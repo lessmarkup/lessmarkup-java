@@ -1,0 +1,10 @@
+<ul ng-controller="configuration" class="configuration">
+    <li ng-repeat="group in groups">
+        <h2 ng-bind="group.title"></h2>
+        <ul>
+            <li ng-repeat="item in group.items">
+                <a href="{{item.path}}" ng-click="navigateToView(item.path)" ng-bind="item.title"></a>
+            </li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,152 @@
+﻿.grid-control {
+    border-top: solid 1px #aaa;
+    border-bottom: solid 1px #aaa;
+    width: 100%;
+}
+
+.grid-control th {
+    font-weight: bold;
+    background: #eee;
+    border-bottom: solid 1px #ccc;
+    padding: 5px;
+}
+
+.grid-control .options-panel {
+    border: solid 1px black;
+    background: #555;
+}
+
+.grid-control.show-options .options-row {
+    border: solid 1px black;
+    border-bottom: solid 1px #ccc;
+}
+
+.grid-control .options-panel td {
+    padding: 5px 8px;
+}
+
+.grid-control .options-panel td * {
+    margin: 3px 0;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.grid-control .grid-data {
+    padding: 5px;
+    vertical-align: top;
+}
+
+.grid-control.has-options .grid-data:not(.ignore-options) {
+    cursor: pointer;
+}
+
+.grid-control tr.odd .grid-data {
+    background: #f0f0f0;
+}
+
+.grid-control.show-options tr.options-row .grid-data {
+    background: none;
+}
+
+.grid-control.show-options .options-space {
+    height: 5px;
+}
+
+.grid-control-panel-bottom {
+    margin-top: 10px;
+}
+
+.grid-control-panel-top {
+    margin-bottom: 20px;
+}
+
+.grid-control-panel-bottom button, .grid-control-panel-top button {
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.grid-control-panel-bottom {
+    margin-bottom: 1em;
+}
+
+.grid-control .grid-cell-options > span:before {
+    font-family: fa;
+    content: "\f141";
+}
+
+.grid-control .grid-cell-options {
+    text-align: center;
+    cursor: pointer;
+    width: 1.7em;
+}
+
+.grid-control .grid-left {
+    text-align: left;
+}
+
+.grid-control .grid-right {
+    text-align: right;
+}
+
+.grid-control .grid-center {
+    text-align: center;
+}
+
+.recordlist-refresh-panel {
+    text-align: center;
+}
+
+.recordlist-refresh-panel button {
+    margin: 1em;
+}
+
+.grid-refreshing {
+    opacity: 0.4;
+    cursor: wait;
+}
+
+.pagination-top {
+    margin-top: 0;
+}
+
+.grid-control th {
+    position: relative;
+}
+
+.grid-control .toggle-search-button {
+    position: absolute;
+    right: 4px;
+}
+
+.grid-control .toggle-search-button button {
+    padding: 0px 5px;
+    
+    margin: 0;
+}
+
+.grid-control .search-row > td {
+    padding: 8px;
+    background: #aaa;
+}
+
+.grid-control .search-row table {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+}
+
+.grid-control .search-row table td:last-child {
+    width: 10px;
+}
+
+.grid-control .search-row td input {
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.grid-control .search-row td button {
+  padding: 6px 10px;
+  margin-left: 7px;
+}

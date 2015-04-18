@@ -1,0 +1,71 @@
+﻿<div class="form-group" ng-repeat="field in fields" ng-class="{'has-error has-feedback' : hasErrors(field.property)}">
+    <span ng-if="fieldVisible(field)" ng-switch="field.type">
+        <span ng-switch-when="CHECK_BOX" class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="object[field.property]" ng-readonly="readOnly(field)"/>
+                <span ng-bind="field.text"></span>
+            </label>
+        </span>
+        <span ng-switch-default>
+            <label ng-if="field.text" class="control-label" for="{{field.id}}" ng-bind="field.text"></label>
+            <span ng-switch="field.type">
+                <span ng-switch-when="LABEL" ng-bind="object[field.property]"></span>
+                <input type="text" ng-switch-when="TEXT" class="form-control" ng-model="object[field.property]" ng-readonly="readOnly(field)" />
+                <input type="email" ng-switch-when="EMAIL" class="form-control" ng-model="object[field.property]" ng-readonly="readOnly(field)" />
+                <input type="number" ng-switch-when="NUMBER" class="form-control" ng-model="object[field.property]" ng-readonly="readOnly(field)" />
+                <input type="password" ng-switch-when="PASSWORD" class="form-control" ng-model="object[field.property]" placeholder="Enter Password" ng-readonly="readOnly(field)" />
+                <div ng-switch-when="PASSWORD_REPEAT" class="row">
+                    <div class="col-xs-6">
+                        <input type="password" class="form-control" ng-model="object[field.property]" placeholder="Enter Password" ng-readonly="readOnly(field)" />
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="password" class="form-control" ng-model="object[field.property + '$Repeat']" placeholder="Repeat Password" ng-readonly="readOnly(field)" />
+                    </div>
+                </div>
+                <div ng-switch-when="RICH_TEXT">
+                    <textarea ng-if="!readOnly(field)" ck-editor ng-model="object[field.property]" class="form-control" cols="10"></textarea>
+                    <div ng-if="readOnly(field)" ng-bind-html="getValue(object, field)" class="rich-control"></div>
+                </div>
+                <div ng-switch-when="FILE" class="form-control" style="height: auto;">
+                    <input type="file" fileread="object[field.property]" />
+                </div>
+                <div ng-switch-when="FILE_LIST" multi-file-read="object[field.property]"></div>
+                <textarea class="form-control" ng-switch-when="CODE_TEXT" ui-codemirror="codeMirrorDefaultOptions" ng-model="object[field.property]" ng-readonly="readOnly(field)" cols="10"></textarea>
+                <select ng-switch-when="SELECT" ng-model="object[field.property]" class="form-control">
+                    <option ng-repeat="select in field.selectValues" value="{{select.value}}" ng-bind="select.text" ng-selected="fieldValueSelected(object, field, select)"></option>
+                </select>
+                <select ng-switch-when="MULTI_SELECT" ng-model="object[field.property]" class="form-control" multiple="multiple" ng-options="item.value as item.text for item in field.selectValues">
+                </select>
+                <input type="text" ng-switch-when="TYPEAHEAD" class="form-control" ng-model="object[field.property]" ng-readonly="readOnly(field)" typeahead="name for name in getTypeahead(field, $viewValue)" />
+                <textarea class="form-control" ng-switch-when="MULTILINE_TEXT" ng-model="object[field.property]" ng-readonly="readOnly(field)"></textarea>
+                <div ng-switch-when="IMAGE">
+                    <div>
+                        <input ng-if="!readOnly(field)" type="file" class="form-control" fileread="object[field.property]" />
+                    </div>
+                    <div style="margin-top: 1em;">
+                        <img ng-if="object[field.property]" ng-src="/Image/Thumbnail/{{object[field.property]}}" />
+                    </div>
+                </div>
+                <span ng-switch-when="DATE" class="input-group">
+                    <input type="text" class="form-control" ng-model="object[field.property]" ng-readonly="readonly(field)" datepicker-popup close-text="[[#text]]Close[[/text]]" clear-text="[[#text]]Clear[[/text]]" current-text="[[#text]]Today[[/text]]" is-open="field.isOpen"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="showDateTimeField($event, field)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </span>
+
+            </span>
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-if="hasErrors(field.property)"></span>
+            <span class="help-block" ng-bind="helpText(field)"></span>
+        </span>
+    </span>
+</div>
+<div ng-if="submitWithCaptcha" captcha="recaptchaPublicKey">
+</div>
+<div class="bg-danger dialog-notification" ng-if="submitError.length > 0">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <span ng-bind="submitError"></span>
+</div>
+<div class="bg-success dialog-notification" ng-if="submitSuccess.length > 0">
+    <span class="glyphicon glyphicon-ok-circle"></span>
+    <span ng-bind="submitSuccess"></span>
+</div>

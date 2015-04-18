@@ -1,0 +1,45 @@
+<script type="text/ng-template" id="inputform-template">
+    <div class="modal-header">
+        <h3 class="modal-title">{{definition.title}}</h3>
+    </div>
+    <div class="modal-body" id="inputform-template-body">
+        [[>views/inputFormTemplateBody.html]]
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="submit()" ng-disabled="okDisabled()">
+            <span>[[#text]]ButtonOk[[/text]]</span>
+            <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0,position:'relative'}" ng-show="isApplying"></span>
+        </button>
+        <button class="btn btn-warning" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</button>
+    </div>
+</script>
+<script type="text/ng-template" id="inputform-message-template">
+    <div class="modal-header">
+        <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+        <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="submit()">[[#text]]ButtonOk[[/text]]</button>
+    </div>
+</script>
+<script type="text/ng-template" id="inputform-question-template">
+    <div class="modal-header">
+        <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+        <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+        <div class="bg-danger dialog-notification" ng-if="submitError.length > 0">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <span ng-bind="submitError"></span>
+        </div>
+        <button class="btn btn-primary" ng-click="submit()">
+            <span>[[#text]]ButtonYes[[/text]]</span>
+            <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0}" ng-show="isApplying"></span>
+        </button>
+        <button class="btn btn-warning" ng-click="cancel()">[[#text]]ButtonNo[[/text]]</button>
+    </div>
+</script>

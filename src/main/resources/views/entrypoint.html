@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="application" ng-controller="main">
+    <head>
+        <meta name="viewport" content="width=device-width"/>
+        [[>views/styles.html]]
+        <title ng-bind="title">{{title}}</title>
+        [[googleAnalytics]]
+
+        <style>
+            .scriptblock {
+                display: none !important;
+            }
+        </style>
+        <style id="noscript">
+            [ng-cloak] {
+                display: inherit;
+            }
+            .scriptonly {
+                display: none !important;
+            }
+            .scriptblock {
+                display: block !important;
+            }
+        </style>
+        [[#useScripts]]
+        <script>
+            document.getElementById("noscript").innerHTML = "";
+        </script>
+        [[/useScripts]]
+    </head>
+    <body>
+        [[#useScripts]]
+            [[>views/inputFormTemplate.html]]
+        [[/useScripts]]
+        [[>views/body.html]]
+        [[#useScripts]]
+            [[initialData]]
+            <script src="[[#map]]minify.js[[/map]]" data-main="[[#map]]scripts/main[[/map]]" async></script>
+            <script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js" async></script>
+        [[/useScripts]]
+    </body>
+</html>

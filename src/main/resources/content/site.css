@@ -1,0 +1,476 @@
+﻿/* Layout */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.body1 {
+    height: auto;
+    min-height: 100%;
+}
+
+.body2 {
+    padding-bottom: 50px;
+    padding-top: 60px;
+}
+
+.footer {
+    clear: both;
+    position: relative;
+    margin-top: -50px;
+    height: 50px;
+}
+
+.container {
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+/* End of layout */
+
+.footer {
+    padding: 10px;
+    background: #fff;
+    border-top: solid 1px #ddd;
+}
+
+.navbar-inner {
+    -webkit-box-shadow: 0 3px 3px rgba(0,0,0,0.175);
+    box-shadow: 0 3px 3px rgba(0,0,0,0.175);    
+}
+
+.header-placeholder {
+    height: 60px;
+}
+
+.breadcrumb {
+    display: inline-block;
+    background: inherit;
+    padding-left: 0;
+    margin-bottom: 1.5em;
+}
+
+.breadcrumb li:first-child {
+    padding: 0;
+}
+
+.breadcrumb > li + li:before {
+  padding: 0;
+  padding-left: 7px;
+}
+
+.breadcrumb > li + li:last-child:before {
+  padding: 0 3px;
+}
+
+.navbar-brand {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.contents .toolbar .btn {
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.has-error .mce-panel {
+    border-color: #a94442;    
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
+.configuration, .configuration ul {
+    margin: 0;
+    padding: 0;
+}
+
+.configuration li {
+    padding: 0;
+    list-style-type: none;
+}
+
+.configuration > li > h2 {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    font-size: 16pt
+}
+
+.configuration ul > li {
+  display: inline-block;
+  border: solid 1px #aaa;
+  width:200px;
+  border-radius: 3px;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  padding: 5px;
+  text-align: center;
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.login-form {
+    padding: 10px 20px;
+    width: 400px;
+}
+
+.login-form .bg-danger {
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border-radius: 3px;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    padding-top: 5px;
+    display: inline-block;
+}
+
+button .spinner {
+    padding-left: 3px;
+    padding-top: 0;
+    margin-left: 0.5em;
+    margin-right: 0.4em;
+    width: 12px;
+    height: 12px;
+    top: 5px !important;
+}
+
+[ng-cloak] {
+    display: none;
+}
+
+.loadmessage {
+    display: none;
+}
+
+.loadmessage[ng-cloak] {
+    margin-top: 1em;
+    display: block;
+}
+
+.dialog-buttons {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+@font-face {
+  font-family: 'fa';
+  src: url('/Content/fontawesome-webfont.eot');
+  src: url('/Content/fontawesome-webfont.eot') format('embedded-opentype'), url('/Content/fontawesome-webfont.woff') format('woff'), url('/Content/fontawesome-webfont.ttf') format('truetype'), url('/Content/fontawesome-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.grid-cell-edit {
+    text-align: center;
+}
+
+.grid-cell-edit > span:before {
+    font-family: fa;
+    content: "\f141";
+}
+
+.grid-cell-edit {
+    cursor: pointer;
+}
+
+.grid-cell-command > span {
+    cursor: pointer;
+}
+
+.grid-cell-command > span:hover {
+    text-decoration: underline;
+}
+
+.form-control.CodeMirror {
+    padding: 0;
+}
+
+button:not(.btn)[disabled=disabled] {
+  color: #bbb;
+}
+
+#navbar-menu > li.dropdown {
+    margin-left: -1em;
+}
+
+#navbar-menu > li .navbar-brand {
+    height: auto;
+}
+
+#navbar-menu > li.active {
+    background: #ddd;
+}
+
+.dropdown-menu > li > ul > li {
+    list-style-type: none;
+}
+
+.dropdown-menu > li > ul > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+.dropdown-menu > li > ul > li > a:hover,
+.dropdown-menu > li > ul > li > a:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu > li > ul > .active > a,
+.dropdown-menu > li > ul > .active > a:hover,
+.dropdown-menu > li > ul > .active > a:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #428bca;
+  outline: 0;
+}
+.dropdown-menu > li > ul > .disabled > a,
+.dropdown-menu > li > ul > .disabled > a:hover,
+.dropdown-menu > li > ul > .disabled > a:focus {
+  color: #999;
+}
+.dropdown-menu > li > ul > .disabled > a:hover,
+.dropdown-menu > li > ul > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.nav-tabs {
+    margin-bottom: 15px;
+}
+
+.form-group .control-label {
+    float: none;
+}
+
+@media (max-width: 767px) {
+    .navbar-brand {
+        padding-left: 15px;
+    }
+    .navbar-nav {
+        margin: 0;
+    }
+    .container > .navbar-header {
+        margin: 0;
+    }
+    .contents {
+        padding: 5px;
+    }
+    .breadcrumb li:first-child {
+        padding: 0 0 0 15px;
+    }
+}
+
+.visible-xs.collapse:not(.in) {
+    display: none !important;
+}
+
+.rich-control {
+    border-radius: 4px;
+    border: solid 1px #ccc;
+    padding: 1em;
+}
+
+.file-comment {
+    margin-left: 1em;
+}
+
+div.navbar-notifications {
+    float: right;
+    margin-top: 12px;
+    margin-right: 3px;
+}
+
+div.navbar-notifications a {
+    margin-right: 5px;
+    color: #999;
+    font-size: 10pt;
+    text-decoration: none;
+}
+
+div.navbar-notifications a:hover {
+    color: #428bca;
+}
+
+div.navbar-notifications span.badge {
+    font-size: 8pt; 
+}
+
+div.navbar-notifications a:hover span.badge {
+    background: #428bca;
+    color: white;
+}
+
+li.navbar-notification .glyphicon {
+    padding-top: 0;
+}
+
+li.navbar-notification span.badge {
+    font-size: 8pt;
+    background: #777;
+}
+
+li.navbar-notification a:hover span.badge {
+    background: #000;
+}
+
+span.badge.active-notification {
+    background: #428bca !important;
+}
+
+.breadcrumb-host > span {
+    position: relative;
+}
+
+.breadcrumb-host.ui-scrollfix {
+    position: fixed;
+    top: 50px;
+    background: white;
+    border-bottom: solid 1px #ccc;
+    width: 100%;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.175);
+    z-index:100;
+}
+
+.breadcrumb-host.ui-scrollfix ul {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.navbar-inner.ui-scrollfix {
+    box-shadow: none;
+}
+
+.breadcrumb > .active {
+    color: black;
+    font-weight: bold;
+}
+
+.search-panel {
+    width: 300px;
+    position: relative;
+}
+
+.search-panel .results {
+    position: absolute;
+    width: 200%;
+    left: -150px;
+    top: 2.5em;
+    background: white;
+    border: solid 1px #ccc;
+}
+
+.search-panel ul, .search-panel li {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.search-panel li {
+    padding: 5px;
+    max-height: 5em;
+    overflow-y: hidden;
+}
+
+.search-panel li a {
+    color: black;
+}
+
+.search-panel .results li:hover a {
+    text-decoration: underline;
+}
+
+.search-panel li:not(:last-child) {
+    border-bottom: solid 1px #eee;
+}
+
+.search-result-name {
+    font-weight: bold;
+}
+
+.search-result-body .highlight {
+    color: #1e90ff;
+    font-weight: bold;
+}
+
+.language-icon {
+    width: 1.5em;
+    height: 1em;
+}
+
+.dialog-notification {
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+
+.dialog-notification.bg-danger {
+    color: red;
+}
+
+table.properties {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+table.properties td.property-name {
+    padding: 5px;
+}
+
+table.properties td.property-name span {
+    font-weight: bold;
+}
+
+table.properties td.property-value {
+    padding: 5px;
+}
+
+.file-choose-list, .file-choose-list li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.file-choose-list li {
+    display: inline-block;
+}
+
+.file-choose-list li:not(:first-child) {
+    margin-left: 0.5em;
+}
+
+.file-choose-list li:first-child {
+    margin-top: 0.5em;
+}
+
+.file-choose-list li:last-child {
+    margin-bottom: 1em;
+}
+
+.file-choose-list li span.glyphicon {
+    margin-left: 5px;
+    cursor: pointer;
+}

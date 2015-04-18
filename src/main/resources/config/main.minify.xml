@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<file>
+  <resources>
+    <resource plain="scripts/lib/jquery/jquery-2.1.1.js" minified="scripts/lib/jquery/jquery-2.1.1.min.js" />
+    <resource plain="scripts/lib/angular/angular.js" minified="scripts/lib/angular/angular.min.js" />
+    <resource plain="scripts/lib/angular/ui-utils.js" minified="scripts/lib/angular/ui-utils.min.js" />
+    <resource plain="scripts/lib/bootstrap/bootstrap.js" minified="scripts/lib/bootstrap/bootstrap.min.js" />
+    <resource plain="scripts/lib/bootstrap/ui-bootstrap.js" minified="scripts/lib/bootstrap/ui-bootstrap.min.js" />
+    <resource plain="scripts/lib/spinner/spin.js" minified="scripts/lib/spinner/spin.min.js" />
+    <resource plain="scripts/lib/spinner/angular-spinner.js" minified="scripts/lib/spinner/angular-spinner.min.js" />
+    <resource plain="scripts/lib/require/require.js" minified="scripts/lib/require/require.min.js" />
+    <resource plain="scripts/lib/autolinker/autolinker.js" />
+
+    <resource plain="scripts/config/app" />
+    <resource plain="scripts/filters/relative-date.js" />
+    <resource plain="scripts/filters/locale-date.js" />
+    <resource plain="scripts/providers/lazyload" />
+    <resource plain="scripts/directives/bindcompiled" />
+    <resource plain="scripts/directives/bind2" />
+    <resource plain="scripts/providers/commandhandler" />
+    <resource plain="scripts/providers/inputform" />
+    <resource plain="scripts/directives/fileread" />
+    <resource plain="scripts/directives/multifileread" />
+    <resource plain="scripts/controllers/main" />
+    <resource plain="scripts/controllers/flatpage" />
+    <resource plain="scripts/controllers/inputform" />
+    <resource plain="scripts/controllers/dialog" />
+    <resource plain="scripts/controllers/recordlist" />
+
+    <resource plain="content/bootstrap.css" minified="content/bootstrap.min.css" />
+    <resource minified="content/ng-grid" />
+    <resource plain="content/site" />
+    <resource plain="content/visualblocks" />
+    <resource plain="content/recordlist" />
+    <resource minified="content/codemirror.min" />
+    <resource plain="content/nodelist" />
+    <resource plain="content/flatpage" />
+  </resources>
+</file>

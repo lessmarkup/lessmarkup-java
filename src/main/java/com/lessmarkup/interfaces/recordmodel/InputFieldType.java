@@ -1,0 +1,31 @@
+package com.lessmarkup.interfaces.recordmodel;
+
+public enum InputFieldType {
+    TEXT,
+    RICH_TEXT,
+    NUMBER,
+    MASKED_TEXT,
+    PASSWORD,
+    CHECK_BOX,
+    SELECT,
+    MULTI_SELECT,
+    SELECT_TEXT,
+    DATE,
+    TIME,
+    MULTILINE_TEXT,
+    EMAIL,
+    IMAGE,
+    IMAGE_GALLERY,
+    ERROR_MESSAGE,
+    TAGGED_TEXT,
+    MESSAGE,
+    CUSTOM,
+    FILE,
+    CODE_TEXT,
+    HIDDEN,
+    TYPEAHEAD,
+    PASSWORD_REPEAT,
+    LABEL,
+    DYNAMIC_FIELD_LIST,
+    FILE_LIST
+}
