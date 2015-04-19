@@ -52,7 +52,6 @@ public class SitePropertiesModel implements SiteConfiguration {
     private String googleAnalyticsResource = null;
     private String validFileType = null;
     private String validFileExtension = null;
-    private String sessionKey = null;
     private String engineOverride = null;
 
     @Autowired
@@ -145,9 +144,6 @@ public class SitePropertiesModel implements SiteConfiguration {
     @InputField(type = InputFieldType.TEXT, textId = TextIds.VALID_FILE_EXTENSION)
     public void setValidFileExtension(String validFileExtension) { this.validFileExtension = validFileExtension; }
     @Override public String getValidFileExtension() { return this.validFileExtension; }
-
-    @Override public void setSessionKey(String sessionKey) { this.sessionKey = sessionKey; }
-    @Override public String getSessionKey() { return this.sessionKey; }
 
     @Override public void setEngineOverride(String param) { this.engineOverride = param; }
     @Override public String getEngineOverride() { return this.engineOverride; }

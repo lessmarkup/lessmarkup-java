@@ -1,7 +1,9 @@
 package com.lessmarkup.userinterface.nodehandlers.globalconfiguration;
 
+import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.interfaces.cache.DataCache;
+import com.lessmarkup.interfaces.structure.ConfigurationHandler;
 import com.lessmarkup.userinterface.model.global.EmailConfigurationModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
+@ConfigurationHandler(titleTextId = TextIds.EMAIL_CONFIGURATION)
 public class EmailNodeHandler extends DialogNodeHandler<EmailConfigurationModel> {
 
     @Autowired

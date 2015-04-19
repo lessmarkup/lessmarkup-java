@@ -24,7 +24,14 @@ import com.lessmarkup.userinterface.model.user.LoginModel;
 import com.lessmarkup.userinterface.model.user.RegisterModel;
 import com.lessmarkup.userinterface.nodehandlers.DefaultRootNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.configuration.ConfigurationRootNodeHandler;
-import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.DatabaseConfigurationNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.configuration.NodeListNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.EmailNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.EngineNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.ModulesNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteCustomizeNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteGroupsNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SitePropertiesNodeHandler;
+import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteUsersNodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -103,6 +110,14 @@ public class MainModuleInitializer implements ModuleInitializer {
         Collection<Class<? extends NodeHandler>> ret = new ArrayList<>();
         ret.add(ConfigurationRootNodeHandler.class);
         ret.add(DefaultRootNodeHandler.class);
+        ret.add(NodeListNodeHandler.class);
+        ret.add(EngineNodeHandler.class);
+        ret.add(EmailNodeHandler.class);
+        ret.add(ModulesNodeHandler.class);
+        ret.add(SiteCustomizeNodeHandler.class);
+        ret.add(SiteGroupsNodeHandler.class);
+        ret.add(SitePropertiesNodeHandler.class);
+        ret.add(SiteUsersNodeHandler.class);
         return ret;
     }
 

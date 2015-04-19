@@ -217,7 +217,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         Optional<Long> nodeId = this.idToNode.keySet().stream().max(Long::compare);
         
         CachedNodeInformationImpl node = new CachedNodeInformationImpl();
-        node.setNodeId(nodeId.orElse(1l));
+        node.setNodeId(nodeId.orElse(0l) + 1);
         node.setFullPath("/" + path.toLowerCase());
         node.setPath(path.toLowerCase());
         node.setHandlerModuleType(moduleType);

@@ -165,7 +165,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         
         JsonArray groups = new JsonArray();
         
-        this.configurationGroups.forEach(g -> {
+        for (ConfigurationGroupData g : this.configurationGroups) {
             JsonObject group = new JsonObject();
             group.addProperty("title", g.getTitle());
             JsonArray items = new JsonArray();
@@ -176,7 +176,8 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
                 items.add(handler);
             });
             group.add("items", items);
-        });
+            groups.add(group);
+        }
         
         ret.add("groups", groups);
         

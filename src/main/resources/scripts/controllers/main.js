@@ -712,6 +712,16 @@ app.controller('main', function ($scope, $http, commandHandler, inputForm, $loca
             return false;
         }
 
+        if (url.length > 0 && url[0] === '/') {
+            if (url.length < $scope.rootPath.length || $scope.rootPath !== url.substring(0, $scope.rootPath.length)) {
+                return false;
+            }
+            url = url.substring($scope.rootPath.length);
+            if (url.length > 0 && url[0] !== '/') {
+                return false;
+            }
+        }
+
         $scope.hideXsMenu();
         $scope.onUserActivity();
         $scope.clearSearch();

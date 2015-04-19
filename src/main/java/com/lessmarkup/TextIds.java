@@ -109,4 +109,8 @@ public final class TextIds {
     public static final String ADMIN_LOGIN_ADDRESS = "AdminLoginAddress";
     public static final String MIGRATE_DATA_LOSS_ALLOWED = "MigrateDataLossAllowed";
     public static final String DISABLE_CUSTOMIZATIONS = "DisableCustomizations";
+    public static final String ENGINE_CONFIGURATION = "EngineConfiguration";
+    public static final String USERS = "Users";
+    public static final String SITE_PROPERTIES = "SiteProperties";
+    public static final String EMAIL_CONFIGURATION = "EmailConfiguration";
 }

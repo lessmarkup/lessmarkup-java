@@ -24,8 +24,6 @@ public interface SiteConfiguration extends CacheHandler {
     String getGoogleAnalyticsResource();
     String getValidFileType();
     String getValidFileExtension();
-    String getSessionKey();
-    void setSessionKey(String sessionKey);
     String getEngineOverride();
     void setEngineOverride(String param);
     String getProperty(String key);

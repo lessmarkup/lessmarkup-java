@@ -74,7 +74,7 @@ public class JsonEntryPointModel {
                 List<String> cachedTemplates = new ArrayList<>();
                 data.getAsJsonArray("cached").forEach(e -> cachedTemplates.add(e.getAsString()));
                 LoadNodeViewModel model = DependencyResolver.resolve(LoadNodeViewModel.class);
-                model.initialize(path, cachedTemplates, true, false);
+                model.initialize(data.getAsJsonPrimitive("newPath").getAsString(), cachedTemplates, true, false);
                 if (model.getNodeId().isPresent()) {
                     nodeId = model.getNodeId();
                 }

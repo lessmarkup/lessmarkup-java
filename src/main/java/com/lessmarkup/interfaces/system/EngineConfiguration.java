@@ -54,4 +54,6 @@ public interface EngineConfiguration {
     void setConnectionString(String connectionString);
     String getModulesPath();
     void setModulesPath(String modulesPath);
+    String getSessionKey();
+    void setSessionKey(String sessionKey);
 }

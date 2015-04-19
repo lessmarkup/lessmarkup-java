@@ -28,6 +28,7 @@ import com.lessmarkup.interfaces.security.EntityAccessType;
 import com.lessmarkup.interfaces.security.LoginTicket;
 import com.lessmarkup.interfaces.security.UserSecurity;
 import com.lessmarkup.interfaces.structure.Tuple;
+import com.lessmarkup.interfaces.system.EngineConfiguration;
 import com.lessmarkup.interfaces.system.MailSender;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import java.io.ByteArrayInputStream;
@@ -320,17 +321,17 @@ public class UserSecurityImpl implements UserSecurity {
     public static Cipher initializeCipher(DataCache dataCache, int mode) {
         try {
             
-            SiteConfiguration siteConfiguration = dataCache.get(SiteConfiguration.class);
+            EngineConfiguration engineConfiguration = RequestContextHolder.getContext().getEngineConfiguration();
             
-            String secretKeyText = siteConfiguration.getSessionKey();
+            String secretKeyText = engineConfiguration.getSessionKey();
             SecretKey secretKey;
             
             if (secretKeyText == null || secretKeyText.length() == 0) {
                 KeyGenerator keyGenerator = KeyGenerator.getInstance(Constants.Encrypt.SYMMETRIC_CIPHER);
                 keyGenerator.init(Constants.Encrypt.SYMMETIC_KEY_SIZE);
                 secretKey = keyGenerator.generateKey();
-                secretKeyText = Base64.encodeBase64String(secretKey.getEncoded());
-                siteConfiguration.setSessionKey(secretKeyText);
+                secretKeyText = Base64.encodeBase64String(secretKey.getEncoded(), false);
+                engineConfiguration.setSessionKey(secretKeyText);
             } else {
                 secretKey = new SecretKeySpec(Base64.decodeBase64(secretKeyText), Constants.Encrypt.SYMMETRIC_CIPHER);
             }
@@ -339,7 +340,7 @@ public class UserSecurityImpl implements UserSecurity {
             ret.init(mode, secretKey);
             return ret;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
-            throw new CommonException(ex);
+            return null;
         }
     }
 
@@ -364,9 +365,10 @@ public class UserSecurityImpl implements UserSecurity {
             objectStream.writeUTF(ticket.getName());
             objectStream.writeUTF(ticket.getEmail());
             objectStream.writeBoolean(ticket.isPersistent());
+            objectStream.flush();
             byte[] rawData = memoryStream.toByteArray();
             byte[] encryptedData = cipher.doFinal(rawData);
-            return Base64.encodeBase64String(encryptedData);
+            return Base64.encodeBase64String(encryptedData, false);
         } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             throw new CommonException(e);
         }
@@ -374,43 +376,49 @@ public class UserSecurityImpl implements UserSecurity {
 
     @Override
     public LoginTicket decryptLoginTicket(String encryptedTicket) {
-        Cipher cipher = initializeCipher(Cipher.DECRYPT_MODE);
-        if (cipher == null) {
-            return null;
-        }
-        
-        try (ByteArrayInputStream memoryStream = new ByteArrayInputStream(Base64.decodeBase64(encryptedTicket));
-                ObjectInputStream objectStream = new ObjectInputStream(memoryStream)) {
-            
-            if (objectStream.readInt() != LOGIN_TICKET_CONTROL_WORD) {
+        try {
+            Cipher cipher = initializeCipher(Cipher.DECRYPT_MODE);
+            if (cipher == null) {
                 return null;
             }
-            
-            if (objectStream.readInt() != LOGIN_TICKET_VERSION) {
-                return null;
+
+            byte[] binaryData = Base64.decodeBase64(encryptedTicket);
+            binaryData = cipher.doFinal(binaryData);
+
+            try (ByteArrayInputStream memoryStream = new ByteArrayInputStream(binaryData);
+                    ObjectInputStream objectStream = new ObjectInputStream(memoryStream)) {
+
+                if (objectStream.readInt() != LOGIN_TICKET_CONTROL_WORD) {
+                    return null;
+                }
+
+                if (objectStream.readInt() != LOGIN_TICKET_VERSION) {
+                    return null;
+                }
+
+                OffsetDateTime expirationTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(objectStream.readLong()), ZoneOffset.UTC);
+
+                if (expirationTime.isBefore(OffsetDateTime.now())) {
+                    return null;
+                }
+
+                String remoteAddress = objectStream.readUTF();
+
+                if (!RequestContextHolder.getContext().getRemoteAddress().equals(remoteAddress)) {
+                    return null;
+                }
+
+                LoginTicket ticket = new LoginTicket();
+                ticket.setUserId(objectStream.readLong());
+                ticket.setName(objectStream.readUTF());
+                ticket.setEmail(objectStream.readUTF());
+                ticket.setPersistent(objectStream.readBoolean());
+
+                return ticket;
             }
-            
-            OffsetDateTime expirationTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(objectStream.readLong()), ZoneOffset.UTC);
-            
-            if (expirationTime.isBefore(OffsetDateTime.now())) {
+        } catch (Exception e) {
+                e.printStackTrace();
                 return null;
-            }
-            
-            String remoteAddress = objectStream.readUTF();
-            
-            if (!RequestContextHolder.getContext().getRemoteAddress().equals(remoteAddress)) {
-                return null;
-            }
-            
-            LoginTicket ticket = new LoginTicket();
-            ticket.setUserId(objectStream.readLong());
-            ticket.setName(objectStream.readUTF());
-            ticket.setEmail(objectStream.readUTF());
-            ticket.setPersistent(objectStream.readBoolean());
-            
-            return ticket;
-        } catch (IOException e) {
-            throw new CommonException(e);
         }
     }
     
@@ -510,9 +518,10 @@ public class UserSecurityImpl implements UserSecurity {
             } else {
                 objectStream.writeLong(expirationTime.get().toInstant().toEpochMilli());
             }
+            objectStream.flush();
             byte[] rawData = memoryStream.toByteArray();
             byte[] encryptedData = cipher.doFinal(rawData);
-            return Base64.encodeBase64String(encryptedData);
+            return Base64.encodeBase64String(encryptedData, false);
         } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             throw new CommonException(e);
         }
@@ -574,7 +583,7 @@ public class UserSecurityImpl implements UserSecurity {
     }
     
     public static String generateSalt() {
-        return Base64.encodeBase64String(generateSaltBytes());
+        return Base64.encodeBase64String(generateSaltBytes(), false);
     }
     
     private static final String HEX_CODES = "0123456789abcdef";
@@ -674,7 +683,7 @@ public class UserSecurityImpl implements UserSecurity {
             objectStream.writeObject(obj);
             byte[] rawData = memoryStream.toByteArray();
             byte[] encryptedData = cipher.doFinal(rawData);
-            return Base64.encodeBase64String(encryptedData);
+            return Base64.encodeBase64String(encryptedData, false);
         } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, e);
             return null;

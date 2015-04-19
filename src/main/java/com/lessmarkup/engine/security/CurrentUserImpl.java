@@ -162,7 +162,9 @@ public class CurrentUserImpl implements CurrentUser {
             return null;
         }
         
-        LoginTicket ticket = userSecurity.decryptLoginTicket(cookie.getValue());
+        String cookieValue = cookie.getValue().replace('_', '/').replace('-', '+');
+        
+        LoginTicket ticket = userSecurity.decryptLoginTicket(cookieValue);
 
         return loadCurrentUser(ticket);
     }
@@ -323,6 +325,8 @@ public class CurrentUserImpl implements CurrentUser {
         ticket.setUserId(userId);
         ticket.setPersistent(savePassword);
         String encryptedTicket = userSecurity.encryptLoginTicket(ticket);
+        
+        encryptedTicket = encryptedTicket.trim().replace('+', '-').replace('/', '_');
         
         RequestContext context = RequestContextHolder.getContext();
         EngineConfiguration configuration = context.getEngineConfiguration();

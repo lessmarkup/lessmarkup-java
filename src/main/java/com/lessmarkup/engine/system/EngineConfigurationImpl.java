@@ -431,4 +431,14 @@ class EngineConfigurationImpl implements EngineConfiguration {
     public void setModulesPath(String modulesPath) {
         setString("modulesPath", modulesPath);
     }
+
+    @Override
+    public String getSessionKey() {
+        return getString("sessionKey", null);
+    }
+
+    @Override
+    public void setSessionKey(String sessionKey) {
+        setString("sessionKey", sessionKey);
+    }
 }
