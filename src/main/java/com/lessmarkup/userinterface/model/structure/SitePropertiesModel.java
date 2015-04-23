@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.structure;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.lessmarkup.TextIds;
@@ -156,11 +157,14 @@ public class SitePropertiesModel implements SiteConfiguration {
                 return;
             }
 
-            JsonObject propertiesObject = JsonSerializer.deserialize(propertiesDataObject.getProperties());
-
-            Collection<PropertyDescriptor> properties = TypeHelper.getProperties(getClass());
-
-            for (PropertyDescriptor property : properties) {
+            JsonElement propertiesElement = JsonSerializer.deserializeToTree(propertiesDataObject.getProperties());
+            
+            if (!propertiesElement.isJsonObject()) {
+                return;
+            }
+            
+            JsonObject propertiesObject = propertiesElement.getAsJsonObject();
+            for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
                 JsonPrimitive element = propertiesObject.getAsJsonPrimitive(property.getName());
                 if (element == null) {
                     continue;
@@ -184,8 +188,7 @@ public class SitePropertiesModel implements SiteConfiguration {
 
     public void save() {
         JsonObject propertiesObject = new JsonObject();
-        Collection<PropertyDescriptor> properties = TypeHelper.getProperties(getClass());
-        for (PropertyDescriptor property : properties) {
+        for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
             if (property.getType().equals(String.class)) {
                 propertiesObject.add(property.getName(), new JsonPrimitive((String) property.getValue(this)));
             } else if (property.getType().equals(int.class)) {
@@ -197,8 +200,9 @@ public class SitePropertiesModel implements SiteConfiguration {
 
         try (DomainModel domainModel = domainModelProvider.create()) {
             SiteProperties propertiesDataObject = domainModel.query().from(SiteProperties.class).firstOrDefault(SiteProperties.class);
-            boolean isNew = propertiesDataObject == null;
-            if (isNew) {
+            boolean isNew = false;
+            if (propertiesDataObject == null) {
+                isNew = true;
                 propertiesDataObject = new SiteProperties();
             }
             propertiesDataObject.setProperties(propertiesObject.toString());

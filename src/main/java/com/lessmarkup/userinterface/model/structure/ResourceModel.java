@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @Scope("prototype")
@@ -18,6 +19,7 @@ public class ResourceModel {
     private final DataCache dataCache;
     private String contentType;
     private String path;
+    private String extension;
 
     @Autowired
     public ResourceModel(DataCache dataCache) {
@@ -41,7 +43,7 @@ public class ResourceModel {
             return false;
         }
         
-        String extension = path.substring(lastDotPoint+1).toLowerCase();
+        this.extension = path.substring(lastDotPoint+1).toLowerCase();
         
         switch (extension) {
             case "html":
@@ -95,7 +97,20 @@ public class ResourceModel {
         requestContext.addHeader("Cache-Control", "public, max-age=3600");
         requestContext.addHeader("Content-Type", this.contentType);
         ResourceCache resourceCache = this.dataCache.get(ResourceCache.class, this.dataCache.get(LanguageCache.class).getCurrentLanguageId());
-        byte[] resourceBytes = resourceCache.readBytes(this.path);
+        
+        byte[] resourceBytes;
+        
+        switch (this.extension) {
+            case "css":
+            case "html":
+            case "js":
+                resourceBytes = resourceCache.parseText(this.path).getBytes(StandardCharsets.UTF_8);
+                break;
+            default:
+                resourceBytes = resourceCache.readBytes(this.path);
+                break;
+        }
+        
         requestContext.getOutputStream().write(resourceBytes, 0, resourceBytes.length);
     }
 }

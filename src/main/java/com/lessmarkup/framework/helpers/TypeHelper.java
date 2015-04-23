@@ -5,9 +5,18 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class TypeHelper {
+    
+    private static final Map<Class<?>, Collection<PropertyDescriptor>> propertyMap = new HashMap<>();
 
-    public static Collection<PropertyDescriptor> getProperties(Class<?> type) {
-        Collection<PropertyDescriptor> ret = new ArrayList<>();
+    public synchronized static Iterable<PropertyDescriptor> getProperties(Class<?> type) {
+        
+        Collection<PropertyDescriptor> ret = propertyMap.get(type);
+        if (ret != null) {
+            return ret;
+        }
+        
+        ret = new ArrayList<>();
+        propertyMap.put(type, ret);
 
         Map<String, Method> methods = new HashMap<>();
 

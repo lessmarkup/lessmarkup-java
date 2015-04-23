@@ -1,0 +1,82 @@
+{
+  "copy": {
+    "bower": {
+      "files": [{
+        "expand": true,
+        "cwd": "bower_components",
+        "dest": "../lib",
+        "src": [
+          "**/*.{css,js,svg,map,eot,svg,ttf,woff,woff2,fla,gif,html,jpg,png}",
+          "!jquery/**"
+        ]
+      }, {
+        "expand": true,
+        "cwd": "bower_components/jquery/dist",
+        "dest": "../lib/jquery",
+        "src": [
+          "**"
+        ]
+      }]
+    },
+    "ts": {
+      "files": [{
+        "expand": true,
+        "cwd": "../src/scripts",
+        "dest": "../scripts",
+        "src": ["**/*.js"]
+      }]
+    }
+  },
+  "sass": {
+    "options": {
+      "style": "expanded"
+    },
+    "files": {
+      "expand": true,
+      "src": ["..src/styles/main.scss"],
+      "dest": "../css",
+      "ext": ".css"
+    }
+  },
+  "less": {
+    "options": {
+    },
+    "files": {
+      "expand": true,
+      "cwd": "../src/styles",
+      "src": ["**.*.less"],
+      "dest": "../css",
+      "ext": ".css"
+    }
+  },
+  "ts": {
+    "default": {
+      "options": {
+        "module": "amd",
+        "target": "es5",
+        "sourceMap": false,
+        "declaration": false,
+        "comments": false,
+        "fast": "never"
+      },
+      "files": [{
+          "src": ["../types/all.d.ts", "../src/scripts/**/*.ts"]
+        }]
+    }
+  },
+  "tsd": {
+    "refresh": {
+      "options": {
+        "command": "reinstall",
+        "latest": true,
+        "config": "config/tsd.config.json"
+      }
+    }
+  },
+  "cssmin": {
+    "dist": {
+      "src": ["../css/*.css", "!*.min.css"],
+      "dest": "../css/main.min.css"
+    }
+  }
+}

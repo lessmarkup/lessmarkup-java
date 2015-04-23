@@ -43,7 +43,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
     
     @Override
     public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-        return query.toIdList();
+        return query.from(dataType).toIdList();
     }
 
     @Override

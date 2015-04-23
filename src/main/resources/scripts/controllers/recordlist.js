@@ -7,7 +7,7 @@
 app.directive("bindCell", function($compile) {
     return {
         scope: {
-            parameters: '=bindCell',
+            parameters: '=bindCell'
         },
         link: function (scope, element) {
 
@@ -32,7 +32,7 @@ app.directive("cellShowOptions", function($compile) {
         replace: false,
         link: function (scope, element) {
 
-            if (!scope.hasOptionsBar || (scope.parameters && scope.parameter.options == false)) {
+            if (!scope.hasOptionsBar || (scope.parameters && scope.parameter.options === false)) {
                 return;
             }
 
@@ -103,13 +103,13 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         if ($scope.recordSearchText.length > 0) {
             var model = {
                 search: $scope.recordSearchText
-            }
+            };
             $scope.updateProperties.filter = JSON.stringify(model);
         } else {
             $scope.updateProperties.filter = null;
         }
         $scope.refreshNewRecords();
-    }
+    };
 
     $scope.toggleRecordSearch = function() {
         $scope.recordSearchVisible = !$scope.recordSearchVisible;
@@ -120,15 +120,15 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 $scope.searchRecords();
             }
         }
-    }
+    };
 
     $scope.getSafeValue = function(html) {
         return $sce.trustAsHtml(html);
-    }
+    };
 
     $scope.getRecordListScope = function() {
         return $scope;
-    }
+    };
 
     var createNewRecord;
 
@@ -141,7 +141,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 var recordId = removedIds[i];
                 for (var j = 0; j < records.length; j++) {
                     var record = records[j];
-                    if (record[recordIdField] == recordId) {
+                    if (record[recordIdField] === recordId) {
                         records.splice(j, 1);
                         if ($scope.hasOwnProperty("pageSize") && $scope.pageSize > 0) {
                             hasChanges = j < $scope.pageOffset + $scope.pageSize;
@@ -161,7 +161,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 var found = false;
                 for (var j = 0; j < records.length; j++) {
                     var record = records[j];
-                    if (record[recordIdField] == recordId) {
+                    if (record[recordIdField] === recordId) {
                         if ($scope.hasOwnProperty("pageSize") && $scope.pageSize > 0 && j >= $scope.pageOffset && j < $scope.pageOffset + $scope.pageSize) {
                             recordsToUpdate.push(recordId);
                         } else {
@@ -203,7 +203,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
     });
 
     $scope.refreshNewRecords = function() {
-        $scope.sendCommand("GetRecordIds", null, function (data2) {
+        $scope.sendCommand("getRecordIds", null, function (data2) {
 
             $scope.hasNewRecords = false;
 
@@ -233,10 +233,10 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
             $scope.loadVisibleRecords();
         });
-    }
+    };
 
     function createNewRecord(recordId) {
-        var record = { loaded: false }
+        var record = { loaded: false };
         for (var i = 0; i < $scope.columns.length; i++) {
             record[$scope.columns[i].name] = "";
         }
@@ -255,14 +255,14 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         if (!column.scope || !column.scope.length) {
             column.scope = function(obj) {
                 return obj.row;
-            }
+            };
         } else {
             column.scope = new Function("obj", "with(obj) { return " + column.scope + "; }");
         }
     }
 
     $scope.onDataReceived = function(scope, data) {
-    }
+    };
 
     for (var i = 0; i < $scope.viewData.actions.length; i++) {
 
@@ -277,23 +277,23 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         }
 
         switch (action.type) {
-            case "Record":
-            case "RecordCreate":
-            case "RecordInitializeCreate":
+            case "RECORD":
+            case "RECORD_CREATE":
+            case "RECORD_INITIALIZE_CREATE":
                 $scope.actions.push({
                     name: action.name,
                     text: action.text,
                     visible: visibleFunction,
                     type: action.type,
-                    parameter: action.parameter,
+                    parameter: action.parameter
                 });
                 break;
-            case "Create":
+            case "CREATE":
                 $scope.toolbarButtons.push({
                     name: action.name,
                     text: action.text,
                     visible: visibleFunction,
-                    type: action.parameter,
+                    type: action.parameter
                 });
                 break;
         }
@@ -322,7 +322,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 });
             }, $scope.getTypeahead);
         });
-    }
+    };
 
     function resetRecords(recordIds) {
 
@@ -337,7 +337,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
     $scope.getRecordId = function(record) {
         return record[recordIdField];
-    }
+    };
 
     function hideOptions() {
         $scope.showOptions = false;
@@ -353,17 +353,17 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             return;
         }
 
-        if (event && event.target && event.target.nodeName == "A") {
+        if (event && event.target && event.target.nodeName === "A") {
             return;
         }
 
-        if (column != null && column.ignoreOptions) {
+        if (column !== null && column.ignoreOptions) {
             return;
         }
 
         var recordId = record[recordIdField];
 
-        if (!currentRecord || currentRecordId != recordId) {
+        if (!currentRecord || currentRecordId !== recordId) {
             $scope.showOptions = true;
         } else {
             $scope.showOptions = !$scope.showOptions;
@@ -375,16 +375,16 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         if (!$scope.$$phase) {
             $scope.$apply();
         }
-    }
+    };
 
     $scope.isActionVisible = function(action) {
-        if (currentRecord == null || !$scope.showOptions) {
+        if (currentRecord === null || !$scope.showOptions) {
             return false;
         }
         return action.visible(currentRecord);
-    }
+    };
 
-    $scope.sortColumn = function (column) {
+    $scope.sortColumn = function(column) {
 
         if (!column.sortable) {
             return;
@@ -401,7 +401,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             column.sort = "";
         }
 
-        if (!current || current == "up") {
+        if (!current || current === "up") {
             current = "down";
         } else {
             current = "up";
@@ -420,8 +420,8 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         hideOptions();
 
-        if (unloadedRecords != 0) {
-            $scope.sendCommand("Sort", { column: column.name, direction: current }, function (data) {
+        if (unloadedRecords !== 0) {
+            $scope.sendCommand("sort", { column: column.name, direction: current }, function (data) {
                 resetRecords(data.recordIds);
                 $scope.showPage(1);
             }, function(message) {
@@ -435,7 +435,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         records.sort(function(a, b) {
             var af = a[field];
             var bf = b[field];
-            if (af == bf) {
+            if (af === bf) {
                 return 0;
             }
             if (af < bf) {
@@ -445,12 +445,12 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         });
 
         $scope.showPage(1);
-    }
+    };
 
     function editCurrentRecord(index) {
 
         inputForm.editObject($scope, records[index], $scope.viewData.type, function (object, success, failure) {
-            $scope.sendCommand("ModifyRecord", {
+            $scope.sendCommand("modifyRecord", {
                 modifiedObject: object
             }, function (data) {
                 // success
@@ -466,7 +466,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         $scope.onDataReceived($scope, data);
 
-        if (data != null && data.redirect && data.redirect.length) {
+        if (data !== null && data.redirect && data.redirect.length) {
             if (success) {
                 success();
             }
@@ -474,7 +474,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             return;
         }
 
-        if (data != null && data.message && data.message.length) {
+        if (data !== null && data.message && data.message.length) {
             if (success) {
                 success();
             }
@@ -482,20 +482,20 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             return;
         }
 
-        if (data != null && data.hasOwnProperty("removed")) {
+        if (data !== null && data.hasOwnProperty("removed")) {
             hideOptions();
             records.splice(index, 1);
             $scope.loadVisibleRecords();
             return;
         }
 
-        if (data != null && data.hasOwnProperty("reset")) {
+        if (data !== null && data.hasOwnProperty("reset")) {
             records = [];
             $scope.refreshNewRecords();
             return;
         }
 
-        if (data == null || !data.hasOwnProperty("record")) {
+        if (data === null || !data.hasOwnProperty("record")) {
             if (success) {
                 success();
             }
@@ -507,7 +507,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         var record = createRecordCopy(data.record);
 
-        if (!isNew && index >= 0 && (newIndex == index || newIndex == -1)) {
+        if (!isNew && index >= 0 && (newIndex === index || newIndex === -1)) {
             records[index] = record;
             $scope.loadVisibleRecords();
         } else {
@@ -521,7 +521,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 newIndex = records.length;
                 records.push(record);
             }
-            if (!data.hasOwnProperty("page") || data.page == "last") {
+            if (!data.hasOwnProperty("page") || data.page === "last") {
                 var totalItems = records.length;
                 var itemsPerPage = $scope.viewData.recordsPerPage;
                 var pageCount = ((totalItems + itemsPerPage - 1) / itemsPerPage) | 0;
@@ -547,7 +547,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
     $scope.executeAction = function (action) {
 
-        if (currentRecordId == null) {
+        if (currentRecordId === null) {
             return;
         }
 
@@ -557,7 +557,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         for (index = 0; index < records.length; index++) {
             var itemId = records[index][recordIdField];
-            if (itemId == currentRecordId) {
+            if (itemId === currentRecordId) {
                 break;
             }
         }
@@ -566,7 +566,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             return;
         }
 
-        if (action.name == "ModifyRecord") {
+        if (action.name === "modifyRecord") {
             editCurrentRecord(index);
             return;
         }
@@ -581,7 +581,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             }, failure);
         }
 
-        if (action.type == "RecordInitializeCreate") {
+        if (action.type === "RECORD_INITIALIZE_CREATE") {
             $scope.sendCommand(action.name, actionData, function(data) {
                 if (data.message && data.message.length > 0) {
                     inputForm.message(data.message, "Information");
@@ -594,7 +594,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             }, function (message) {
                 inputForm.message(message, "Error");
             });
-        } else if (action.type == "RecordCreate") {
+        } else if (action.type === "RECORD_CREATE") {
             inputForm.editObject($scope, null, action.parameter, function (object, success, failure) {
                 actionData.newObject = object;
                 sendCommand(success, failure);
@@ -604,8 +604,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 inputForm.message(message, "Error");
             });
         }
-
-    }
+    };
 
     function extractLink(text, row) {
         var link = text;
@@ -636,18 +635,18 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
     $scope.navigateToLink = function(link) {
         $scope.navigateToView($scope.path + "/" + extractLink(link.url, currentRecord));
-    }
+    };
 
     $scope.linkUrl = function (link) {
-        if (currentRecord == null) {
+        if (currentRecord === null) {
             return "";
         }
         return $scope.path + "/" + extractLink(link.url, currentRecord);
-    }
+    };
 
     $scope.getColumnLink = function(column, row) {
         return $scope.path + "/" + extractLink(column.url, row);
-    }
+    };
 
     for (var i = 0; i < $scope.columns.length; i++) {
         var column = $scope.columns[i];
@@ -677,7 +676,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         if (column.ignoreOptions) {
             column.cellClass += " ignore-options";
         }
-        if (!column.template || column.template.length == 0) {
+        if (!column.template || column.template.length === 0) {
             var value = "data." + column.name;
             var bind = "ng-bind";
             if (column.allowUnsafe) {
@@ -703,7 +702,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         var itemsPerPage = $scope.viewData.recordsPerPage;
         var pageCount = (($scope.totalItems + itemsPerPage - 1) / itemsPerPage) | 0;
 
-        if ($scope.currentPage != "last" || $scope.currentPageNumeric != pageCount) {
+        if ($scope.currentPage !== "last" || $scope.currentPageNumeric !== pageCount) {
             $scope.currentPage = $scope.currentPageNumeric;
         }
 
@@ -711,7 +710,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
     });
 
     function updateVisibleRecords(recordIds, page) {
-        $scope.sendCommand("Fetch", {
+        $scope.sendCommand("fetch", {
             ids: recordIds
         }, function (data) {
             $scope.updating = false;
@@ -739,7 +738,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         var localPage = page;
 
-        if (localPage == "last") {
+        if (localPage === "last") {
             localPage = pageCount;
         }
 
@@ -752,7 +751,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
         var pageOffset = (localPage - 1) * itemsPerPage;
         var pageSize = itemsPerPage;
 
-        if (pageCount == 0) {
+        if (pageCount === 0) {
             pageSize = 0;
         } else if (pageOffset + pageSize > records.length) {
             pageSize = records.length - pageOffset;
@@ -791,7 +790,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
             rows.push(record);
 
-            record.isOdd = (i % 2) != 0;
+            record.isOdd = (i % 2) !== 0;
 
         }
 
@@ -807,12 +806,12 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
         var pageProperty = page.toString();
 
-        if (pageProperty == "1") {
+        if (pageProperty === "1") {
             pageProperty = "";
         }
 
         $scope.setPageProperty("p", pageProperty);
-    }
+    };
 
     $scope.updateRecords = function (updated) {
         for (var i = 0; i < updated.length; i++) {
@@ -823,7 +822,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             for (var j = 0; j < records.length; j++) {
                 var currentRecord = records[j];
                 var currentRecordId = currentRecord[recordIdField];
-                if (currentRecordId != recordId) {
+                if (currentRecordId !== recordId) {
                     continue;
                 }
 
@@ -831,9 +830,9 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
 
                 for (var k = 0; k < $scope.rows.length; k++) {
                     var row = $scope.rows[k];
-                    if (row[recordIdField] == recordId) {
+                    if (row[recordIdField] === recordId) {
                         $scope.rows[k] = target;
-                        target.isOdd = (k % 2) != 0;
+                        target.isOdd = (k % 2) !== 0;
                         break;
                     }
                 }
@@ -841,11 +840,11 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
                 break;
             }
         }
-    }
+    };
 
     $scope.loadVisibleRecords = function () {
         $scope.showPage($scope.currentPage);
-    }
+    };
 
     function initializeRecords() {
         for (var i = 0; i < $scope.viewData.records.length; i++) {
@@ -853,7 +852,7 @@ app.controller('recordlist', function ($scope, inputForm, $sce) {
             var recordId = source[recordIdField];
 
             for (var j = 0; j < $scope.viewData.records.length; j++) {
-                if (records[j][recordIdField] != recordId) {
+                if (records[j][recordIdField] !== recordId) {
                     continue;
                 }
                 var target = records[j];

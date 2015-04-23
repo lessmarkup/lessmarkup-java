@@ -11,7 +11,9 @@ import com.lessmarkup.framework.nodehandlers.AbstractNodeHandler;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.*;
 import com.lessmarkup.interfaces.recordmodel.*;
+import com.lessmarkup.interfaces.structure.ActionAccess;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
+import com.lessmarkup.interfaces.structure.Parameter;
 import com.lessmarkup.interfaces.structure.RecordAction;
 import com.lessmarkup.interfaces.system.LanguageCache;
 import com.lessmarkup.interfaces.system.ResourceCache;
@@ -112,16 +114,13 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     private final Map<String, String> columnUrls = new HashMap<>();
     private final List<Link> links = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
-    private final Collection<PropertyDescriptor> allProperties;
-    private final PropertyDescriptor idProperty;
-    private ModelCollection<T> collection;
-    private EditableModelCollection<T> editableCollection;
+    private final Iterable<PropertyDescriptor> allProperties;
+    private ModelCollection<T> modelCollection;
+    private EditableModelCollection<T> editableModelCollection;
     private final RecordModelDefinition recordModel;
     private final DataCache dataCache;
     private final DomainModelProvider domainModelProvider;
     private final Class<T> modelType;
-
-    protected PropertyDescriptor getIdProperty() { return idProperty; }
 
     protected RecordModelDefinition getRecordModel() { return recordModel; }
 
@@ -138,22 +137,18 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         }
 
         this.allProperties = TypeHelper.getProperties(modelType);
-
-        Optional<PropertyDescriptor> idDescriptor = this.allProperties.stream().filter(p -> p.getName().endsWith("Id")).findFirst();
-
-        idProperty = idDescriptor.isPresent() ? idDescriptor.get() : null;
     }
 
     protected void addEditActions() {
-        if (editableCollection != null) {
-            if (editableCollection.isDeleteOnly()) {
-                addRecordAction("RemoveRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
+        if (editableModelCollection != null) {
+            if (editableModelCollection.isDeleteOnly()) {
+                addRecordAction("removeRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
             }
             else
             {
-                addCreateAction("AddRecord", Constants.ModuleType.MAIN, TextIds.ADD_RECORD, null);
-                addRecordAction("ModifyRecord", Constants.ModuleType.MAIN, TextIds.MODIFY_RECORD, null);
-                addRecordAction("RemoveRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
+                addCreateAction("addRecord", Constants.ModuleType.MAIN, TextIds.ADD_RECORD, modelType);
+                addRecordAction("modifyRecord", Constants.ModuleType.MAIN, TextIds.MODIFY_RECORD, null);
+                addRecordAction("removeRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
             }
         }
     }
@@ -205,30 +200,30 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     }
 
     protected EditableModelCollection<T> getEditableCollection() {
-        return editableCollection;
+        return editableModelCollection;
     }
 
     protected ModelCollection<T> getCollection() {
         initializeCollections();
-        return collection;
+        return modelCollection;
     }
 
     private void initializeCollections() {
-        if (collection != null) {
+        if (modelCollection != null) {
             return;
         }
 
-        collection = createCollection();
-        editableCollection = (EditableModelCollection<T>) collection;
-        collection.initialize(getObjectId(), getAccessType());
+        modelCollection = createCollection();
+        editableModelCollection = (EditableModelCollection<T>) modelCollection;
+        modelCollection.initialize(getObjectId(), getAccessType());
 
-        if (collection == null) {
+        if (modelCollection == null) {
             throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.MISSING_PARAMETER));
         }
     }
 
     protected ModelCollection<T> createCollection() {
-        return (ModelCollection<T>) DependencyResolver.resolve(recordModel.getCollectionType());
+        return (ModelCollection<T>) recordModel.createModelCollection();
     }
 
     @Override
@@ -270,7 +265,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
     protected void addCreateAction(String name, String moduleType, String text, Class<T> type)
     {
-        String typeId = dataCache.get(RecordModelCache.class).getDefinition(type).getId();
+        String typeId = type == null ? null : dataCache.get(RecordModelCache.class).getDefinition(type).getId();
         Action action = new Action();
         action.setName(name);
         action.setText(LanguageHelper.getText(moduleType, text));
@@ -300,41 +295,49 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             data.addProperty("recordsPerPage", recordsPerPage);
             data.addProperty("type", recordModel.getId());
             data.addProperty("extensionScript", getExtensionScript());
-            data.addProperty("recordId", StringHelper.toJsonCase(idProperty.getName()));
+            data.addProperty("recordId", StringHelper.toJsonCase(Constants.Data.ID_PROPERTY_NAME));
             data.addProperty("liveUpdates", isSupportsLiveUpdates());
             data.addProperty("manualRefresh", isSupportsManualRefresh());
-            data.addProperty("getHasSearch", allProperties.stream().anyMatch(p -> p.getType().equals(String.class) && p.getAnnotation(RecordSearch.class) != null));
+            boolean hasSearch = false;
+            for (PropertyDescriptor property : allProperties) {
+                if (property.getAnnotation(RecordSearch.class) != null) {
+                    hasSearch = true;
+                    break;
+                }
+            }
+            data.addProperty("getHasSearch", hasSearch);
 
-            JsonArray actions = new JsonArray();
-            this.actions.forEach(a -> {
+            JsonArray actionsArray = new JsonArray();
+            
+            for (Action a : this.actions) {
                 JsonObject o = new JsonObject();
-                o.addProperty("name", a.getName());
+                o.addProperty("name", StringHelper.toJsonCase(a.getName()));
                 o.addProperty("text", a.getText());
                 o.addProperty("visible", a.getVisible());
                 o.addProperty("type", a.getType().toString());
                 o.addProperty("parameter", a.getParameter());
-                actions.add(o);
-            });
+                actionsArray.add(o);
+            }
 
-            data.add("actions", actions);
+            data.add("actions", actionsArray);
 
-            JsonArray links = new JsonArray();
+            JsonArray linksArray = new JsonArray();
 
-            this.links.forEach(link -> {
+            for (Link link : this.links) {
                 JsonObject o = new JsonObject();
                 o.addProperty("text", link.getText());
                 o.addProperty("url", link.getUrl());
                 o.addProperty("external", link.isExternal());
-                links.add(o);
-            });
+                linksArray.add(o);
+            }
 
-            data.add("links", links);
+            data.add("links", linksArray);
 
-            data.addProperty("optionsTemplate", resourceCache.readText("Views/RecordOptions.html"));
+            data.addProperty("optionsTemplate", resourceCache.parseText("views/recordOptions.html"));
 
             JsonArray columns = new JsonArray();
 
-            recordModel.getColumns().forEach(c -> {
+            for (RecordColumnDefinition c : recordModel.getColumns()) {
                 JsonObject o = new JsonObject();
 
                 o.addProperty("width", getColumnWidth(c));
@@ -352,7 +355,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
                 o.addProperty("align", c.getAlign().toString());
                 o.addProperty("ignoreOptions", c.isIgnoreOptions());
                 columns.add(o);
-            });
+            }
 
             data.add("columns", columns);
 
@@ -368,7 +371,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             query = applyFilterAndOrderBy(domainModel.query(), filter);
         }
         List<Long> recordIds = getCollection().readIds(query, false);
-        long recordId = (long) idProperty.getValue(modifiedObject);
+        long recordId = (long) modifiedObject.getId();
         return recordIds.indexOf(recordId);
     }
 
@@ -378,12 +381,15 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         }
     }
 
-    public JsonObject ModifyRecord(T modifiedObject, String filter, String rawModifiedObject) {
-        recordModel.validateInput(JsonSerializer.serializeToTree(modifiedObject), false, rawModifiedObject);
+    @ActionAccess(minimumAccess = NodeAccessType.WRITE)
+    public JsonObject modifyRecord(@Parameter("modifiedObject") JsonElement modifiedObject, @Parameter("filter") String filter) {
+        recordModel.validateInput(modifiedObject, false);
 
-        getEditableCollection().updateRecord(modifiedObject);
+        T deserializedModifiedObject = JsonSerializer.deserializePojo(modelType, modifiedObject);
+        
+        getEditableCollection().updateRecord(deserializedModifiedObject);
 
-        return returnRecordResult(modifiedObject, false, getIndex(modifiedObject, filter));
+        return returnRecordResult(deserializedModifiedObject, false, getIndex(deserializedModifiedObject, filter));
     }
 
     public JsonObject createRecord() {
@@ -392,23 +398,27 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         T record = collection != null ? collection.createRecord() : DependencyResolver.resolve(modelType);
 
         JsonObject ret = new JsonObject();
-        ret.add("record", JsonSerializer.serializeToTree(record));
+        ret.add("record", JsonSerializer.serializePojoToTree(record));
         return ret;
     }
 
-    public JsonObject addRecord(T newObject, String filter, JsonObject settings, String rawNewObject) {
-        if (newObject == null) {
+    @ActionAccess(minimumAccess = NodeAccessType.WRITE)
+    public JsonObject addRecord(@Parameter("newObject") JsonElement newObject, @Parameter("filter") String filter, @Parameter("settings") JsonObject settings) {
+        if (newObject == null || newObject.isJsonNull()) {
             return returnRecordResult(DependencyResolver.resolve(modelType), false, -1);
         }
 
-        recordModel.validateInput(JsonSerializer.serializeToTree(newObject), true, rawNewObject);
+        recordModel.validateInput(newObject, true);
+        
+        T deserializedNewObject = JsonSerializer.deserializePojo(modelType, newObject);
 
-        getEditableCollection().addRecord(newObject);
+        getEditableCollection().addRecord(deserializedNewObject);
 
-        return returnRecordResult(newObject, true, getIndex(newObject, filter));
+        return returnRecordResult(deserializedNewObject, true, getIndex(deserializedNewObject, filter));
     }
 
-    public JsonObject removeRecord(long recordId, String filter) {
+    @ActionAccess(minimumAccess = NodeAccessType.WRITE)
+    public JsonObject removeRecord(@Parameter("recordId") long recordId, @Parameter("filter") String filter) {
         List<Long> recordIds = new ArrayList<>();
         recordIds.add(recordId);
         getEditableCollection().deleteRecords(recordIds);
@@ -507,7 +517,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             Collection<T> records;
             records = getCollection().read(domainModel.query(), ids);
             postProcessRecords(records);
-            records.forEach(r -> array.add(JsonSerializer.serializeToTree(r)));
+            records.forEach(r -> array.add(JsonSerializer.serializePojoToTree(r)));
         }
         values.add("records", array);
     }
@@ -544,7 +554,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         postProcessRecords(records);
 
         JsonObject ret = new JsonObject();
-        ret.add("record", JsonSerializer.serializeToTree(record));
+        ret.add("record", JsonSerializer.serializePojoToTree(record));
         ret.addProperty("isNew", isNew);
         ret.addProperty("index", index);
         return ret;
@@ -552,7 +562,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
     protected <TN> JsonObject returnNewObjectResult(TN record) {
         JsonObject ret = new JsonObject();
-        ret.add("record", JsonSerializer.serializeToTree(record));
+        ret.add("record", JsonSerializer.serializePojoToTree(record));
         return ret;
     }
 
@@ -591,54 +601,66 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             return queryBuilder;
         }
 
-        JsonObject searchProperties = JsonSerializer.deserialize(filter);
+        JsonElement searchProperties = JsonSerializer.deserializeToTree(filter);
 
-        JsonElement searchObject = searchProperties.get("search");
-        if (searchObject != null)
-        {
-            List<Object> filterParams = new ArrayList<>();
+        
+        if (searchProperties.isJsonObject()) {
+            JsonObject searchPropertiesObject = searchProperties.getAsJsonObject();
+            JsonElement searchObject = searchPropertiesObject.get("search");
+        
+            if (searchObject != null)
+            {
+                List<Object> filterParams = new ArrayList<>();
 
-            String searchText = "%" + searchObject.getAsString() + "%";
+                String searchText = "%" + searchObject.getAsString() + "%";
 
-            String filterText = "";
+                String filterText = "";
 
-            for (PropertyDescriptor property : allProperties) {
-                if (!property.getType().equals(String.class)) {
-                    continue;
-                }
+                for (PropertyDescriptor property : allProperties) {
+                    if (!property.getType().equals(String.class)) {
+                        continue;
+                    }
 
-                if (!dataCache.get(UserCache.class).isAdministrator() && property.getAnnotation(SupportsTextSearch.class) == null) {
-                    continue;
+                    if (!dataCache.get(UserCache.class).isAdministrator() && property.getAnnotation(SupportsTextSearch.class) == null) {
+                        continue;
+                    }
+
+                    if (filterText.length() > 0) {
+                        filterText += " OR ";
+                    }
+
+                    filterText += String.format("%s LIKE ($)", property.getName());
+                    filterParams.add(searchText);
                 }
 
                 if (filterText.length() > 0) {
-                    filterText += " OR ";
+                    queryBuilder = queryBuilder.where("(" + filterText + ")", filterParams);
                 }
-
-                filterText += String.format("%s LIKE ($)", property.getName());
-                filterParams.add(searchText);
             }
 
-            if (filterText.length() > 0) {
-                queryBuilder = queryBuilder.where("(" + filterText + ")", filterParams);
-            }
-        }
+            JsonElement orderByObject = searchPropertiesObject.get("orderBy");
+            JsonElement directionObject = searchPropertiesObject.get("direction");
+            if (orderByObject != null && directionObject != null) {
+                String orderBy = orderByObject.getAsString();
 
-        JsonElement orderByObject = searchProperties.get("orderBy");
-        JsonElement directionObject = searchProperties.get("direction");
-        if (orderByObject != null && directionObject != null) {
-            String orderBy = orderByObject.getAsString();
-
-            Optional<PropertyDescriptor> parameter = allProperties.stream().filter(p -> p.getName().equals(orderBy)).findFirst();
-
-            if (parameter.isPresent()) {
-                boolean ascending = directionObject.getAsString().equals("asc");
-
-                if (ascending) {
-                    queryBuilder = queryBuilder.orderBy(String.format("%s", parameter.get().getName()));
+                PropertyDescriptor orderByProperty = null;
+                
+                for (PropertyDescriptor descriptor : allProperties) {
+                    if (descriptor.getName().equalsIgnoreCase(orderBy)) {
+                        orderByProperty = descriptor;
+                        break;
+                    }
                 }
-                else {
-                    queryBuilder = queryBuilder.orderBy(String.format("%s", parameter.get().getName()));
+                
+                if (orderByProperty != null) {
+                    boolean ascending = directionObject.getAsString().equals("asc");
+
+                    if (ascending) {
+                        queryBuilder = queryBuilder.orderBy(String.format("%s", orderByProperty.getName()));
+                    }
+                    else {
+                        queryBuilder = queryBuilder.orderBy(String.format("%s", orderByProperty.getName()));
+                    }
                 }
             }
         }

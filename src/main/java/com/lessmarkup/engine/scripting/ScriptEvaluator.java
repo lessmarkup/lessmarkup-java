@@ -270,7 +270,7 @@ class ScriptEvaluator {
 
         switch (atom.getType()) {
             case PARAMETER:
-                String parameterName = atom.getValue().toString();
+                String parameterName = atom.getValue().getAsString();
                 if (!root.isJsonObject()) {
                     throw new IllegalArgumentException("Unknown parameter '" + parameterName + "'");
                 }

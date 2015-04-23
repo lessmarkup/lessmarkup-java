@@ -31,7 +31,7 @@
             <version>3.3</version>
         </dependency>
         <dependency>
-            <groupId>xstream</groupId>
+            <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.2.2</version>
         </dependency>
@@ -88,6 +88,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>WEB-INF/classes/build/**,WEB-INF/classes/src/**,WEB-INF/classes/types/**</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -111,6 +112,86 @@
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <target name="building">
+                                <echo>--- Executing gem install sass ---</echo>
+
+                                <exec executable="cmd" dir="${project.build.outputDirectory}/build" failonerror="true" osfamily="windows">
+                                    <arg line="/c 'gem install sass'"/>
+                                </exec>
+
+                                <exec executable="bash" dir="${project.build.outputDirectory}/build" failonerror="true" osfamily="unix">
+                                    <arg line="gem install sass"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.23</version>
+
+                <configuration>
+                    <workingDirectory>${project.build.outputDirectory}/build</workingDirectory>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v0.10.36</nodeVersion>
+                            <npmVersion>2.4.1</npmVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <phase>process-classes</phase>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <phase>process-classes</phase>
+                        <id>bower install</id>
+                        <goals>
+                            <goal>bower</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <phase>process-classes</phase>
+                        <id>grunt build</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>build --no-color</arguments>
                         </configuration>
                     </execution>
                 </executions>

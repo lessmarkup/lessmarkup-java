@@ -423,6 +423,7 @@
         <translation id="DatabaseChangeSuccess" text="Database configuration successfully applied" />
         <translation id="ConnectionString" text="Connection String" />
         <translation id="DatabaseConfiguration" text="Database Configuration" />
+        <translation id="UserAlreadyLoggedIn" text="You are already logged in." />
 
         <translation id="" text="" />
     </translations>

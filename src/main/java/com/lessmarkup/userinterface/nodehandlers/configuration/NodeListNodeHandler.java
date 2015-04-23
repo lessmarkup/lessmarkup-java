@@ -73,7 +73,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
         NodeSettingsModel node = DependencyResolver.resolve(NodeSettingsModel.class);
 
         JsonObject ret = new JsonObject();
-        ret.add("root", JsonSerializer.serializeToTree(node.getRootNode()));
+        ret.add("root", JsonSerializer.serializePojoToTree(node.getRootNode()));
         ret.addProperty("nodeSettingsModelId", modelCache.getDefinition(NodeSettingsModel.class).getId());
 
         JsonArray handlers = new JsonArray();
@@ -110,7 +110,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
         return node.updateNode();
     }
 
-    public Object changeSettings(long nodeId, Object settings) {
+    public Object changeSettings(long nodeId, JsonElement settings) {
         NodeSettingsModel node = DependencyResolver.resolve(NodeSettingsModel.class);
         node.setSettings(settings);
         node.setNodeId(nodeId);
@@ -126,13 +126,12 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
     public ChildHandlerSettings getChildHandler(String path) {
         String[] split = path.split("/");
         long nodeId;
-        if (split.length != 2 || split[1] != "access") {
+        if (split.length != 2 || !"access".equals(split[1])) {
             return null;
         }
         try {
             nodeId = Long.parseLong(split[0]);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
         NodeAccessNodeHandler handler = DependencyResolver.resolve(NodeAccessNodeHandler.class);

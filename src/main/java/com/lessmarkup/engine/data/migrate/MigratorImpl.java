@@ -166,11 +166,9 @@ public class MigratorImpl implements Migrator {
         final StringBuilder sb = new StringBuilder();
         sb.append(String.format("CREATE TABLE %s (", this.dialect.decorateName(tableName)));
 
-        Collection<PropertyDescriptor> properties = TypeHelper.getProperties(type);
-        
         boolean first = true;
         
-        for (PropertyDescriptor property : properties) {
+        for (PropertyDescriptor property : TypeHelper.getProperties(type)) {
             if (first) {
                 first = false;
             } else {
@@ -274,11 +272,10 @@ public class MigratorImpl implements Migrator {
         final String tableName = English.plural(type.getSimpleName());
         
         final Map<String, String> columnsToAdd = new HashMap<>();
-        final Collection<PropertyDescriptor> properties = TypeHelper.getProperties(type);
         
         final String columnId = Constants.Data.ID_PROPERTY_NAME.toLowerCase();
         
-        for (PropertyDescriptor property : properties) {
+        for (PropertyDescriptor property : TypeHelper.getProperties(type)) {
             String columnName = property.getName().toLowerCase();
             if (columnName.equals(columnId)) {
                 continue;

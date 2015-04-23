@@ -221,7 +221,7 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
         if (settingsModel == null || settingsModel.isLoadOnShow()) {
             for (FlatNodeEntry node : flatNodeList) {
                 NodeHandler handler = createChildHandler(node.getHandlerType());
-                JsonObject nodeSettings = null;
+                JsonElement nodeSettings = null;
 
                 for (String script : handler.getScripts()) {
                     addScript(script);
@@ -232,18 +232,20 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
                 }
 
                 if (handler.getSettingsModel() != null && !StringHelper.isNullOrEmpty(node.getSettings())) {
-                    nodeSettings = JsonSerializer.deserialize(node.getSettings());
+                    nodeSettings = JsonSerializer.deserializeToTree(node.getSettings());
                 }
 
-                handler.initialize(OptionalLong.of(node.getNodeId()), nodeSettings, node.getPath(), node.getFullPath(), node.getAccessType());
+                handler.initialize(OptionalLong.of(node.getNodeId()), 
+                        nodeSettings != null && nodeSettings.isJsonObject() ? nodeSettings.getAsJsonObject() : null, 
+                        node.getPath(), node.getFullPath(), node.getAccessType());
 
                 node.setViewData(handler.getViewData());
                 node.setViewBody(LoadNodeViewModel.getViewTemplate(handler, dataCache));
 
-                List<String> scripts = handler.getScripts();
+                List<String> handlerScripts = handler.getScripts();
 
-                if (scripts != null) {
-                    scripts.addAll(scripts);
+                if (handlerScripts != null) {
+                    handlerScripts.addAll(handlerScripts);
                 }
             }
 
@@ -253,7 +255,7 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
         int pageIndex = 1;
 
         for (FlatNodeEntry node : flatNodeList) {
-            node.setUniqueId(String.format("flatpage%i", pageIndex++));
+            node.setUniqueId(String.format("flatpage%d", pageIndex++));
         }
 
         return null;
@@ -264,8 +266,13 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
         FlatPageSettingsModel settingsModel = getSettings(FlatPageSettingsModel.class);
 
         JsonObject ret = new JsonObject();
+        
+        JsonArray children = new JsonArray();
+        for (TreeNodeEntry child : treeRoot.getChildren()) {
+            children.add(JsonSerializer.serializePojoToTree(child));
+        }
 
-        ret.add("tree", JsonSerializer.serializeToTree(treeRoot.getChildren()));
+        ret.add("tree", children);
 
         JsonArray flatArray = new JsonArray();
         for (FlatNodeEntry entry : flatNodeList) {
@@ -309,20 +316,22 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
 
         NodeHandler handler = DependencyResolver.resolve(node.getHandlerType());
 
-        JsonObject nodeSettings = null;
+        JsonElement nodeSettings = null;
 
         if (handler.getSettingsModel() != null && !StringHelper.isNullOrEmpty(node.getSettings())) {
-            nodeSettings = JsonSerializer.deserialize(node.getSettings());
+            nodeSettings = JsonSerializer.deserializeToTree(node.getSettings());
         }
 
-        handler.initialize(OptionalLong.of(node.getNodeId()), nodeSettings, node.getPath(), node.getFullPath(), accessType);
+        handler.initialize(OptionalLong.of(node.getNodeId()), 
+                nodeSettings != null && nodeSettings.isJsonObject() ? nodeSettings.getAsJsonObject() : null,
+                node.getPath(), node.getFullPath(), accessType);
 
         return handler;
     }
 
     @Override
     public ChildHandlerSettings getChildHandler(String path) {
-        Optional<FlatNodeEntry> node = flatNodeList.stream().filter(n -> n.getPath() == path).findFirst();
+        Optional<FlatNodeEntry> node = flatNodeList.stream().filter(n -> n.getPath().equals(path)).findFirst();
 
         if (!node.isPresent()) {
             return null;

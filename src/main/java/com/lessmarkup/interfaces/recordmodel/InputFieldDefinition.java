@@ -1,6 +1,7 @@
 package com.lessmarkup.interfaces.recordmodel;
 
 import com.lessmarkup.framework.helpers.PropertyDescriptor;
+import com.lessmarkup.framework.helpers.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,11 @@ public class InputFieldDefinition {
     
     public InputFieldDefinition(PropertyDescriptor property, InputField definition) {
         this.property = property;
-        this.id = definition.id();
+        if (StringHelper.isNullOrEmpty(definition.id())) {
+            this.id = StringHelper.toJsonCase(property.getName());
+        } else {
+            this.id = definition.id();
+        }
         this.readOnly = definition.readOnly();
         this.readOnlyCondition = definition.readOnlyCondition();
         this.required = definition.required();

@@ -2,7 +2,6 @@ package com.lessmarkup.engine.recordmodel;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.engine.scripting.ScriptHelper;
@@ -12,7 +11,7 @@ import com.lessmarkup.framework.helpers.PropertyDescriptor;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.helpers.TypeHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
-import com.lessmarkup.interfaces.data.AbstractDataObject;
+import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.exceptions.RecordValidationException;
 import com.lessmarkup.interfaces.recordmodel.*;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
@@ -31,27 +30,24 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     private String titleTextId;
     private String moduleType;
     private Class<? extends RecordModel> modelType;
-    private Class<? extends AbstractDataObject> dataType;
-    private Class<? extends ModelCollection> collectionType;
+    private Class<? extends DataObject> dataType;
     private boolean submitWithCaptcha;
     private final List<InputFieldDefinition> fields = new ArrayList<>();
     private final List<RecordColumnDefinition> columns = new ArrayList<>();
     private String id;
+    private RecordModel recordModelInstance;
     
     public void initialize(Class<? extends RecordModel> modelType, String moduleType) {
         
-        RecordModel recordModel = DependencyResolver.resolve(modelType);
+        this.recordModelInstance = DependencyResolver.resolve(modelType);
         
-        this.titleTextId = recordModel.getTitleTextId();
+        this.titleTextId = this.recordModelInstance.getTitleTextId();
         this.moduleType = moduleType;
         this.modelType = modelType;
-        this.dataType = recordModel.getDataType();
-        this.collectionType = recordModel.getCollectionType();
-        this.submitWithCaptcha = recordModel.getSubmitWithCaptcha();
+        this.dataType = this.recordModelInstance.getDataType();
+        this.submitWithCaptcha = this.recordModelInstance.getSubmitWithCaptcha();
 
-        Collection<PropertyDescriptor> properties = TypeHelper.getProperties(modelType);
-
-        for (PropertyDescriptor property : properties) {
+        for (PropertyDescriptor property : TypeHelper.getProperties(modelType)) {
             InputField inputField = property.getAnnotation(InputField.class);
 
             if (inputField != null) {
@@ -74,11 +70,6 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     }
     
     @Override
-    public Class<? extends ModelCollection> getCollectionType() {
-        return this.collectionType;
-    }
-
-    @Override
     public String getTitleTextId() {
         return this.titleTextId;
     }
@@ -89,12 +80,12 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     }
 
     @Override
-    public Class<?> getModelType() {
+    public Class<? extends RecordModel> getModelType() {
         return this.modelType;
     }
 
     @Override
-    public Class<?> getDataType() {
+    public Class<? extends DataObject> getDataType() {
         return this.dataType;
     }
 
@@ -121,20 +112,18 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     private final String ResponseFieldKey = "-RecaptchaResponse-";
 
     @Override
-    public void validateInput(JsonElement objectToValidate, boolean isNew, String properties) throws RecordValidationException {
+    public void validateInput(JsonElement objectToValidate, boolean isNew) throws RecordValidationException {
+        
+        if (objectToValidate == null || objectToValidate.isJsonNull()) {
+            throw new IllegalArgumentException();
+        }
+        
         if (this.submitWithCaptcha) {
-            if (properties == null || properties.length() == 0) {
+            if (!objectToValidate.isJsonObject()) {
                 throw new RecordValidationException("Cannot validate captcha");
             }
             
-            JsonParser parser = new JsonParser(); 
-            JsonElement propertiesElement = parser.parse(properties);
-            
-            if (!propertiesElement.isJsonObject()) {
-                throw new RecordValidationException("Cannot validate captcha");
-            }
-            
-            JsonObject propertiesObject = propertiesElement.getAsJsonObject();
+            JsonObject propertiesObject = objectToValidate.getAsJsonObject();
             
             String challengeValue = propertiesObject.getAsJsonPrimitive(ChallengeFieldKey).toString();
             String responseValue = propertiesObject.getAsJsonPrimitive(ResponseFieldKey).toString();
@@ -185,5 +174,10 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     @Override
     public boolean isSubmitWithCaptcha() {
         return this.submitWithCaptcha;
+    }
+
+    @Override
+    public ModelCollection createModelCollection() {
+        return this.recordModelInstance.createCollection();
     }
 }

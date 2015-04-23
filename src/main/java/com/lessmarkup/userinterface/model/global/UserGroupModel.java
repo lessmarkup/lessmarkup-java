@@ -17,7 +17,7 @@ public class UserGroupModel extends RecordModelWithEditableCollection<UserGroupM
     private String description;
 
     public UserGroupModel() {
-        super(UserGroup.class);
+        super(UserGroup.class, UserGroupModel.class);
     }
 
     @RecordColumn(textId = TextIds.NAME)

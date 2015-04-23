@@ -8,60 +8,30 @@ import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.structure.Property;
-import com.lessmarkup.userinterface.model.common.PropertyModel;
 
 import java.net.URL;
 import java.util.*;
 
 public abstract class PropertiesNodeHandler extends AbstractNodeHandler {
-    class PropertyDefinition {
-        private String name;
-        private InputFieldType type;
-        private Object value;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public InputFieldType getType() {
-            return type;
-        }
-
-        public void setType(InputFieldType type) {
-            this.type = type;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public void setValue(Object value) {
-            this.value = value;
-        }
-    }
 
     private final ModuleProvider moduleProvider;
-    private final List<PropertyDefinition> properties = new ArrayList<>();
+    private final List<JsonObject> properties = new ArrayList<>();
 
     protected PropertiesNodeHandler(ModuleProvider moduleProvider) {
         this.moduleProvider = moduleProvider;
     }
 
-    protected void addProperty(String name, InputFieldType type, Object value) {
-        PropertyDefinition definition = new PropertyDefinition();
-        definition.setName(name);
-        definition.setType(type);
-        definition.setValue(value);
-        properties.add(definition);
+    protected void addProperty(String name, InputFieldType type, String value) {
+        JsonObject model = new JsonObject();
+        model.addProperty("name", name);
+        model.addProperty("type", type.toString());
+        model.addProperty("value", value);
+        properties.add(model);
     }
 
     @Override
     public String getViewType() {
-        return "Properties";
+        return "properties";
     }
 
     @Override
@@ -71,11 +41,10 @@ public abstract class PropertiesNodeHandler extends AbstractNodeHandler {
 
         Optional<ModuleConfiguration> moduleConfiguration = moduleProvider.getModules().stream().filter(m -> m.getUrl().equals(moduleUrl)).findFirst();
 
-        Collection<PropertyDescriptor> typeProperties = TypeHelper.getProperties(getClass());
-
-        List<PropertyModel> properties = new ArrayList<>();
-
-        for (PropertyDescriptor property : typeProperties) {
+        JsonObject ret = new JsonObject();
+        JsonArray propertiesArray = new JsonArray();
+        
+        for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
             Property propertyAttribute = property.getAnnotation(Property.class);
 
             if (propertyAttribute == null) {
@@ -88,45 +57,23 @@ public abstract class PropertiesNodeHandler extends AbstractNodeHandler {
                 continue;
             }
 
-            PropertyModel model = new PropertyModel();
-            model.setName(LanguageHelper.getText(moduleConfiguration.get().getModuleType(), propertyAttribute.textId()));
-            model.setValue(value);
-            model.setType(propertyAttribute.type());
-
-            switch (model.getType()) {
+            JsonObject model = new JsonObject();
+            model.addProperty("name", LanguageHelper.getText(moduleConfiguration.get().getModuleType(), propertyAttribute.textId()));
+            model.addProperty("type", propertyAttribute.type().toString());
+            model.addProperty("value", value.toString());
+            
+            switch (propertyAttribute.type()) {
                 case IMAGE:
-                    Class<?> valueType = property.getType();
-                    if (valueType.equals(OptionalLong.class)) {
-                        OptionalLong imageId = (OptionalLong) model.getValue();
-                        model.setValue(ImageHelper.getImageUrl(imageId.getAsLong()));
-                    }
-                    else if (valueType.equals(long.class)) {
-                        long imageId = (long) model.getValue();
-                        model.setValue(ImageHelper.getImageUrl(imageId));
-                    }
+                    long imageId = Long.parseLong(value.toString());
+                    model.addProperty("value", ImageHelper.getImageUrl(imageId));
                     break;
             }
 
-            properties.add(model);
+            propertiesArray.add(model);
         }
 
-        for (PropertyDefinition item : this.properties) {
-            PropertyModel model = new PropertyModel();
-            model.setName(item.getName());
-            model.setValue(item.getValue());
-            model.setType(item.getType());
-            properties.add(model);
-        }
-
-        JsonObject ret = new JsonObject();
-        JsonArray propertiesArray = new JsonArray();
-
-        for (PropertyModel model : properties) {
-            JsonObject o = new JsonObject();
-            o.addProperty("name", model.getName());
-            o.addProperty("type", model.getType().toString());
-            o.add("value", JsonSerializer.serializeToTree(model.getValue()));
-            propertiesArray.add(o);
+        for (JsonObject item : this.properties) {
+            propertiesArray.add(item);
         }
 
         ret.add("properties", propertiesArray);

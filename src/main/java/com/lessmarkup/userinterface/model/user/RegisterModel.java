@@ -57,13 +57,13 @@ public class RegisterModel extends RecordModel<RegisterModel> {
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
 
         JsonObject ret = new JsonObject();
-        ret.add("registerObject", JsonSerializer.serializeToTree(this));
+        ret.add("registerObject", JsonSerializer.serializePojoToTree(this));
         ret.addProperty("modelId", modelCache.getDefinition(RegisterModel.class).getId());
 
         return ret;
     }
 
-    public JsonElement register(String properties) {
+    public JsonElement register() {
         SiteConfiguration siteProperties = dataCache.get(SiteConfiguration.class);
 
         if (!siteProperties.getHasUsers()) {
@@ -72,7 +72,7 @@ public class RegisterModel extends RecordModel<RegisterModel> {
 
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
         RecordModelDefinition definition = modelCache.getDefinition(RegisterModel.class);
-        definition.validateInput(JsonSerializer.serializeToTree(this), true, properties);
+        definition.validateInput(JsonSerializer.serializePojoToTree(this), true);
 
         userSecurity.createUser(name, password, email, false, false);
 

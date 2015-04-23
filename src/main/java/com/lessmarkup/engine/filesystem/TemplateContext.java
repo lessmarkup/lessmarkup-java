@@ -7,6 +7,7 @@ package com.lessmarkup.engine.filesystem;
 
 import com.lessmarkup.Constants;
 import com.lessmarkup.framework.helpers.LanguageHelper;
+import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.system.RequestContext;
@@ -35,8 +36,16 @@ public class TemplateContext {
             out.write(LanguageHelper.getText(Constants.ModuleType.MAIN, key));
         };
         this.property = (frag, out) -> {
-            String key = frag.execute();
-            String value = dataCache.get(SiteConfiguration.class).getProperty(key);
+            String key = StringHelper.toJsonCase(frag.execute());
+            String value;
+            switch (key) {
+                case "rootPath":
+                    value = RequestContextHolder.getContext().getRootPath();
+                    break;
+                default:
+                    value = dataCache.get(SiteConfiguration.class).getProperty(key);
+                    break;
+            }
             out.write(value);
         };
         RequestContext requestContext = RequestContextHolder.getContext();

@@ -1,160 +1,127 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lessmarkup.framework.helpers;
 
-/*import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;*/
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.lessmarkup.interfaces.exceptions.CommonException;
+import java.time.OffsetDateTime;
+import java.util.OptionalLong;
 
-/**
- *
- * @author User
- */
 public final class JsonSerializer {
     
-    public static <T> T deserialize(Class<T> type, String data) {
-        Gson gson = new Gson();
-        return gson.fromJson(data, type);
+    public static <T> T deserializePojo(Class<T> type, String data) {
+        return deserializePojo(type, deserializeToTree(data));
     }
     
-    public static String serialize(Object object) {
-        Gson gson = new Gson();
-        return gson.toJson(object);
+    public static JsonElement serializePojoToTree(Object object) {
+        
+        Class<?> type = object.getClass();
+        if (type.equals(long.class)) {
+            return new JsonPrimitive((long) object);
+        } else if (type.equals(int.class)) {
+            return new JsonPrimitive((int) object);
+        } else if (type.equals(String.class)) {
+            return new JsonPrimitive((String) object);
+        } else if (JsonElement.class.isAssignableFrom(type)) {
+            return (JsonElement) object;
+        }
+        
+        JsonObject ret = new JsonObject();
+        for (PropertyDescriptor property : TypeHelper.getProperties(object.getClass())) {
+            if (property.getType().equals(long.class)) {
+                ret.addProperty(property.getName(), (long) property.getValue(object));
+            } else if (property.getType().equals(String.class)) {
+                ret.addProperty(property.getName(), (String) property.getValue(object));
+            } else if (property.getType().equals(boolean.class)) {
+                ret.addProperty(property.getName(), (boolean) property.getValue(object));
+            } else if (property.getType().equals(int.class)) {
+                ret.addProperty(property.getName(), (int) property.getValue(object));
+            } else if (property.getType().equals(OptionalLong.class)) {
+                OptionalLong value = (OptionalLong) property.getValue(object);
+                if (value.isPresent()) {
+                    ret.addProperty(property.getName(), value.getAsLong());
+                } else {
+                    ret.add(property.getName(), JsonNull.INSTANCE);
+                }
+            } else if (property.getType().equals(OffsetDateTime.class)) {
+                ret.addProperty(property.getName(), ((OffsetDateTime)property.getValue(object)).toString());
+            } else if (JsonElement.class.isAssignableFrom(type)) {
+                ret.add(property.getName(), (JsonElement) property.getValue(object));
+            }
+        }
+        return ret;
     }
     
-    public static JsonElement serializeToTree(Object object) {
-        Gson gson = new Gson();
-        return gson.toJsonTree(object);
+    public static String serializePojo(Object object) {
+        JsonElement obj = serializePojoToTree(object);
+        return obj.toString();
     }
 
-    public static JsonObject deserialize(String data) {
-        JsonElement element = new JsonParser().parse(data);
-        if (element.isJsonObject()) {
-            return element.getAsJsonObject();
-        }
-        return null;
+    public static JsonElement deserializeToTree(String data) {
+        return new JsonParser().parse(data);
     }
     
-    public static <T> T deserialize(Class<T> type, JsonElement data) {
+    public static <T> T deserializePojo(Class<T> type, JsonElement data) {
         
-        Gson gson = new Gson();
-        return gson.fromJson(data, type);
-        
-        /*switch (data.getValueType()) {
-            case NUMBER:
-                JsonNumber number = (JsonNumber) data;
-                if (type.equals(Integer.class)) {
-                    return (T)(Integer) number.intValue();
-                } else if (type.equals(Double.class)) {
-                    return (T)(Double) number.doubleValue();
-                } else if (type.equals(Long.class)) {
-                    return (T)(Long) number.longValue();
-                }
-                break;
-            case STRING:
-                if (type.equals(String.class)) {
-                    JsonString string = (JsonString) data;
-                    return (T) string.getString();
-                }
-                break;
-            case NULL:
-                return null;
-            case FALSE:
-                if (type.equals(Boolean.class)) {
-                    return (T) (Boolean) false;
-                }
-                break;
-            case TRUE:
-                if (type.equals(Boolean.class)) {
-                    return (T) (Boolean) true;
-                }
-                break;
-            case ARRAY:
-                JsonArray array = (JsonArray) data;
-                Type superclass = type.getGenericSuperclass();
-                if (superclass == null) {
-                    return null;
-                }
-                if (!superclass.getClass().equals(List.class)) {
-                    return null;
-                }
-                Type[] parameters = ((ParameterizedType)type.getGenericSuperclass()).getActualTypeArguments();
-                if (parameters.length != 1) {
-                    return null;
-                }
-                Class<?> arrayType = parameters[0].getClass();
-                Object arrayInstance;
-                try {
-                    arrayInstance = type.newInstance();
-                } catch (InstantiationException | IllegalAccessException ex) {
-                    Logger.getLogger(JsonSerializer.class.getName()).log(Level.SEVERE, null, ex);
-                    return null;
-                }
-                Method addMethod = Arrays.stream(type.getMethods()).filter(m -> "add".equals(m.getName())).findFirst().get();
-                for (JsonValue item : array) {
-                    Object itemObject = deserialize(arrayType, item);
-                    try {
-                        addMethod.invoke(arrayInstance, itemObject);
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                        Logger.getLogger(JsonSerializer.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                    }
-                }
-                return (T) arrayInstance;
+        if (type.equals(int.class)) {
+            return (T)(Integer) data.getAsInt();
+        } else if (type.equals(long.class)) {
+            return (T)(Long) data.getAsLong();
+        } else if (type.equals(String.class)) {
+            return (T) data.getAsString();
+        } else if (type.equals(OptionalLong.class)) {
+            if (data.isJsonNull()) {
+                return (T) OptionalLong.empty();
+            } else {
+                return (T) OptionalLong.of(data.getAsLong());
+            }
+        } else if (JsonElement.class.isAssignableFrom(type)) {
+            return (T) data;
         }
         
-        if (data.getValueType() != JsonValue.ValueType.OBJECT) {
+        if (data.isJsonNull() || !data.isJsonObject()) {
             return null;
         }
         
-        JsonObject objectData = (JsonObject) data;
+        JsonObject object = data.getAsJsonObject();
         
-        Object instance;
+        T ret;
         
         try {
-            instance = type.newInstance();
+            ret = type.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(JsonSerializer.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw new CommonException(ex);
         }
         
-        for (Method method : type.getMethods()) {
-            if (!method.getName().startsWith("set")) {
+        for (PropertyDescriptor property : TypeHelper.getProperties(type)) {
+            JsonElement element = object.get(property.getName());
+            if (element == null) {
                 continue;
             }
-            Type[] parameterTypes = method.getParameterTypes();
-            if (parameterTypes.length != 1) {
-                continue;
-            }
-            JsonValue property = objectData.get(method.getName().substring(3));
-            if (property == null) {
-                continue;
-            }
-            Object propertyObject = deserialize(parameterTypes[0].getClass(), property);
-            try {
-                method.invoke(instance, propertyObject);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(JsonSerializer.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+            
+            if (property.getType().equals(long.class)) {
+                property.setValue(ret, element.getAsLong());
+            } else if (property.getType().equals(String.class)) {
+                property.setValue(ret, element.getAsString());
+            } else if (property.getType().equals(boolean.class)) {
+                property.setValue(ret, element.getAsBoolean());
+            } else if (property.getType().equals(int.class)) {
+                property.setValue(ret, element.getAsInt());
+            } else if (property.getType().equals(OptionalLong.class)) {
+                if (!element.isJsonNull()) {
+                    property.setValue(ret, element.getAsLong());
+                }
+            } else if (property.getType().equals(OffsetDateTime.class)) {
+                if (!element.isJsonNull()) {
+                    property.setValue(ret, OffsetDateTime.parse(element.getAsString()));
+                }
+            } else if (JsonElement.class.isAssignableFrom(property.getType())) {
+                property.setValue(ret, element);
             }
         }
         
-        return (T) instance;*/
+        return ret;
     }
 }

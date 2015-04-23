@@ -13,7 +13,7 @@ public final class UrlHelper {
         builder.append(request.getScheme()).append("://").append(request.getServerName());
         int serverPort = request.getServerPort();
         if (serverPort != 80 && serverPort != 443) {
-            builder.append(serverPort);
+            builder.append(':').append(serverPort);
         }
         builder.append(request.getContextPath()).append(request.getServletPath());
         return builder.toString();

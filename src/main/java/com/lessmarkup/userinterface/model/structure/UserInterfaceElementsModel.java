@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.model.structure;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
@@ -57,13 +58,15 @@ public class UserInterfaceElementsModel {
                 
                 NodeHandler node = DependencyResolver.resolve(nodeInfo.getHandlerType());
                 
-                JsonObject settings = null;
+                JsonElement settings = null;
                 
                 if (nodeInfo.getSettings() != null && nodeInfo.getSettings().length() > 0) {
-                    settings = JsonSerializer.deserialize(nodeInfo.getSettings());
+                    settings = JsonSerializer.deserializeToTree(nodeInfo.getSettings());
                 }
                 
-                node.initialize(OptionalLong.of(nodeInfo.getNodeId()), settings, nodeInfo.getPath(), nodeInfo.getFullPath(), accessType);
+                node.initialize(OptionalLong.of(nodeInfo.getNodeId()), 
+                        settings != null && settings.isJsonObject() ? settings.getAsJsonObject() : null, 
+                        nodeInfo.getPath(), nodeInfo.getFullPath(), accessType);
                 
                 NotificationProvider notificationProvider = (NotificationProvider) node;
                 

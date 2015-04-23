@@ -35,8 +35,7 @@
         [[>views/body.html]]
         [[#useScripts]]
             [[initialData]]
-            <script src="[[#map]]minify.js[[/map]]" data-main="[[#map]]scripts/main[[/map]]" async></script>
-            <script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js" async></script>
+            <script type="text/javascript" src="[[#map]]lib/require.js[[/map]]" data-main="[[#map]]scripts/config/paths[[/map]]"></script>
         [[/useScripts]]
     </body>
 </html>

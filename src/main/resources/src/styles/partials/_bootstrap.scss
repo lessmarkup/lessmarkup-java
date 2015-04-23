@@ -1,0 +1,12 @@
+[ng-cloak] {
+  display: none;
+}
+
+.loadmessage {
+  display: none;
+}
+
+.loadmessage[ng-cloak] {
+  margin-top: 1em;
+  display: block;
+}

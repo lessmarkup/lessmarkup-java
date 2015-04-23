@@ -1,7 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.common;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -86,16 +85,16 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
     public JsonObject getViewData() {
         JsonObject ret = new JsonObject();
         ret.add("definition", definitionModel.toJson());
-        ret.add("object", JsonSerializer.serializeToTree(loadObject()));
+        ret.add("object", JsonSerializer.serializePojoToTree(loadObject()));
         ret.addProperty("applyCaption", getApplyCaption());
         return ret;
     }
 
     @ActionAccess
-    public JsonObject save(@Parameter("changedObject") JsonObject changedObject, @Parameter("rawChangedObject") String rawChangedObject) {
+    public JsonObject save(@Parameter("changedObject") JsonObject changedObject) {
         RecordModelDefinition model = dataCache.get(RecordModelCache.class).getDefinition(modelType);
-        model.validateInput(changedObject, false, rawChangedObject);
-        String message = saveObject(JsonSerializer.deserialize(modelType, changedObject));
+        model.validateInput(changedObject, false);
+        String message = saveObject(JsonSerializer.deserializePojo(modelType, changedObject));
         if (message == null) {
             message = LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.SUCCESSFULLY_SAVED);
         }

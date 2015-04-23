@@ -53,7 +53,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
     
     private String title;
     private String handlerId;
-    private Object settings;
+    private JsonElement settings;
     private String settingsModelId;
     private long nodeId;
     private boolean customizable;
@@ -82,8 +82,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
     public void setHandlerId(String handlerId) { this.handlerId = handlerId; }
     public String getHandlerId() { return handlerId; }
 
-    public void setSettings(Object settings) { this.settings = settings; }
-    public Object getSettings() { return settings; }
+    public void setSettings(JsonElement settings) { this.settings = settings; }
+    public JsonElement getSettings() { return settings; }
 
     public void setSettingsModelId(String settingsModelId) { this.settingsModelId = settingsModelId; }
     public String getSettingsModelId() { return settingsModelId; }
@@ -143,7 +143,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
         RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class);
         try {
-            definition.validateInput(JsonSerializer.serializeToTree(this), true, null);
+            definition.validateInput(JsonSerializer.serializePojoToTree(this), true);
         } catch (RecordValidationException ex) {
             LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, ex);
             return null;
@@ -156,7 +156,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         target.setPosition(position);
         target.setPath(path);
         target.setAddToMenu(addToMenu);
-        target.setSettings(settings != null ? JsonSerializer.serialize(settings) : null);
+        target.setSettings(settings != null ? settings.toString() : null);
         target.setTitle(title);
 
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
@@ -182,7 +182,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
         RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class);
         try {
-            definition.validateInput(JsonSerializer.serializeToTree(this), false, null);
+            definition.validateInput(JsonSerializer.serializePojoToTree(this), false);
         } catch (RecordValidationException ex) {
             LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, ex);
         }
@@ -209,11 +209,11 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
     public Object deleteNode() {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
             Node node = domainModel.query().find(Node.class, nodeId);
-            OptionalLong parentId = node.getParentId();
+            OptionalLong nodeParentId = node.getParentId();
             domainModel.delete(Node.class, node.getId());
             changeTracker.addChange(Node.class, node, EntityChangeType.REMOVED, domainModel);
 
-            List<Node> nodes = domainModel.query().from(Node.class).where("parentId = $", parentId).toList(Node.class);
+            List<Node> nodes = domainModel.query().from(Node.class).where("parentId = $", nodeParentId).toList(Node.class);
 
             for (int i = 0; i < nodes.size(); i++) {
                 if (nodes.get(i).getPosition() != i) {
@@ -298,7 +298,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 
                 if (handler != null && handler.getSettingsModel() != null) {
                     if (source.getSettings() != null) {
-                        node.setSettings(JsonSerializer.deserialize(handler.getSettingsModel(), source.getSettings()));
+                        node.setSettings(JsonSerializer.deserializeToTree(source.getSettings()));
                     }
                     node.setSettingsModelId(modelCache.getDefinition(handler.getSettingsModel()).getId());
                 }
@@ -336,7 +336,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             normalizeTree(nodes, rootNode, domainModel, changedNodes);
 
             if (changedNodes.size() > 0) {
-                changedNodes.stream().forEach(nodeId -> changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED, domainModel));
+                changedNodes.stream().forEach(id -> changeTracker.addChange(Node.class, id, EntityChangeType.UPDATED, domainModel));
             }
         }
 
@@ -348,7 +348,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
             Node node = domainModel.query().find(Node.class, nodeId);
 
-            node.setSettings(settings != null ? JsonSerializer.serialize(settings) : null);
+            node.setSettings(settings != null ? settings.toString() : null);
 
             domainModel.update(node);
             changeTracker.addChange(Node.class, node, EntityChangeType.UPDATED, domainModel);
@@ -463,7 +463,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             domainModel.completeTransaction();
         }
         
-        JsonElement rootNode = JsonSerializer.serializeToTree(getRootNode());
+        JsonElement rootNode = JsonSerializer.serializePojoToTree(getRootNode());
 
         JsonObject ret = new JsonObject();
         ret.add("Root", rootNode);

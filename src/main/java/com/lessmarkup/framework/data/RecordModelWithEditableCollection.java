@@ -14,16 +14,22 @@ import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 
 public abstract class RecordModelWithEditableCollection<TM extends RecordModel, TD extends AbstractDataObject> extends RecordModel<TM> {
-    protected RecordModelWithEditableCollection(String titleTextId, Class<TD> dataType, boolean submitWithCaptcha) {
+    
+    private final Class<TM> modelType;
+    
+    protected RecordModelWithEditableCollection(String titleTextId, Class<TD> dataType, Class<TM> modelType, boolean submitWithCaptcha) {
         super(titleTextId, null, dataType, submitWithCaptcha);
+        this.modelType = modelType;
     }
 
-    protected RecordModelWithEditableCollection(Class<TD> dataType) {
+    protected RecordModelWithEditableCollection(Class<TD> dataType, Class<TM> modelType) {
         super(null, dataType);
+        this.modelType = modelType;
     }
 
-    protected RecordModelWithEditableCollection(String titleTextId, Class<TD> dataType) {
+    protected RecordModelWithEditableCollection(String titleTextId, Class<TD> dataType, Class<TM> modelType) {
         super(titleTextId, null, dataType);
+        this.modelType = modelType;
     }
     
     @Override
@@ -32,7 +38,7 @@ public abstract class RecordModelWithEditableCollection<TM extends RecordModel, 
                 DependencyResolver.resolve(DomainModelProvider.class),
                 DependencyResolver.resolve(DataCache.class), 
                 DependencyResolver.resolve(ChangeTracker.class),
-                getCollectionType(),
+                this.modelType,
                 getDataType()
         );
     }

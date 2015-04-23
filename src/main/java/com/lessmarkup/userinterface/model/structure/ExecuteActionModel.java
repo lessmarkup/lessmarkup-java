@@ -93,7 +93,11 @@ public class ExecuteActionModel {
                 continue;
             }
             
-            arguments[i] = JsonSerializer.deserialize(parameterType, dataParameter);
+            if (JsonElement.class.isAssignableFrom(parameterType)) {
+                arguments[i] = dataParameter;
+            } else {
+                arguments[i] = JsonSerializer.deserializePojo(parameterType, dataParameter);
+            }
         }
         
         try {

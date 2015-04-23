@@ -25,7 +25,7 @@ public class CustomizationModel extends RecordModelWithEditableCollection<Custom
     private boolean append;
     
     public CustomizationModel() {
-        super(TextIds.EDIT_CUSTOMIZATION, SiteCustomization.class);
+        super(TextIds.EDIT_CUSTOMIZATION, SiteCustomization.class, CustomizationModel.class);
     }
 
     @InputField(type = InputFieldType.HIDDEN, defaultValue = "false")
@@ -45,11 +45,11 @@ public class CustomizationModel extends RecordModelWithEditableCollection<Custom
     public void setPath(String path) { this.path = path; }
     public String getPath() { return path; }
 
-    @InputField(type = InputFieldType.CHECK_BOX, textId = TextIds.APPEND, defaultValue = "false", visibleCondition = "!isBinary")
+    @InputField(type = InputFieldType.CHECK_BOX, textId = TextIds.APPEND, defaultValue = "false", visibleCondition = "!binary")
     public void setAppend(boolean append) { this.append = append; }
     public boolean isAppend() { return append; }
 
-    @InputField(type = InputFieldType.FILE, textId = TextIds.FILE, visibleCondition = "isBinary", required = true)
+    @InputField(type = InputFieldType.FILE, textId = TextIds.FILE, visibleCondition = "binary", required = true)
     public void setFile(InputFile file) {
         if (file != null && file.getFile() != null && file.getFile().length > 0) {
             body = file.getFile();
@@ -67,7 +67,7 @@ public class CustomizationModel extends RecordModelWithEditableCollection<Custom
         return ret;
     }
     
-    @InputField(type = InputFieldType.CODE_TEXT, textId = TextIds.TEXT, visibleCondition = "!isBinary", required = true)
+    @InputField(type = InputFieldType.CODE_TEXT, textId = TextIds.TEXT, visibleCondition = "!binary", required = true)
     public void setText(String text) {
         body = text.getBytes();
     }

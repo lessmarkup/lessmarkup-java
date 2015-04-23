@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.nodehandlers.common;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.lessmarkup.framework.helpers.JsonSerializer;
@@ -175,10 +176,10 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
         for (TabPage page : pages) {
             NodeHandler handler = createChildHandler(page.getType());
 
-            JsonObject nodeSettings = null;
+            JsonElement nodeSettings = null;
 
             if (handler.getSettingsModel() != null && !StringHelper.isNullOrEmpty(page.getSettings())) {
-                nodeSettings = JsonSerializer.deserialize(page.getSettings());
+                nodeSettings = JsonSerializer.deserializeToTree(page.getSettings());
             }
 
             if (StringHelper.isNullOrWhitespace(page.getPath())) {
@@ -190,15 +191,17 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
                 }
             }
 
-            handler.initialize(page.getPageId(), nodeSettings, page.getPath(), page.getFullPath(), page.getAccessType().isPresent() ? page.getAccessType().get() : getAccessType());
+            handler.initialize(page.getPageId(), 
+                    nodeSettings != null && nodeSettings.isJsonObject() ? nodeSettings.getAsJsonObject() : null, 
+                    page.getPath(), page.getFullPath(), page.getAccessType().isPresent() ? page.getAccessType().get() : getAccessType());
 
             page.setViewData(handler.getViewData());
             page.setViewBody(LoadNodeViewModel.getViewTemplate(handler, dataCache));
             page.setUniqueId(String.format("page_%s", uniqueId++));
 
-            List<String> scripts = handler.getScripts();
-            if (scripts != null) {
-                this.scripts.addAll(scripts);
+            List<String> handlerScripts = handler.getScripts();
+            if (handlerScripts != null) {
+                this.scripts.addAll(handlerScripts);
             }
         }
 
@@ -210,7 +213,7 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
     @Override
     public JsonObject getViewData() {
         JsonObject ret = new JsonObject();
-        JsonArray pages = new JsonArray();
+        JsonArray pagesArray = new JsonArray();
         this.pages.forEach(p -> {
             JsonObject o = new JsonObject();
             o.addProperty("pageId", p.getPageId().orElse(0));
@@ -219,9 +222,9 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
             o.addProperty("viewBody", p.getViewBody());
             o.add("viewData", p.getViewData());
             o.addProperty("uniqueId", p.getUniqueId());
-            pages.add(o);
+            pagesArray.add(o);
         });
-        ret.add("pages", pages);
+        ret.add("pages", pagesArray);
         JsonArray requires = new JsonArray();
         this.scripts.forEach(s -> requires.add(new JsonPrimitive(s)));
         ret.add("requires", requires);
@@ -246,12 +249,14 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
         }
         NodeHandler handler = createChildHandler(page.get().getType());
 
-        JsonObject nodeSettings = null;
+        JsonElement nodeSettings = null;
         if (handler.getSettingsModel() != null && !StringHelper.isNullOrEmpty(page.get().getSettings())) {
-            nodeSettings = JsonSerializer.deserialize(page.get().getSettings());
+            nodeSettings = JsonSerializer.deserializeToTree(page.get().getSettings());
         }
 
-        handler.initialize(page.get().getPageId(), nodeSettings, page.get().getPath(), page.get().getFullPath(), page.get().getAccessType().isPresent() ? page.get().getAccessType().get() : getAccessType());
+        handler.initialize(page.get().getPageId(), 
+                nodeSettings != null && nodeSettings.isJsonObject() ? nodeSettings.getAsJsonObject() : null, 
+                page.get().getPath(), page.get().getFullPath(), page.get().getAccessType().isPresent() ? page.get().getAccessType().get() : getAccessType());
 
         ChildHandlerSettings ret = new ChildHandlerSettings();
         ret.setHandler(handler);

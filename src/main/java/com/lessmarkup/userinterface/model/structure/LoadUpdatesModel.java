@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.model.structure;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
@@ -54,12 +55,13 @@ public class LoadUpdatesModel {
                 currentProvider = notificationProvider;
             }
 
-            JsonObject settings = null;
+            JsonElement settings = null;
             if (node.getValue1().getSettings() != null && node.getValue1().getSettings().length() > 0) {
-                settings = JsonSerializer.deserialize(node.getValue1().getSettings());
+                settings = JsonSerializer.deserializeToTree(node.getValue1().getSettings());
             }
 
-            handler.initialize(OptionalLong.of(node.getValue1().getNodeId()), settings, node.getValue1().getPath(), node.getValue1().getFullPath(), node.getValue2());
+            handler.initialize(OptionalLong.of(node.getValue1().getNodeId()), 
+                    settings != null && settings.isJsonObject() ? settings.getAsJsonObject() : null, node.getValue1().getPath(), node.getValue1().getFullPath(), node.getValue2());
             handlers.add(new Tuple(node.getValue1().getNodeId(), notificationProvider));
         }
 

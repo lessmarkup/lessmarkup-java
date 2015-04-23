@@ -24,7 +24,7 @@ public class UserPropertyModel extends RecordModelWithEditableCollection<UserPro
     private UserPropertyType type;
     
     public UserPropertyModel() {
-        super(TextIds.USER_PROPERTY, UserPropertyDefinition.class);
+        super(TextIds.USER_PROPERTY, UserPropertyDefinition.class, UserPropertyModel.class);
     }
 
     @InputField(type = InputFieldType.TEXT, textId = TextIds.NAME, required = true)

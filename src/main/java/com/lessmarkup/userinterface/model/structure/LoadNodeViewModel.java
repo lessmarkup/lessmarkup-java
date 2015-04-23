@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.structure.NodeCache;
@@ -120,7 +119,7 @@ public class LoadNodeViewModel {
         ret.addProperty("template", this.template);
         ret.addProperty("templateId", this.templateId);
         ret.addProperty("title", this.title);
-        ret.add("viewData", JsonSerializer.serializeToTree(this.viewData));
+        ret.add("viewData", this.viewData);
         ret.addProperty("isStatic", this.isStatic);
         ret.addProperty("path", this.path);
         
@@ -151,7 +150,7 @@ public class LoadNodeViewModel {
             });
         }
         
-        ret.add("Breadcrumbs", arrayBreadcrumbs);
+        ret.add("breadcrumbs", arrayBreadcrumbs);
         
         JsonArray arrayButtons = new JsonArray();
         

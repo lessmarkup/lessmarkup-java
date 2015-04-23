@@ -1,6 +1,6 @@
 package com.lessmarkup.userinterface.model.structure;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Node;
@@ -229,6 +229,10 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         node.setRoot(this.rootNode);
         node.setVisible(false);
         
+        CachedNodeAccess cachedNodeAccess = new CachedNodeAccess();
+        cachedNodeAccess.setAccessType(accessType);
+        node.getAccessList().add(cachedNodeAccess);
+        
         this.rootNode.getChildren().add(node);
         this.idToNode.put(node.getNodeId(), node);
         
@@ -362,15 +366,17 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         String currentTitle = node.getTitle();
         String currentPath = node.getFullPath();
         
-        String settings = node.getSettings();
+        String settingsText = node.getSettings();
         
-        JsonObject settingsObject = null;
+        JsonElement settingsElement = null;
         
-        if (settings != null) {
-            settingsObject = JsonSerializer.deserialize(settings);
+        if (settingsText != null) {
+            settingsElement = JsonSerializer.deserializeToTree(settingsText);
         }
         
-        nodeHandler.initialize(OptionalLong.of(node.getNodeId()), settingsObject, node.getPath(), node.getFullPath(), accessType);
+        nodeHandler.initialize(OptionalLong.of(node.getNodeId()), 
+                settingsElement != null && settingsElement.isJsonObject() ? settingsElement.getAsJsonObject() : null, 
+                node.getPath(), node.getFullPath(), accessType);
         
         boolean first = true;
         
@@ -401,7 +407,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
             rest = childSettings.getRest();
         }
         
-        if (filter != null && filter.preprocess(nodeHandler, currentTitle, currentPath, rest, first ? OptionalLong.of(node.getNodeId()) : null)) {
+        if (filter != null && filter.preprocess(nodeHandler, currentTitle, currentPath, rest, first ? OptionalLong.of(node.getNodeId()) : OptionalLong.empty())) {
             return null;
         }
         

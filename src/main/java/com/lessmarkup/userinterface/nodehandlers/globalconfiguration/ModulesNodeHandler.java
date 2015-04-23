@@ -62,7 +62,7 @@ public class ModulesNodeHandler extends RecordListNodeHandler<ModuleModel> {
 
             JsonObject ret = new JsonObject();
             ret.addProperty("index", getIndex(record, null, domainModel));
-            ret.add("record", JsonSerializer.serializeToTree(record));
+            ret.add("record", JsonSerializer.serializePojoToTree(record));
             return ret;
         }
     }

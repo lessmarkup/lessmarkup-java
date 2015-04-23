@@ -202,7 +202,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         path = parts.get(0);
         parts.remove(0);
         
-        handler.initialize(OptionalLong.empty(), null, path, getFullPath() + "/" + path, NodeAccessType.READ);
+        handler.initialize(OptionalLong.empty(), null, path, getFullPath() + "/" + path, NodeAccessType.WRITE);
         
         ChildHandlerSettings ret = new ChildHandlerSettings();
         

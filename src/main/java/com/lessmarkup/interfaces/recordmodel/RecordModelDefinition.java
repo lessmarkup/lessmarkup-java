@@ -1,18 +1,19 @@
 package com.lessmarkup.interfaces.recordmodel;
 
 import com.google.gson.JsonElement;
+import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.exceptions.RecordValidationException;
 import java.util.List;
 
 public interface RecordModelDefinition {
-    Class<? extends ModelCollection> getCollectionType();
     String getTitleTextId();
     String getModuleType();
-    Class<?> getModelType();
-    Class<?> getDataType();
+    Class<? extends RecordModel> getModelType();
+    Class<? extends DataObject> getDataType();
     String getId();
     List<InputFieldDefinition> getFields();
     List<RecordColumnDefinition> getColumns();
-    void validateInput(JsonElement objectToValidate, boolean isNew, String properties) throws RecordValidationException;
+    void validateInput(JsonElement objectToValidate, boolean isNew) throws RecordValidationException;
     boolean isSubmitWithCaptcha();
+    ModelCollection createModelCollection();
 }
