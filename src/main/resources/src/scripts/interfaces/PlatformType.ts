@@ -1,0 +1,4 @@
+enum PlatformType {
+    MOBILE,
+    DESKTOP,
+}

@@ -175,16 +175,22 @@ public class JsonEntryPointModel {
             String message = e.getMessage();
             response.addProperty("message", StringHelper.getMessage(e));
         }
-        
-        response.addProperty("loggedIn", this.currentUser.getUserId().isPresent());
-        if (this.currentUser.getUserId().isPresent()) {
-            response.addProperty("userName", this.currentUser.getUserName());
+
+        JsonObject userState = new JsonObject();
+        response.add("user", userState);
+
+        OptionalLong userId = this.currentUser.getUserId();
+        userState.addProperty("loggedIn", userId.isPresent());
+
+        if (userId.isPresent()) {
+            userState.addProperty("userName", this.currentUser.getUserName());
         }
+
         if (userVerified != isUserVerified()) {
-            response.addProperty("userNotVerified", userVerified);
+            userState.addProperty("userNotVerified", userVerified);
         }
         if (administrator != this.currentUser.isAdministrator()) {
-            response.addProperty("showConfiguration", this.currentUser.isAdministrator());
+            userState.addProperty("showConfiguration", this.currentUser.isAdministrator());
         }
         
         try (OutputStream output = requestContext.getOutputStream()) {

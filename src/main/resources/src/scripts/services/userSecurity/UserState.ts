@@ -1,10 +1,10 @@
-class LoginState {
+class UserState {
 
     constructor() {
         this.notVerified = true;
         this.progress = false;
-        this.email = null;
-        this.password = null;
+        this.email = "";
+        this.password = "";
         this.remember = false;
         this.loggedIn = false;
         this.name = null;

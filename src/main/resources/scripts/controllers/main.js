@@ -18,48 +18,6 @@ app.controller('main', function ($scope, $http, commandHandler, inputForm, $loca
     var initialData = window.viewInitialData;
     window.viewInitialData = null;
 
-    $scope.toolbarButtons = [];
-    $scope.templates = {};
-    $scope.title = "";
-    $scope.breadcrumbs = [];
-    $scope.viewData = null;
-    $scope.staticNodes = {};
-    $scope.path = "";
-    $scope.loginUserEmail = "";
-    $scope.loginUserPassword = "";
-    $scope.loginUserRemember = false;
-    $scope.loggedIn = initialData.loggedIn;
-    $scope.userNotVerified = initialData.userNotVerified || false;
-    $scope.userName = initialData.userName || "";
-    $scope.userLoginError = "";
-    $scope.userLoginProgress = false;
-    $scope.alerts = [];
-    $scope.hasLogin = initialData.hasLogin || false;
-    $scope.hasSearch = initialData.hasSearch || false;
-    $scope.showConfiguration = initialData.showConfiguration || false;
-    $scope.configurationPath = initialData.configurationPath || "";
-    $scope.rootPath = initialData.rootPath || "";
-    $scope.rootTitle = initialData.rootTitle || "Home";
-    $scope.navigationTree = initialData.navigationTree || [];
-    $scope.topMenu = initialData.topMenu || [];
-    $scope.profilePath = initialData.profilePath || "";
-    $scope.forgotPasswordPath = initialData.forgotPasswordPath || "";
-    $scope.languages = initialData.languages || [];
-    $scope.getViewScope = function () { return $scope; };
-    $scope.showXsMenu = false;
-    $scope.notifications = initialData.notifications || [];
-    $scope.recaptchaPublicKey = initialData.recaptchaPublicKey || "";
-    $scope.lastActivity = new Date().getDate() / 1000;
-    $scope.title = $scope.rootTitle;
-    $scope.loadingNewPage = true;
-    $scope.searchText = "";
-    $scope.searchResults = [];
-    $scope.maximumFileSize = initialData.maximumFileSize || 1024;
-    $scope.smiles = initialData.smiles || [];
-    $scope.smilesBase = initialData.smilesBase || "";
-    $scope.versionId = initialData.versionId || null;
-    $scope.updateProperties = {};
-
     var searchTimeout = null;
     var pageProperties = {};
 
@@ -575,8 +533,8 @@ app.controller('main', function ($scope, $http, commandHandler, inputForm, $loca
             }
 
             if (result.data.hasOwnProperty("notificationChanges")) {
-                for (var i = 0; i < result.data.notificationChanges.length; i++) {
-                    var change = result.data.notificationChanges[i];
+                for (var i = 0; i < result.data.collectionChanges.length; i++) {
+                    var change = result.data.collectionChanges[i];
                     for (var j = 0; j < $scope.notifications.length; j++) {
                         var notification = $scope.notifications[j];
                         if (notification.id === change.id) {

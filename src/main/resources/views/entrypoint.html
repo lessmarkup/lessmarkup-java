@@ -22,20 +22,22 @@
                 display: block !important;
             }
         </style>
-        [[#useScripts]]
-        <script>
-            document.getElementById("noscript").innerHTML = "";
-        </script>
-        [[/useScripts]]
     </head>
     <body>
         [[#useScripts]]
-            [[>views/inputFormTemplate.html]]
+        [[>views/inputFormTemplate.html]]
         [[/useScripts]]
         [[>views/body.html]]
         [[#useScripts]]
-            [[initialData]]
-            <script type="text/javascript" src="[[#map]]lib/require.js[[/map]]" data-main="[[#map]]scripts/config/paths[[/map]]"></script>
+        document.getElementById("noscript").innerHTML = "";
+        <script type="text/javascript" src="[[#map]]lib/require.js[[/map]]" data-main="[[#map]]scripts/config/paths[[/map]]"></script>
+        <script type="text/javascript">
+            require(['app', 'angular', 'domready'], function(app, ng, document) {
+                app.value('initialData', [[initialData]]);
+                app.value('serverConfiguration', [[serverConfiguration]]);
+                ng.bootstrap(document, ['app']);
+            });
+        </script>
         [[/useScripts]]
     </body>
 </html>

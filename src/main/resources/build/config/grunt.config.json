@@ -7,7 +7,15 @@
         "dest": "../lib",
         "src": [
           "**/*.{css,js,svg,map,eot,svg,ttf,woff,woff2,fla,gif,html,jpg,png}",
-          "!jquery/**"
+          "!jquery/**",
+          "!**/examples/**",
+          "!**/samples/**",
+          "!**/demos/**",
+          "!**/index.js",
+          "!**/karma.conf.js",
+          "!**/Gruntfile.js",
+          "!**/src/**",
+          "!**/package.js"
         ]
       }, {
         "expand": true,

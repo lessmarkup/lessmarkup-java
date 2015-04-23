@@ -1,0 +1,24 @@
+<li ng-show="!loggedIn && hasLogin" class="scriptonly">
+    <a ng-click="showLogin()">
+        <span class="glyphicon glyphicon-user" style="font-size:small"></span> [[#text]]User[[/text]]
+    </a>
+</li>
+
+<li ng-show="loggedIn" class="scriptonly">
+    <a href="{{rootPath+profilePath}}" ng-click="navigateToView(rootPath+profilePath)">
+        <span class="glyphicon glyphicon-user" style="font-size:small"></span> <span>{{userName}}</span>
+    </a>
+</li>
+
+<li ng-show="loggedIn" class="scriptonly">
+    <a href="#" ng-if="loggedIn && userNotVerified">
+        <span>
+            <span class="badge" style="background-color: #a94442" data-toggle="tooltip" data-placement="bottom" title="[[#text]]EmailNotVerified[[/text]]">!</span>
+        </span>
+    </a>
+</li>
+
+<li ng-show="loggedIn" class="scriptonly">
+    <a href="#" ng-click="doLogout()">[[#text]]Logout[[/text]]</a>
+</li>
+

@@ -1,0 +1,20 @@
+<li>
+    <a href="/" ng-if="navigationTree.length == 0" ng-click="navigateToView(rootPath)" role="button" class="navbar-brand">
+        [[>views/logo.html]]
+    </a>
+</li>
+<li class="dropdown scriptonly" ng-if="navigationTree.length > 0">
+    <a role="button" class="dropdown-toggle navbar-brand">
+        <span ng-bind="rootTitle">[[#property]]siteName[[/property]]</span> <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="{{rootPath}}" ng-click="navigateToView(rootPath)" role="button" class="navbar-brand">
+                [[>views/logo.html]]
+            </a>
+        </li>
+        <li class="scriptonly" ng-repeat="item in navigationTree" style="{{item.style}}">
+            <a href="{{rootPath+item.url}}" ng-click="navigateToView(rootPath+item.url)" ng-bind="item.title"></a>
+        </li>
+    </ul>
+</li>

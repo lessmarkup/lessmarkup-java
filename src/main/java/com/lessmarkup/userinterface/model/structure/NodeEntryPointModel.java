@@ -38,6 +38,7 @@ public class NodeEntryPointModel {
         private String title;
         private final DataCache dataCache;
         private String initialData;
+        private String configurationData;
         
         public Context(DataCache dataCache) {
             super(dataCache);
@@ -55,6 +56,8 @@ public class NodeEntryPointModel {
         public String getInitialData() {
             return initialData;
         }
+
+        public String getConfigurationData() { return configurationData; }
         
         public String getTopMenu() {
             StringBuilder builder = new StringBuilder();
@@ -89,6 +92,7 @@ public class NodeEntryPointModel {
     private final Context context;
     private LoadNodeViewModel viewData;
     private final JsonObject initialData = new JsonObject();
+    private final JsonObject configurationData = new JsonObject();
     private final DataCache dataCache;
     private final CurrentUser currentUser;
     
@@ -106,6 +110,8 @@ public class NodeEntryPointModel {
     public String getInitialData() {
         return initialData.toString();
     }
+
+    public String getConfigurationData() { return configurationData.toString(); }
 
     private void checkBrowser(RequestContext requestContext) {
     }
@@ -184,12 +190,13 @@ public class NodeEntryPointModel {
         initialData.addProperty("recaptchaPublicKey", requestContext.getEngineConfiguration().getRecaptchaPublicKey());
         initialData.addProperty("loginModelId", recordModelCache.getDefinition(LoginModel.class).getId());
 
-        context.initialData = String.format("<script>window.viewInitialData = %s;</script>", initialData.toString());
+        context.initialData = getInitialData();
+        context.configurationData = getConfigurationData();
 
         return true;
     }
     
-    private void initializeSiteProperties(RequestContext request, JsonObject initialValues) {
+    private void initializeSiteProperties(RequestContext request) {
         ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
         OptionalLong versionId = changesCache.getLastChangeId();
         if (versionId.isPresent()) {

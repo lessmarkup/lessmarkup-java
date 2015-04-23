@@ -2,28 +2,62 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import app = require('app');
+import ng = require('angular');
 
-interface MainControllerScope extends angular.IScope {
+interface MainControllerScope extends ng.IScope {
     toolbarButtons: ToolbarButton[];
     title: string;
     breadcrumbs: Breadcrumb[];
-    loginState: LoginState;
-    alerts: string[];
-    hasLogin: boolean;
-    hasSearch: boolean;
+    alerts: Alert[];
+    showXsMenu: boolean;
+    loadingNewPage: boolean;
 }
 
-app.controller('main', ['$scope', '$http', 'commandHandler', 'inputForm', '$location', '$browser', '$timeout', 'lazyLoad', '$sce', MainController]);
+class MainController {
+    private configurationPath: string;
+    private staticNodes: string[];
+    private templates: string[] = [];
+    private scope: MainControllerScope;
+    private viewData: any = null;
+    private serverConfiguration: ServerConfiguration;
 
-export class MainController {
-    configurationPath: string;
-    path: string;
-    staticNodes: string[];
-    templates: string[];
+    constructor($scope: MainControllerScope, $http: ng.IHttpService, commandHandler: IEventHandler, inputForm: InputForm, $location: ng.ILocationService,
+        $browser: ng.IBrowserService, $timeout: ng.ITimeoutService, $sce: ng.ISCEService, serverConfiguration: ServerConfiguration, initialData: InitialData) {
 
-    constructor($scope: MainControllerScope, $http: angular.IHttpService, commandHandler: CommandHandler, inputForm: InputForm, $location: angular.ILocationService,
-        $browser: angular.IBrowserService, $timeout: angular.ITimeoutService, lazyLoad: LazyLoad, $sce: angular.ISCEService) {
+        this.scope = $scope;
+        this.serverConfiguration = serverConfiguration;
+        this.initializeScope(initialData);
+    }
 
+    private initializeScope(initialData: InitialData) {
+        this.scope.toolbarButtons = [];
+        this.scope.title = "";
+        this.scope.breadcrumbs = [];
+        this.scope.alerts = [];
+        this.scope.showXsMenu = false;
+        this.scope.title = this.serverConfiguration.rootTitle;
+        this.scope.loadingNewPage = true;
+    }
+
+    resetAlerts(): void {
+        this.scope.alerts = [];
+    }
+
+    showError(message:string):void {
     }
 }
+
+import appControllers = require('lmApp.controllers');
+
+appControllers.controller('lmMain', [
+    '$scope',
+    '$http',
+    'commandHandler',
+    'inputForm',
+    '$location',
+    '$browser',
+    '$timeout',
+    '$sce',
+    'serverConfiguration',
+    'initialData',
+    MainController]);

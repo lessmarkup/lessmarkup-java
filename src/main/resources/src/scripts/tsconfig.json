@@ -16,7 +16,24 @@
     ],
     "files": [
         "../../../../../target/classes/types/all.d.ts",
+        "./app.ts",
+        "./config/bootstrap.ts",
         "./config/paths.ts",
-        "./controllers/DialogController.ts"
+        "./controllers/DialogController.ts",
+        "./controllers/MainController.ts",
+        "./controllers/index.ts",
+        "./controllers/module.ts",
+        "./datatypes/Breadcrumb.ts",
+        "./datatypes/ToolbarButton.ts",
+        "./directives/index.ts",
+        "./directives/module.ts",
+        "./filters/index.ts",
+        "./filters/module.ts",
+        "./providers/CommandHandler.ts",
+        "./providers/InputForm.ts",
+        "./providers/LazyLoad.ts",
+        "./security/LoginState.ts",
+        "./services/index.ts",
+        "./services/module.ts"
     ]
 }
