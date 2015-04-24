@@ -1,0 +1,3 @@
+interface SearchResponse {
+    results: SearchResult[];
+}

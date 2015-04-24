@@ -1,4 +1,4 @@
-class EventHandler {
+class EventHandlerService {
     private handlers: { [event: string]: IEventHandler[] } = {};
 
     public subscribeEvent(event: string, handler: IEventHandler) {
@@ -65,3 +65,6 @@ class EventHandler {
     }
 }
 
+import servicesModule = require('./module');
+servicesModule.service('eventHandler', [
+    EventHandlerService]);

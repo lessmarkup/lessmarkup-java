@@ -12,25 +12,61 @@ class NodeLoaderService {
     private staticNodes: {[name: string]: NodeLoadData } = {};
     private templates: {[name: string]: string } = {};
     private serverConfiguration: ServerConfiguration;
+    private qService: ng.IQService;
 
-    public static EVENT_LOADING_NEW_NODE = "nodeloader.loadingnewnode";
-    public static EVENT_NODE_LOADED = "nodeloader.loaded";
-
-    constructor(commandProcessor: CommandProcessorService, $rootScope: ng.IRootScopeService, serverConfiguration: ServerConfiguration) {
+    constructor(commandProcessor: CommandProcessorService, rootScope: ng.IRootScopeService, serverConfiguration: ServerConfiguration, $browser: ng.IBrowserService, qService: ng.IQService) {
+        this.qService = qService;
         this.path = "";
-        this.rootScope = $rootScope;
+        this.rootScope = rootScope;
         this.serverConfiguration = serverConfiguration;
+        this.initializeBrowser($browser);
         commandProcessor.onPathChanged(this.path);
+        this.resetPageProperties();
+
+        rootScope.$on(BroadcastEvents.USER_LOGGED_OUT, this.onUserLoggedOut);
+        rootScope.$on(BroadcastEvents.USER_LOGGED_IN, this.onUserLoggedIn);
+    }
+
+    private onUserLoggedIn() {
+        this.staticNodes = [];
+    }
+
+    private onUserLoggedOut() {
+        this.staticNodes = [];
+        this.loadNode('/');
+    }
+
+    private initializeBrowser(browser: ng.IBrowserService) {
+        var browserUrl:string = browser["url"]();
+        // dirty hack to prevent AngularJS from reloading the page on pushState and fix $location.$$parse bug
+        browser["url"] = () => { return browserUrl; };
+
+        $(window).on('popstate', function () {
+            this.loadNode(location.pathname+location.search);
+        });
     }
 
     public getPageProperty(name: string, defaultValue: string = null): string {
+
         if (this.pageProperties.hasOwnProperty(name)) {
             return this.pageProperties[name];
         }
         return defaultValue;
     }
 
+    public setPageProperty(name: string, value: string): void {
+
+        if (this.getPageProperty(name, null) == value) {
+            return;
+        }
+
+        this.pageProperties[name] = value;
+
+        this.updatePageHistory();
+    }
+
     private updatePageHistory() : void {
+
         var query = "";
 
         _.forIn(this.pageProperties, (value: string, key: string) => {
@@ -79,7 +115,7 @@ class NodeLoaderService {
         }
     }
 
-    private onNodeLoaded(data: NodeLoadData, url: string): void {
+    public onNodeLoaded(data: NodeLoadData, url: string, deferred: ng.IDeferred<NodeConfiguration> = null): void {
 
         this.loadingNewPage = false;
 
@@ -121,7 +157,11 @@ class NodeLoaderService {
             config.title = data.title;
             config.template = data.template;
 
-            this.rootScope.$broadcast(NodeLoaderService.EVENT_NODE_LOADED, config);
+            if (deferred != null) {
+                deferred.resolve(config);
+            }
+
+            this.rootScope.$broadcast(BroadcastEvents.NODE_LOADED, config);
         };
 
         if (data.require && data.require.length > 0) {
@@ -133,12 +173,15 @@ class NodeLoaderService {
         }
     }
 
-    public loadNode(path: string, leaveProperties: boolean = false, errorFunction: (message: string) => void = null):boolean {
+    public loadNode(path: string, leaveProperties: boolean = false):ng.IPromise<NodeConfiguration> {
+
         if (this.loadingNewPage) {
-            return false;
+            return this.qService.reject("Already loading new page");
         }
 
-        this.rootScope.$broadcast(NodeLoaderService.EVENT_LOADING_NEW_NODE);
+        var deferred:ng.IDeferred<NodeConfiguration> = this.qService.defer<NodeConfiguration>();
+
+        this.rootScope.$broadcast(BroadcastEvents.NODE_LOADING, { path: path });
 
         if (!leaveProperties) {
             this.resetPageProperties(path);
@@ -149,8 +192,8 @@ class NodeLoaderService {
         }
 
         if (this.staticNodes.hasOwnProperty(path)) {
-            this.onNodeLoaded(this.staticNodes[path], path);
-            return false;
+            this.onNodeLoaded(this.staticNodes[path], path, deferred);
+            return deferred.promise;
         }
 
         var cachedItems = [];
@@ -163,22 +206,18 @@ class NodeLoaderService {
 
         this.loadingNewPage = true;
 
-        this.commandProcessor.sendCommand("view", {
+        this.commandProcessor.sendCommand<NodeLoadData>("view", {
             cached: cachedItems,
             newPath: path
-        }, (data):void => {
+        }).then((data: NodeLoadData):void => {
             this.loadingNewPage = false;
-            this.onNodeLoaded(data, path);
+            this.onNodeLoaded(data, path, deferred);
         }, (message:string):void => {
             this.loadingNewPage = false;
-            if (errorFunction != null) {
-                errorFunction(message);
-            } else {
-                console.log(message);
-            }
+            deferred.reject(message);
         });
 
-        return false;
+        return deferred.promise;
     }
 
     public getPath(): string {
@@ -192,4 +231,4 @@ class NodeLoaderService {
 }
 
 import servicesModule = require('./module');
-servicesModule.service('nodeLoader', ['commandProcessor', NodeLoaderService]);
+servicesModule.service('nodeLoader', ['commandProcessor', '$rootScope', 'serverConfiguration', '$browser', '$q', NodeLoaderService]);

@@ -5,12 +5,10 @@
 import ng = require('angular');
 
 interface MainControllerScope extends ng.IScope {
-    toolbarButtons: ToolbarButton[];
-    title: string;
-    breadcrumbs: Breadcrumb[];
-    alerts: Alert[];
     showXsMenu: boolean;
-    loadingNewPage: boolean;
+    hideXsMenu: () => void;
+    template: string;
+    configuration: any;
 }
 
 class MainController {
@@ -19,45 +17,40 @@ class MainController {
     private templates: string[] = [];
     private scope: MainControllerScope;
     private viewData: any = null;
-    private serverConfiguration: ServerConfiguration;
 
-    constructor($scope: MainControllerScope, $http: ng.IHttpService, commandHandler: IEventHandler, inputForm: InputForm, $location: ng.ILocationService,
-        $browser: ng.IBrowserService, $timeout: ng.ITimeoutService, $sce: ng.ISCEService, serverConfiguration: ServerConfiguration, initialData: InitialData) {
-
+    constructor($scope: MainControllerScope, initialData: InitialData, nodeLoader: NodeLoaderService, messaging: MessagingService) {
         this.scope = $scope;
-        this.serverConfiguration = serverConfiguration;
         this.initializeScope(initialData);
+
+        if (initialData.nodeLoadError && initialData.nodeLoadError.length > 0) {
+            messaging.showError(initialData.nodeLoadError);
+        } else {
+            nodeLoader.onNodeLoaded(initialData.loadedNode, initialData.path);
+        }
+
+        this.scope.$on(BroadcastEvents.NODE_LOADED, (event: ng.IAngularEvent, configuration: NodeConfiguration) => {
+            this.scope.configuration = configuration.viewData;
+            this.scope.template = configuration.template;
+        });
     }
 
     private initializeScope(initialData: InitialData) {
-        this.scope.toolbarButtons = [];
-        this.scope.title = "";
-        this.scope.breadcrumbs = [];
-        this.scope.alerts = [];
         this.scope.showXsMenu = false;
-        this.scope.title = this.serverConfiguration.rootTitle;
-        this.scope.loadingNewPage = true;
-    }
-
-    resetAlerts(): void {
-        this.scope.alerts = [];
-    }
-
-    showError(message:string):void {
+        this.scope.hideXsMenu = () => {
+            if (this.scope.showXsMenu) {
+                this.scope.$apply((scope: ng.IScope) => {
+                    this.scope.showXsMenu = false;
+                });
+            }
+        }
     }
 }
 
-import appControllers = require('lmApp.controllers');
+import appControllers = require('app.controllers');
 
-appControllers.controller('lmMain', [
+appControllers.controller('main', [
     '$scope',
-    '$http',
-    'commandHandler',
-    'inputForm',
-    '$location',
-    '$browser',
-    '$timeout',
-    '$sce',
-    'serverConfiguration',
     'initialData',
+    'nodeLoader',
+    'messaging',
     MainController]);

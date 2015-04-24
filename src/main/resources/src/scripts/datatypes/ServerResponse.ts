@@ -1,7 +1,7 @@
-class ServerResponse {
+class ServerResponse<T> {
     success: boolean;
     message: string;
-    data: any;
+    data: T;
     user: UserStateUpdate;
     versionId: number;
     collectionChanges: CollectionStateChange[];

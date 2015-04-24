@@ -4,8 +4,6 @@ class ServerConfiguration {
     configurationPath: string;
     rootPath: string;
     rootTitle: string;
-    navigationTree: MenuItem[];
-    topMenu: TopMenuItem[];
     profilePath: string;
     forgotPasswordPath: string;
     languages: Language[];
@@ -15,4 +13,6 @@ class ServerConfiguration {
     smiles: Smile[];
     smilesBase: string;
     useGoogleAnalytics: boolean;
+    loginModelId: string;
+    pageSize: number;
 }

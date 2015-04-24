@@ -61,6 +61,12 @@
     },
     "oclazyload/oclazyload.d.ts": {
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
+    },
+    "codemirror/codemirror.d.ts": {
+      "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
+    },
+    "recaptcha/recaptcha.d.ts": {
+      "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     }
   }
 }

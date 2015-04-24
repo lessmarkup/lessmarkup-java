@@ -4,4 +4,5 @@ class MenuItem {
     imageUrl: string;
     selected: boolean;
     level: number;
+    style: string;
 }

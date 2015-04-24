@@ -1,3 +1,3 @@
 class SearchResult {
-
+    text: string;
 }

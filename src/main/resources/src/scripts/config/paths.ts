@@ -12,9 +12,10 @@ require.config({
         'autolinker': 'lib/Autolinker.js/dist/Autolinker.js',
         'bootstrap': 'lib/bootstap/dist/js/bootstrap',
         'ckeditor': 'lib/ckeditor/ckeditor',
-        'codemirror': 'lib/codemirror/lib/codemirror',
+        'Codemirror': 'lib/codemirror/lib/codemirror',
         'tinymce': 'lib/tinymce/tinymce',
-        'domReady': 'lib/requirejs-domready/domReady'
+        'domReady': 'lib/requirejs-domready/domReady',
+        'recaptcha': 'http://www.google.com/recaptcha/api/js/recaptcha_ajax'
     },
     shim: {
         'angular':{

@@ -12,8 +12,7 @@ class CommandProcessorService {
     private navigationTree: NavigationTreeService;
     private path: string;
     private rootScope: ng.IRootScopeService;
-
-    public static EVENT_RECEIVED_UPDATES = "commandprocessor.updates";
+    private qService: ng.IQService;
 
     constructor(http: ng.IHttpService,
                 rootScope: ng.IRootScopeService,
@@ -21,7 +20,8 @@ class CommandProcessorService {
                 userSecurity: UserSecurityService,
                 collectionUpdates: CollectionUpdatesService,
                 navigationTree: NavigationTreeService,
-                initialData: InitialData) {
+                initialData: InitialData,
+                qService: ng.IQService) {
         this.rootScope = rootScope;
         this.http = http;
         this.versionId = initialData.versionId;
@@ -29,25 +29,22 @@ class CommandProcessorService {
         this.userSecurity = userSecurity;
         this.collectionUpdates = collectionUpdates;
         this.navigationTree = navigationTree;
+        this.qService = qService;
     }
 
     public onPathChanged(path: string) {
         this.path = path;
     }
 
-    private onSuccess(response: ng.IHttpPromiseCallbackArg<ServerResponse>, success: (data: any) => void, failure: (message:string) => void) {
+    private onSuccess<T>(response: ng.IHttpPromiseCallbackArg<ServerResponse>, defer: ng.IDeferred<T>): void {
         this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
 
         this.userSecurity.updateState(response.data.user);
 
         if (!response.data.success) {
             var message:string = response.data.message || "Error";
-            if (failure) {
-                failure(message);
-            } else {
-                console.log(message);
-            }
-            return null;
+            defer.reject(message);
+            return;
         }
 
         if (response.data.versionId) {
@@ -71,39 +68,33 @@ class CommandProcessorService {
         }
 
         if (response.data.updates) {
-            this.rootScope.$broadcast(CommandProcessorService.EVENT_RECEIVED_UPDATES, response.data.updates);
+            this.rootScope.$broadcast(BroadcastEvents.RECORD_UPDATES, response.data.updates);
         }
 
-        if (success) {
-            try {
-                return success(response.data.data);
-            } catch (e) {
-                if (failure) {
-                    failure(e);
-                } else {
-                    console.log(e);
-                }
-            }
+        try {
+            return defer.resolve(response.data.data);
+        } catch (e) {
+            defer.reject(e);
         }
 
         return null;
     }
 
-    private onFailure(response: ng.IHttpPromiseCallbackArg<any>, failure: (message:string) => void) {
+    private onFailure<T>(response: ng.IHttpPromiseCallbackArg<any>, defer: ng.IDeferred<T>) {
         this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
         var message = response.status > 0 ? "Request failed, error " + response.status : "Request failed, unknown communication error";
-        if (failure) {
-            failure(message);
-        } else {
-            console.log(message);
-        }
+        defer.reject(message);
     }
 
     public sendIdle() : void {
         this.sendCommand("idle");
     }
 
-    public sendCommand(command:string, data:any = null, success: (data: any) => void = null, failure: (message:string) => void = null, path:string = null) {
+    public onUserActivity():void {
+        this.backgroundRefresh.onUserActivity(this.sendIdle);
+    }
+
+    public sendCommand<T>(command:string, data:any = null, path:string = null): ng.IPromise<T> {
 
         data = data || {};
 
@@ -128,9 +119,13 @@ class CommandProcessorService {
             }
         }, this);
 
-        return this.http.post("", data).then(
-            (response:ng.IHttpPromiseCallbackArg<ServerResponse>) => { this.onSuccess(response, success, failure); },
-            (response: ng.IHttpPromiseCallbackArg<any>) => { this.onFailure(response, failure); });
+        var defer: ng.IDeferred<T> = this.qService.defer<T>();
+
+        this.http.post<ServerResponse<T>>("", data).then(
+            (response:ng.IHttpPromiseCallbackArg<ServerResponse<T>>) => { this.onSuccess(response, defer); },
+            (response: ng.IHttpPromiseCallbackArg<any>) => { this.onFailure(response, defer); });
+
+        return defer.promise;
     }
 }
 
@@ -143,4 +138,5 @@ servicesModule.service('commandProcessor', [
     'collectionUpdates',
     'navigationTree',
     'initialData',
+    '$q',
     CommandProcessorService]);

@@ -15,7 +15,7 @@ class CollectionUpdatesDirective {
     private static VIEW_PATH_MOBILE = "/views/collectionUpdatesMobile.html";
     private static VIEW_PATH_NORMAL = "/views/collectionUpdates.html";
 
-    constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, navigate: NodeLoaderService) {
+    constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, navigate: ModuleLoaderService) {
 
         $scope.getTemplateUrl = () => {
             return $scope.platform === PlatformType.DESKTOP ?

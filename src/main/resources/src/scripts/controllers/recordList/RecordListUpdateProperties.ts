@@ -1,0 +1,3 @@
+class RecordListUpdateProperties {
+    filter: string;
+}

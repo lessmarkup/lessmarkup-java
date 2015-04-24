@@ -27,7 +27,7 @@
                     <div ng-if="readOnly(field)" ng-bind-html="getValue(object, field)" class="rich-control"></div>
                 </div>
                 <div ng-switch-when="FILE" class="form-control" style="height: auto;">
-                    <input type="file" fileread="object[field.property]" />
+                    <file-read value="object[field.property]" />
                 </div>
                 <div ng-switch-when="FILE_LIST" multi-file-read="object[field.property]"></div>
                 <textarea class="form-control" ng-switch-when="CODE_TEXT" ui-codemirror="codeMirrorDefaultOptions" ng-model="object[field.property]" ng-readonly="readOnly(field)" cols="10"></textarea>

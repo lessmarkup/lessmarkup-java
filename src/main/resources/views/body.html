@@ -10,9 +10,9 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand visible-xs" href="{{rootPath}}" ng-click="navigateToView(rootPath)">
+                        <node-link class="navbar-brand visible-xs" path="">
                             [[>views/logoXs.html]]
-                        </a>
+                        </node-link>
                         
                         <div class="visible-xs navbar-notifications scriptonly">
                             <collection-updates platform="mobile" />
@@ -36,6 +36,7 @@
                             [[>views/topMenuPlugins.html]]
 
                             <collection-updates platform="desktop" />
+
                             <user-panel platform="desktop" />
 
                         </ul>
@@ -61,13 +62,12 @@
         <div class="loadmessage container scriptonly" ng-cloak>[[#text]]PleaseWaitLoading[[/text]]</div>
 
         <div class="contents container" ng-cloak>
-            <div class="toolbar scriptonly">
-                <button ng-repeat="button in toolbarButtons" type="button" class="btn btn-default" ng-disabled="!isToolbarButtonEnabled(button.id)" ng-click="onToolbarButtonClick(button.id)" ng-bind="button.text"></button>
-            </div>
-            <alert class="scriptonly" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert(alert.id)"><div ng-bind="alert.message"></div></alert>
-            <div class="scriptonly" bind-compiled-html="{ name: 'bindBody', scope: getViewScope }">
+
+            <alerts-and-messages />
+
+            <bind-template class="scriptonly" template="template" configuration="configuration">
                 [[#text]]PleaseWaitLoading[[/text]]
-            </div>
+            </bind-template>
             [[noScriptBlock]]
         </div>
     </div>
