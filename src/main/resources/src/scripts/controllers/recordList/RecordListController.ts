@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import ng = require('angular');
 import _ = require('lodash');
 
 class RecordListController {
@@ -21,7 +20,13 @@ class RecordListController {
     private qService: ng.IQService;
     private nodeLoader: NodeLoaderService;
 
-    constructor(scope:RecordListControllerScope, serverConfiguration: ServerConfiguration, commandProcessor: CommandProcessorService, inputForm: InputFormService, qService: ng.IQService, nodeLoader: NodeLoaderService) {
+    constructor(
+        scope:RecordListControllerScope,
+        serverConfiguration: ServerConfiguration,
+        commandProcessor: CommandProcessorService,
+        inputForm: InputFormService,
+        qService: ng.IQService,
+        nodeLoader: NodeLoaderService) {
 
         this.scope = scope;
         this.scope.pageSize = serverConfiguration.pageSize;
@@ -835,8 +840,14 @@ class RecordListController {
     }
 }
 
-import appControllers = require('../app.controllers');
+import module = require('../module');
 
-appControllers.controller('recordList', [
-'$scope',
-RecordListController]);
+module.controller('recordList', [
+    '$scope',
+    'serverConfiguration',
+    'commandProcessor',
+    'inputForm',
+    '$q',
+    'nodeLoader',
+    RecordListController
+]);

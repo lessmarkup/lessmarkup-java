@@ -20,9 +20,6 @@
     "angular-material/angular-material.d.ts": {
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
-    "angularjs/angular-route.d.ts": {
-      "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
-    },
     "angularjs/angular-animate.d.ts": {
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
@@ -36,6 +33,9 @@
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
     "angularjs/angular-tests.d.ts": {
+      "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
+    },
+    "angular-translate/angular-translate.d.ts": {
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
     "bootstrap.paginator/bootstrap.paginator.d.ts": {
@@ -57,9 +57,6 @@
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
     "domready/domready.d.ts": {
-      "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
-    },
-    "oclazyload/oclazyload.d.ts": {
       "commit": "6b19a967eff47c4d6eaf56c573ea4b8f0fc9c487"
     },
     "codemirror/codemirror.d.ts": {

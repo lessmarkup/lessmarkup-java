@@ -1,5 +1,3 @@
-import ng = require('angular');
-
 interface ToolbarPanelDirectiveScope extends ng.IScope {
     isButtonEnabled(id: string):boolean;
     onClick(id: string):void;
@@ -19,10 +17,10 @@ class ToolbarPanelDirective {
     }
 }
 
-import app = require('app');
+import module = require('./module');
 
-app.directive('toolbarPanel', [() => {
-    return <ng.IDirective>{
+module.directive('toolbarPanel', [() => {
+    return <ng.IDirective> {
         template: '/views/toolbarPanel.html',
         restrict: 'E',
         replace: true,

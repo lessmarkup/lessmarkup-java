@@ -1,5 +1,3 @@
-import ng = require('angular');
-
 interface LoginDialogDirectiveScope extends ng.IScope {
     showLogin: () => void;
 }
@@ -60,14 +58,14 @@ class LoginDialogDirectiveController {
     }
 }
 
-import app = require('app');
+import module = require('./module');
 
-app.directive('loginDialog', ['$scope', 'inputForm', () => {
+module.directive('loginDialog', [() => {
     return <ng.IDirective>{
         templateUrl: '/views/login.html',
         restrict: 'E',
         replace: true,
         scope: true,
-        controller: ['$scope', LoginDialogDirectiveController]
+        controller: ['$scope', 'inputForm', 'serverConfiguration', 'userSecurity', 'commandProcessor', 'messaging', '$q', LoginDialogDirectiveController]
     };
 }]);

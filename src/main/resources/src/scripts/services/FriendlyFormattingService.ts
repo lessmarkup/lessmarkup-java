@@ -4,8 +4,8 @@ class FriendlyFormattingService {
 
     smilesBase: string;
     smiles: { [code: string]: string } = {};
-    smilesStr = "";
-    smilesExpr: RegExp;
+    smilesString = "";
+    smilesExpression: RegExp;
     autoLinker: Autolinker;
 
     constructor(serverConfiguration: ServerConfiguration) {
@@ -15,8 +15,8 @@ class FriendlyFormattingService {
         for (var i = 0; i < serverConfiguration.smiles.length; i++) {
             var smile = serverConfiguration.smiles[i];
             this.smiles[smile.code] = smile.id;
-            if (this.smilesStr.length > 0) {
-                this.smilesStr += "|";
+            if (this.smilesString.length > 0) {
+                this.smilesString += "|";
             }
             for (var j = 0; j < smile.code.length; j++) {
                 switch (smile.code[j]) {
@@ -27,19 +27,23 @@ class FriendlyFormattingService {
                     case '-':
                     case '?':
                     case '|':
-                        this.smilesStr += '\\';
+                        this.smilesString += '\\';
                         break;
                 }
-                this.smilesStr += smile.code[j];
+                this.smilesString += smile.code[j];
             }
         }
 
-        if (this.smilesStr.length > 0) {
-            this.smilesExpr = new RegExp(this.smilesStr, "g");
+        if (this.smilesString.length > 0) {
+            this.smilesExpression = new RegExp(this.smilesString, "g");
         } else {
-            this.smilesExpr = null;
+            this.smilesExpression = null;
         }
 
+    }
+
+    public getSmilesExpression(): RegExp {
+        return this.smilesExpression;
     }
 
     private getSmileUrl(code: string) {
@@ -49,13 +53,13 @@ class FriendlyFormattingService {
         return "<img alt=\"" + code + "\" src=\"" + this.smilesBase + this.smiles[code] + "\" title=\"" + code + "\" />";
     }
 
-    private smilesToImg(text: string) {
-        if (this.smilesExpr != null) {
+    public smilesToImg(text: string): string {
+        if (this.smilesExpression != null) {
             text = text.replace(/([^<>]*)(<[^<>]*>)/gi, function (match, left, tag) {
                 if (!left || left.length == 0) {
                     return match;
                 }
-                left = left.replace(this.smilesExpr, this.getSmileUrl);
+                left = left.replace(this.smilesExpression, this.getSmileUrl);
                 return tag ? left + tag : left;
             });
         }

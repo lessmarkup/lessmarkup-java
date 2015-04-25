@@ -1,6 +1,3 @@
-import ng = require('angular');
-import $ = require('jQuery');
-
 interface NodeLinkDirectiveScope extends ng.IScope {
     path: string;
     fullPath: string;
@@ -28,9 +25,9 @@ class NodeLinkDirectiveLink {
     }
 }
 
-import appDirectives = require('app.directives');
+import module = require('./module');
 
-appDirectives.directive('nodeLink', [() => {
+module.directive('nodeLink', [() => {
     return <ng.IDirective>{
         template: '<a class="{{class}}" href="{{fullPath}}"><ng-transclude></ng-transclude></a>',
         restrict: 'E',

@@ -1,10 +1,8 @@
-import ng = require('angular');
-import $ = require('jQuery');
-
 interface FileReadResponse {
     file: any;
     type: string;
     name: string;
+    id: number;
 }
 
 interface FileReadDirectiveScope extends ng.IScope {
@@ -40,14 +38,14 @@ class FileReadDirectiveLink {
     }
 
     private onFileSelected(changeEvent) {
-        this.scope.comment = changeEvent.target.files[0].name;
+        this.scope.comment = changeEvent.target.value[0].name;
         var reader = new FileReader();
         reader.onload = function (loadEvent) {
             this.scope.$apply(() => {
                 this.onReadFinished(loadEvent, changeEvent);
             });
         };
-        reader.readAsDataURL(changeEvent.target.files[0]);
+        reader.readAsDataURL(changeEvent.target.value[0]);
     }
 
     private onReadFinished(loadEvent, changeEvent) {
@@ -60,15 +58,16 @@ class FileReadDirectiveLink {
 
         this.scope.value = {
             file: value,
-            type: changeEvent.target.files[0].type,
-            name: changeEvent.target.files[0].name
+            type: changeEvent.target.value[0].type,
+            name: changeEvent.target.value[0].name,
+            id: null
         };
     }
 }
 
-import appDirectives = require('app.directives');
+import module = require('./module');
 
-appDirectives.directive('fileRead', [() => {
+module.directive('fileRead', [() => {
     return <ng.IDirective>{
         templateUrl: '/views/fileRead.html',
         restrict: 'E',

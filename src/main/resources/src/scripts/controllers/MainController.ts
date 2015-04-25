@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import ng = require('angular');
-
 interface MainControllerScope extends ng.IScope {
     showXsMenu: boolean;
     hideXsMenu: () => void;
@@ -46,11 +44,12 @@ class MainController {
     }
 }
 
-import appControllers = require('app.controllers');
+import module = require('./module');
 
-appControllers.controller('main', [
+module.controller('main', [
     '$scope',
     'initialData',
     'nodeLoader',
     'messaging',
-    MainController]);
+    MainController
+]);

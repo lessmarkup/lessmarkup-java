@@ -1,5 +1,5 @@
-import ng = require('angular');
-import material = require('angular.material');
+///<amd-dependency path="angular.material" />
+
 import Codemirror = require('Codemirror');
 import _ = require('lodash');
 import Recaptcha = require('recaptcha');
@@ -379,9 +379,9 @@ class InputFormController {
     }
 }
 
-import appControllers = require('app.controllers');
+import module = require('./module');
 
-appControllers.controller('inputForm', [
+module.controller('inputForm', [
     '$scope',
     '$mdDialog',
     '$sce',

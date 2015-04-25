@@ -34,9 +34,9 @@ class CellShowOptionsDirectiveLink {
     }
 }
 
-import appDirectives = require('app.directives');
+import module = require('./module');
 
-appDirectives.directive('cellShowOptions', [() => {
+module.directive('cellShowOptions', [() => {
     return <ng.IDirective>{
         restrict: 'A',
         replace: false,

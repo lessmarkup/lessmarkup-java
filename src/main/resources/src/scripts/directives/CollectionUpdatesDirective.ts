@@ -1,5 +1,8 @@
-import ng = require('angular');
-import app = require('app');
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 interface CollectionUpdatesDirectiveScope extends ng.IScope {
     getTemplateUrl(): string;
@@ -15,7 +18,7 @@ class CollectionUpdatesDirective {
     private static VIEW_PATH_MOBILE = "/views/collectionUpdatesMobile.html";
     private static VIEW_PATH_NORMAL = "/views/collectionUpdates.html";
 
-    constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, navigate: ModuleLoaderService) {
+    constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, nodeLoader: NodeLoaderService) {
 
         $scope.getTemplateUrl = () => {
             return $scope.platform === PlatformType.DESKTOP ?
@@ -30,7 +33,7 @@ class CollectionUpdatesDirective {
         );
 
         $scope.gotoCollection = (collection : CollectionDefinition) => {
-            navigate.loadNode(collection.path);
+            nodeLoader.loadNode(collection.path);
         };
 
         $scope.hasCollections = () => {
@@ -46,7 +49,9 @@ class CollectionUpdatesDirective {
     }
 }
 
-app.directive('notificationsPanel', ['', () => {
+import module = require('./module');
+
+module.directive('collectionUpdates', [() => {
     return <ng.IDirective>{
         template: '<ng-include src="getTemplateUrl()"/>',
         restrict: 'E',
@@ -54,6 +59,6 @@ app.directive('notificationsPanel', ['', () => {
         scope: {
             platform: '='
         },
-        controller: ['$scope', 'serverConfiguration', 'collectionUpdates', 'navigate', CollectionUpdatesDirective]
+        controller: ['$scope', 'serverConfiguration', 'collectionUpdates', 'nodeLoader', CollectionUpdatesDirective]
     };
 }]);

@@ -2,89 +2,60 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c8ac08a-feb6-416a-8aeb-7c70e2ae0b33" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/types/Autolinker.d.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/interfaces/BroadcastEvents.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/CellShowOptionsDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/interfaces/Constants.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/DynamicInputFieldDefinition.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/GetRecordIdsData.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/InputFieldDefinition.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/interfaces/InputFieldTypes.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/InputFormDefinition.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/services/InputFormService.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/services/LanguageService.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/services/MessagingService.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordActionType.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListAction.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListActionDefinition.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListColumn.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerConfiguration.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerScope.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListLink.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRecord.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRow.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListUpdateProperties.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/services/RecordSearchService.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/RegisterModelRequest.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/SearchResponse.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/SelectValueDefinition.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/ToolbarPanelDirective.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/UserLoginModel.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/alertsAndMessages.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/fileRead.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/inputFormMessageTemplate.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/inputFormQuestionTemplate.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/toolbarPanel.html" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\config\app.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\composite.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\inputform.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\message.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\question.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\recordlist.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\toolbar.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\bind2.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\bindcompiled.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\composite.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\fileread.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\main.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\providers\commandhandler.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\providers\inputform.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\providers\lazyload.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\providers\InputForm.ts" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\helpers\PendingModuleLoader.ts" afterPath="$PROJECT_DIR$/src/scripts/services/ModuleLoaderService.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/CkEditorDirective.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/ConfigurationController.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/FlatPageController.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/MultiFileReadDirective.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/NodeListController.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/ScrollSpySideDirective.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/directives/ScrollSpyTopDirective.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/controllers/TabPageController.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/datatypes/TreeNode.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/scripts/utilities/WebSocketConnection.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/multiFileRead.html" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\configuration.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\flatpage.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\main.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\nodelist.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\controllers\tabpage.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\angular-ckeditor.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\directives\multifileread.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\filters\locale-date.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\filters\relative-date.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\scripts\interface\websocket.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\IApplication.ts" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/CellShowOptionsDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/CellShowOptionsDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/CollectionUpdatesDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/CollectionUpdatesDirective.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/CommandProcessorService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/CommandProcessorService.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/EventHandlerService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/EventHandlerService.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/DialogController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/DialogController.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/FriendlyFormattingService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/FriendlyFormattingService.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/interfaces/IApplication.ts" afterPath="$PROJECT_DIR$/src/scripts/interfaces/IApplication.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/InitialData.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/InitialData.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/InputFormService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/InputFormService.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/Language.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/Language.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/LanguagesPanelDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/LanguagesPanelDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts" afterPath="$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/LoginDialogDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/LoginDialogDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/MainController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/MainController.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/MenuItem.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/MenuItem.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/NavigationTreeService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/NavigationTreeService.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/nodeLoader/NodeLoaderService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/nodeLoader/NodeLoaderService.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/SearchResult.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/SearchResult.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/ServerConfiguration.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/ServerConfiguration.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/ServerResponse.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/ServerResponse.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/datatypes/Smile.ts" afterPath="$PROJECT_DIR$/src/scripts/datatypes/Smile.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/NavigationTreeDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/NavigationTreeDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts" afterPath="$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/SearchPanelDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/SearchPanelDirective.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/ToolbarPanelDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/ToolbarPanelDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/User.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/User.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/services/userSecurity/UserSecurityService.ts" afterPath="$PROJECT_DIR$/src/scripts/services/userSecurity/UserSecurityService.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/UserPanelDirective.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/UserPanelDirective.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/types/all.d.ts" afterPath="$PROJECT_DIR$/build/types/all.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/app.ts" afterPath="$PROJECT_DIR$/src/scripts/app.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/body.html" afterPath="$PROJECT_DIR$/views/body.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/inputFormTemplate.html" afterPath="$PROJECT_DIR$/views/inputFormTemplate.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/inputFormTemplateBody.html" afterPath="$PROJECT_DIR$/views/inputFormTemplateBody.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/bower.json" afterPath="$PROJECT_DIR$/build/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/entrypoint.html" afterPath="$PROJECT_DIR$/views/entrypoint.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/controllers/index.ts" afterPath="$PROJECT_DIR$/src/scripts/controllers/index.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/directives/index.ts" afterPath="$PROJECT_DIR$/src/scripts/directives/index.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/languagesPanel.html" afterPath="$PROJECT_DIR$/views/languagesPanel.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/scripts/config/paths.ts" afterPath="$PROJECT_DIR$/src/scripts/config/paths.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/config/tsd.config.json" afterPath="$PROJECT_DIR$/build/config/tsd.config.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -124,57 +95,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/InputFieldDefinition.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/interfaces/InputFieldTypes.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/InputFormDefinition.ts" />
-        <option value="$PROJECT_DIR$/views/inputFormMessageTemplate.html" />
-        <option value="$PROJECT_DIR$/views/inputFormQuestionTemplate.html" />
-        <option value="$PROJECT_DIR$/views/inputFormTemplate.html" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/services/InputFormService.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/UserLoginModel.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/RegisterModel.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/RegisterModelRequest.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/LoginDialogDirective.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/SearchResults.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/SearchResponse.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/SearchResult.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/services/RecordSearchService.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/types/Autolinker.d.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts" />
-        <option value="$PROJECT_DIR$/scripts/directives/fileread.js" />
-        <option value="$PROJECT_DIR$/views/fileRead.html" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts" />
-        <option value="$PROJECT_DIR$/views/inputFormTemplateBody.html" />
-        <option value="$PROJECT_DIR$/scripts/directives/bindcompiled.js" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/services/nodeLoader/NodeLoaderService.ts" />
-        <option value="$PROJECT_DIR$/views/recordList.html" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/CellShowOptionsDirective.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts" />
-        <option value="$PROJECT_DIR$/views/body.html" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/MainController.ts" />
-        <option value="$PROJECT_DIR$/scripts/controllers/recordlist.js" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/RecordListControllerScope.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/RecordListController.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/Configuration.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerRecord.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListLink.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRow.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListUpdateProperties.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/datatypes/ServerConfiguration.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/GetRecordIdsData.ts" />
-        <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListActionDefinition.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordActionType.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListAction.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListColumn.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRecord.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerScope.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerConfiguration.ts" />
+        <option value="$PROJECT_DIR$/views/entrypoint.html" />
+        <option value="$PROJECT_DIR$/src/scripts/datatypes/Language.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/LoginDialogDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/app.ts" />
+        <option value="$PROJECT_DIR$/views/languagesPanel.html" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/LanguagesPanelDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/services/FriendlyFormattingService.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/ToolbarPanelDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/UserPanelDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/NavigationTreeDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/CollectionUpdatesDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/CkEditorDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/CellShowOptionsDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/SearchPanelDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/index.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/DialogController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/MainController.ts" />
         <option value="$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts" />
+        <option value="$PROJECT_DIR$/views/multiFileRead.html" />
+        <option value="$PROJECT_DIR$/scripts/directives/multifileread.js" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/MultiFileReadDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/index.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/ScrollSpyTopDirective.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/directives/ScrollSpySideDirective.ts" />
+        <option value="$PROJECT_DIR$/scripts/controllers/flatpage.js" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/ConfigurationController.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/FlatPageController.ts" />
+        <option value="$PROJECT_DIR$/scripts/interface/websocket.js" />
+        <option value="$PROJECT_DIR$/src/scripts/utilities/WebSocketConnection.ts" />
+        <option value="$PROJECT_DIR$/scripts/controllers/nodelist.js" />
+        <option value="$PROJECT_DIR$/src/scripts/services/InputFormService.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/datatypes/TreeNode.ts" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/NodeListController.ts" />
+        <option value="$PROJECT_DIR$/scripts/controllers/tabpage.js" />
+        <option value="$PROJECT_DIR$/src/scripts/controllers/TabPageController.ts" />
       </list>
     </option>
   </component>
@@ -187,7 +158,6 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-9" />
-    <option name="y" value="-9" />
     <option name="width" value="1932" />
     <option name="height" value="1170" />
   </component>
@@ -248,8 +218,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -267,10 +237,6 @@
               <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -301,28 +267,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="types" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -366,177 +310,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="interfaces" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="filters" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="directives" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="config" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="filters" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="directives" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -599,7 +373,7 @@
     <property name="list.type.of.created.stylesheet" value="SCSS" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="SearchEverywhereHistoryKey" value="ini&#9;FILE&#9;file://C:/Users/Oleg/Source/LessMarkupJava/lessmarkup-java/src/main/resources/src/scripts/datatypes/InitialData.ts" />
+    <property name="SearchEverywhereHistoryKey" value="frie&#9;null&#9;null&#10;ngmode&#9;null&#9;null&#10;init&#9;FILE&#9;file://C:/Users/Oleg/Source/LessMarkupJava/lessmarkup-java/src/main/resources/src/scripts/datatypes/InitialData.ts&#10;ini&#9;FILE&#9;file://C:/Users/Oleg/Source/LessMarkupJava/lessmarkup-java/src/main/resources/src/scripts/datatypes/InitialData.ts" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -664,7 +438,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1932" height="1170" extended-state="0" />
+    <frame x="-9" y="0" width="1932" height="1170" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973877" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -702,171 +476,63 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/tsconfig.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.722332">
-          <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.36206895">
+          <caret line="21" column="21" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/InitialData.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8567194">
-          <caret line="51" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.16798419">
+          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/services/RecordSearchService.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4367589">
-          <caret line="26" column="20" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/SearchResponse.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/ServerConfiguration.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="17" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/services/nodeLoader/NodeLoadData.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/Smile.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="6" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+          <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/SearchResult.ts">
+    <entry file="file://$PROJECT_DIR$/views/inputFormTemplateBody.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.01679842">
-          <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.6896552">
+          <caret line="40" column="44" selection-start-line="40" selection-start-column="44" selection-end-line="40" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/controllers/configuration.js">
+    <entry file="file://$PROJECT_DIR$/build/types/angularjs/angular.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/services/FriendlyFormattingService.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7648221">
-          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/types/Autolinker.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="7" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/filters/relative-date.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/filters/locale-date.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6887352">
-          <caret line="41" column="4" selection-start-line="41" selection-start-column="4" selection-end-line="41" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/module.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/fileRead.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#1;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/directives/multifileread.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <marker date="1428787474619" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428787474619" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/UserPanelDirective.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.520751">
-          <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.36660078">
+          <caret line="471" column="14" selection-start-line="471" selection-start-column="14" selection-end-line="471" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scripts/directives/ToolbarPanelDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.50395256">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/SearchPanelDirective.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -876,53 +542,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scripts/directives/NavigationTreeDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.01679842">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/NodeLinkDirective.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4535573">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/inputFormTemplateBody.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5862069">
-          <caret line="34" column="21" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3527668">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/scripts/directives/LoginDialogDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2262846">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8992095">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/controllers/tabpage.js">
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/LanguagesPanelDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8992095">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/CollectionUpdatesDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -932,18 +574,140 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/CkEditorDirective.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="4" selection-start-line="68" selection-start-column="0" selection-end-line="80" selection-end-column="4" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/UserPanelDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.520751">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/recordOptions.html">
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/module.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846">
-          <caret line="4" column="29" selection-start-line="4" selection-start-column="29" selection-end-line="4" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.050395258">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/app.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6887352">
+          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/services/FriendlyFormattingService.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5879447">
+          <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/InputFormController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01679842">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/InputFieldDefinition.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.050395258">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01679842">
+          <caret line="1" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/InputFormMessageController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36956522">
+          <caret line="22" column="33" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/InputFormQuestionController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8735178">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/MainController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06719368">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31620553">
+          <caret line="225" column="0" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/GetRecordIdsData.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01679842">
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/AlertsAndMessagesDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67193675">
+          <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8992095">
+          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/BreadcrumbsPanelDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26877472">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -956,35 +720,176 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/directives/BindTemplateDirective.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/filters/RelativeDateFilter.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6136364">
-          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/MainController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21837945">
-          <caret line="13" column="22" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/body.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70892495">
-          <caret line="67" column="94" selection-start-line="67" selection-start-column="94" selection-end-line="67" selection-end-column="94" />
+        <state vertical-scroll-proportion="0.8992095">
+          <caret line="54" column="50" selection-start-line="54" selection-start-column="50" selection-end-line="54" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListLink.ts">
+    <entry file="file://$PROJECT_DIR$/src/scripts/filters/LocaleDateFilter.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18478261">
+          <caret line="11" column="46" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/FileReadDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/multiFileRead.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.12068965">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <folding>
+            <element signature="n#style#0;n#input#0;n#!!top" expanded="false" />
+            <element signature="n#class#0;n#ul#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/MultiFileReadDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.15118577">
+          <caret line="9" column="32" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/module.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/ScrollSpySideDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28557312">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/ScrollSpyTopDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48715416">
+          <caret line="29" column="39" selection-start-line="29" selection-start-column="39" selection-end-line="29" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/directives/SearchPanelDirective.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06719368">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/ConfigurationController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06719368">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/DialogController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/FlatPageController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/lib.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33300394">
+          <caret line="1152" column="10" selection-start-line="1152" selection-start-column="10" selection-end-line="1152" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33300394">
+          <caret line="1364" column="0" selection-start-line="1364" selection-start-column="0" selection-end-line="1364" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/utilities/WebSocketConnection.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/types/lodash/lodash.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="8.575099">
+          <caret line="5524" column="8" selection-start-line="5524" selection-start-column="8" selection-end-line="5524" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/NodeListController.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.08695652">
+          <caret line="171" column="37" selection-start-line="171" selection-start-column="37" selection-end-line="171" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/services/InputFormService.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33300394">
+          <caret line="131" column="11" selection-start-line="131" selection-start-column="11" selection-end-line="131" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/TreeNode.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13438736">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/TabPageController.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.01679842">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
@@ -992,140 +897,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRow.ts">
+    <entry file="file://$PROJECT_DIR$/scripts/controllers/tabpage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.01679842">
-          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListUpdateProperties.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/InitialData.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/datatypes/ServerConfiguration.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26877472">
-          <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/types/angularjs/angular.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33300394">
-          <caret line="565" column="90" selection-start-line="565" selection-start-column="90" selection-end-line="565" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/services/CommandProcessorService.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="96" column="40" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerScope.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.100790516">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListRecord.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.050395258">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/GetRecordIdsData.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.01679842">
-          <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListActionDefinition.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.083992094">
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordActionType.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.06719368">
-          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListAction.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.06719368">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListController.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45059288">
-          <caret line="444" column="0" selection-start-line="444" selection-start-column="0" selection-end-line="444" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/recordList.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15517241">
-          <caret line="9" column="32" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/services/nodeLoader/NodeLoaderService.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33300394">
-          <caret line="48" column="11" selection-start-line="48" selection-start-column="11" selection-end-line="48" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListControllerConfiguration.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16798419">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scripts/controllers/recordList/RecordListColumn.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20158103">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.38636363">
+          <caret line="23" column="9" selection-start-line="8" selection-start-column="17" selection-end-line="23" selection-end-column="9" />
           <folding />
         </state>
       </provider>

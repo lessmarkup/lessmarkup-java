@@ -20,9 +20,9 @@ class InputFormMessageController {
     }
 }
 
-import appControllers = require('app.controllers');
+import module = require('./module');
 
-appControllers.controller('inputFormMessage', [
+module.controller('inputFormMessage', [
     '$scope',
     '$mdDialog',
     'message',

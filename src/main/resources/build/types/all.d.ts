@@ -17,3 +17,4 @@
 /// <reference path="lodash/lodash.d.ts" />
 /// <reference path="cryptojs/cryptojs.d.ts" />
 /// <reference path="codemirror/codemirror.d.ts" />
+/// <reference path="angular-translate/angular-translate.d.ts" />

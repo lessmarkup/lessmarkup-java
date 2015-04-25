@@ -1,13 +1,13 @@
-<ul ng-if="languages && languages.length" class="nav navbar-nav navbar-right scriptonly">
+<ul ng-if="languages.length > 1" class="nav navbar-nav navbar-right scriptonly">
     <li class="dropdown">
         <a role="button" class="dropdown-toggle">
-            <img ng-if="selectedLanguage.imageUrl" ng-src="{{rootPath+selectedLanguage.imageUrl}}" class="language-icon" />
+            <img ng-if="selectedLanguage.imageUrl" ng-src="{{selectedLanguage.imageUrl}}" class="language-icon" />
             <span ng-bind="selectedLanguage.shortName"></span> <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
             <li ng-repeat="language in languages">
-                <a href="{{language.url}}">
-                    <img ng-if="language.imageUrl" ng-src="{{rootPath+language.imageUrl}}"/> {{language.name}} ({{language.shortName}})
+                <a href="#" ng-click="switchLanguage(language.id)">
+                    <img ng-if="language.imageUrl" ng-src="{{language.imageUrl}}"/> {{language.name}} ({{language.shortName}})
                 </a>
             </li>
         </ul>

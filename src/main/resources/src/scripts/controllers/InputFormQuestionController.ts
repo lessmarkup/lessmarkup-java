@@ -39,9 +39,9 @@ class InputFormQuestionController {
     }
 }
 
-import appControllers = require('app.controllers');
+import module = require('./module');
 
-appControllers.controller('inputFormQuestion', [
+module.controller('inputFormQuestion', [
     '$scope',
     '$mdDialog',
     'message',

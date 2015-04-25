@@ -1,4 +1,3 @@
-import ng = require('angular');
 import _ = require('lodash');
 
 interface AlertsAndMessagesDirectiveScope extends ng.IScope {
@@ -29,14 +28,18 @@ class AlertsAndMessagesDirectiveController {
     }
 }
 
-import app = require('app');
+import module = require('./module');
 
-app.directive('alertsAndMessages', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
+module.directive('alertsAndMessages', [() => {
     return <ng.IDirective>{
-        templateUrl: serverConfiguration.rootPath + '/views/alertsAndMessages.html',
+        templateUrl: '/views/alertsAndMessages.html',
         restrict: 'E',
         replace: true,
         scope: true,
-        controller: ['$scope', AlertsAndMessagesDirectiveController]
+        controller: [
+            '$scope',
+            'messaging',
+            AlertsAndMessagesDirectiveController
+        ]
     };
 }]);

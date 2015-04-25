@@ -148,7 +148,7 @@ class InputFormService {
         return defer.promise;
     }
 
-    public message(message: string, title: string): ng.IPromise<void> {
+    public message(message: string, title: string = null): ng.IPromise<void> {
 
         var defer = this.qService.defer<void>();
 
@@ -156,7 +156,7 @@ class InputFormService {
             templateUrl: '/views/inputFormMessageTemplate.html',
             locals: {
                 message: message,
-                title: title,
+                title: title || "LessMarkup",
                 defer: defer
             },
             controller: 'inputFormMessage'

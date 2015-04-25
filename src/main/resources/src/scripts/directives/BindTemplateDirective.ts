@@ -2,9 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import ng = require('angular');
-import $ = require('jQuery');
-
 interface BindTemplateDirectiveScope extends ng.IScope {
     template: string;
     configuration: any;
@@ -47,9 +44,9 @@ class BindTemplateDirectiveLink {
     }
 }
 
-import appDirectives = require('app.directives');
+import module = require('./module');
 
-appDirectives.directive('bindTemplate', [() => {
+module.directive('bindTemplate', [() => {
     return <ng.IDirective>{
         template: '<div></div>',
         restrict: 'E',
@@ -58,6 +55,10 @@ appDirectives.directive('bindTemplate', [() => {
             template: '=',
             configuration: '='
         },
-        controller: ['$compile', 'moduleLoader', BindTemplateDirectiveLink]
+        controller: [
+            '$compile',
+            'moduleLoader',
+            BindTemplateDirectiveLink
+        ]
     };
 }]);

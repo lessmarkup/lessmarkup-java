@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import app = require('app');
-
 interface DialogScope extends angular.IScope {
     definition: string;
     object: any;
@@ -15,7 +13,7 @@ interface DialogScope extends angular.IScope {
     openForm();
 }
 
-export class DialogController {
+class DialogController {
     constructor($scope: DialogScope, $timeout, lazyLoad, $sce) {
         $scope.definition = $scope.viewData.definition;
         $scope.object = $scope.viewData.object;
@@ -59,4 +57,5 @@ export class DialogController {
     });*/
 }
 
-//app.controller("dialog", DialogController);
+import module = require('./module');
+module.controller("dialog", DialogController);
