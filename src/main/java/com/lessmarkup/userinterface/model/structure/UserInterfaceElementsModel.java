@@ -38,7 +38,7 @@ public class UserInterfaceElementsModel {
         this.currentUser = currentUser;
     }
     
-    public void handle(JsonObject returnValues, OptionalLong lastChangeId) {
+    public void handle(JsonObject serverConfiguration, OptionalLong lastChangeId) {
         JsonArray notifications = new JsonArray();
         NodeCache nodeCache = this.dataCache.get(NodeCache.class);
         SiteConfiguration siteConfiguration = this.dataCache.get(SiteConfiguration.class);
@@ -93,13 +93,13 @@ public class UserInterfaceElementsModel {
             menuNodes.add(obj);
         });
         
-        returnValues.add("topMenu", menuNodes);
-        returnValues.add("notifications", notifications);
+        serverConfiguration.add("topMenu", menuNodes);
+        serverConfiguration.add("collections", notifications);
         
         if (siteConfiguration.getHasNavigationBar()) {
             JsonArray navigationTree = new JsonArray();
             fillNavigationBarItems(nodeCache.getRootNode().getChildren(), 0, menuNodes);
-            returnValues.add("navigationTree", navigationTree);
+            serverConfiguration.add("navigationTree", navigationTree);
         }
     }
     

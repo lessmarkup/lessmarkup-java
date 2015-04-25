@@ -68,7 +68,12 @@ public class CachedLanguage implements Language {
     public boolean getIsDefault() {
         return isDefault;
     }
-    
+
+    @Override
+    public Map<String, String> getTranslations() {
+        return this.translationsMap;
+    }
+
     public class Translation {
         private String reference;
         private String text;

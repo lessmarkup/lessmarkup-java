@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.lessmarkup.Constants;
+import com.lessmarkup.dataobjects.Smile;
 import com.lessmarkup.engine.filesystem.TemplateContext;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.ImageHelper;
@@ -11,6 +12,8 @@ import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.ChangesCache;
+import com.lessmarkup.interfaces.data.DomainModel;
+import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.RecordModelCache;
 import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.CachedNodeInformation;
@@ -24,6 +27,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.Map;
 import java.util.OptionalLong;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -38,7 +42,8 @@ public class NodeEntryPointModel {
         private String title;
         private final DataCache dataCache;
         private String initialData;
-        private String configurationData;
+        private String serverConfiguration;
+        private String languages;
         
         public Context(DataCache dataCache) {
             super(dataCache);
@@ -57,7 +62,9 @@ public class NodeEntryPointModel {
             return initialData;
         }
 
-        public String getConfigurationData() { return configurationData; }
+        public String getServerConfiguration() { return serverConfiguration; }
+
+        public String getLanguages() { return this.languages; }
         
         public String getTopMenu() {
             StringBuilder builder = new StringBuilder();
@@ -79,41 +86,142 @@ public class NodeEntryPointModel {
             if (StringHelper.isNullOrWhitespace(resourceId)) {
                 return "";
             }
-            String analyticsObject =
-                    "<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" +
-                            "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," +
-                            "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" +
-                            "})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');";
-            analyticsObject += String.format("ga('create', '%s', 'auto');</script>", resourceId);
-            return analyticsObject;
+            return String.format(this.dataCache.get(ResourceCache.class, this.dataCache.get(LanguageCache.class).getCurrentLanguageId()).readText("/views/googleAnalytics.html"), resourceId);
         }
     }
 
     private final Context context;
     private LoadNodeViewModel viewData;
-    private final JsonObject initialData = new JsonObject();
-    private final JsonObject configurationData = new JsonObject();
     private final DataCache dataCache;
     private final CurrentUser currentUser;
+    private final DomainModelProvider domainModelProvider;
+
+    private String nodeLoadError;
+    private OptionalLong versionId;
     
     @Autowired
-    public NodeEntryPointModel(DataCache dataCache, CurrentUser currentUser) {
+    public NodeEntryPointModel(DataCache dataCache, CurrentUser currentUser, DomainModelProvider domainModelProvider) {
         this.dataCache = dataCache;
         this.currentUser = currentUser;
         this.context = new Context(dataCache);
+        this.domainModelProvider = domainModelProvider;
     }
 
     public String getResource(String path) {
         return dataCache.get(ResourceCache.class).readText(path);
     }
 
-    public String getInitialData() {
-        return initialData.toString();
+    private void checkBrowser(RequestContext requestContext) {
+    }
+    
+    private void prepareInitialData(RequestContext requestContext, String path) {
+        JsonObject initialData = new JsonObject();
+
+        ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
+        this.versionId = changesCache.getLastChangeId();
+
+        initialData.addProperty("loggedIn", this.currentUser.getUserId().isPresent());
+        initialData.addProperty("userNotVerified", !this.currentUser.isApproved() || !this.currentUser.emailConfirmed());
+        if (this.currentUser.getUserName() != null) {
+            initialData.addProperty("userName", this.currentUser.getUserName());
+        } else {
+            initialData.add("userName", JsonNull.INSTANCE);
+        }
+        initialData.addProperty("showConfiguration", this.currentUser.isAdministrator());
+
+        if (versionId.isPresent()) {
+            initialData.addProperty("versionId", versionId.getAsLong());
+        } else {
+            initialData.add("versionId", JsonNull.INSTANCE);
+        }
+
+        initialData.add("loadedNode", this.viewData.toJson());
+
+        initialData.addProperty("path", path != null ? path : "");
+
+
+        if (nodeLoadError != null) {
+            initialData.addProperty("nodeLoadError", nodeLoadError);
+        }
+
+        this.context.initialData = initialData.toString();
     }
 
-    public String getConfigurationData() { return configurationData.toString(); }
+    private void prepareServerConfiguration(RequestContext requestContext) {
+        JsonObject serverConfiguration = new JsonObject();
 
-    private void checkBrowser(RequestContext requestContext) {
+        EngineConfiguration engineConfiguration = requestContext.getEngineConfiguration();
+        SiteConfiguration siteConfiguration = this.dataCache.get(SiteConfiguration.class);
+
+        String adminLoginPage = siteConfiguration.getAdminLoginPage();
+        if (adminLoginPage == null || adminLoginPage.length() == 0) {
+            adminLoginPage = RequestContextHolder.getContext().getEngineConfiguration().getAdminLoginPage();
+        }
+        serverConfiguration.addProperty("hasLogin", siteConfiguration.getHasUsers() || adminLoginPage == null || adminLoginPage.length() == 0);
+        serverConfiguration.addProperty("hasSearch", siteConfiguration.getHasSearch());
+        serverConfiguration.addProperty("configurationPath", "/" + Constants.NodePath.CONFIGURATION);
+        serverConfiguration.addProperty("rootPath", requestContext.getRootPath());
+        serverConfiguration.addProperty("rootTitle", siteConfiguration.getSiteName());
+        serverConfiguration.addProperty("profilePath", "/" + Constants.NodePath.PROFILE);
+        serverConfiguration.addProperty("forgotPasswordPath", "/" + Constants.NodePath.FORGOT_PASSWORD);
+
+        UserInterfaceElementsModel notificationsModel = DependencyResolver.resolve(UserInterfaceElementsModel.class);
+        notificationsModel.handle(serverConfiguration, this.versionId);
+
+        serverConfiguration.addProperty("recaptchaPublicKey", engineConfiguration.getRecaptchaPublicKey());
+        serverConfiguration.addProperty("maximumFileSize", siteConfiguration.getMaximumFileSize());
+
+        try (DomainModel domainModel = this.domainModelProvider.create()) {
+
+            JsonArray smiles = new JsonArray();
+            serverConfiguration.add("smiles", smiles);
+
+            for (Smile smile : domainModel.query().from(Smile.class).toList(Smile.class)) {
+                JsonObject smileTarget = new JsonObject();
+                smileTarget.addProperty("id", smile.getId());
+                smileTarget.addProperty("code", smile.getCode());
+                smiles.add(smileTarget);
+            }
+
+            serverConfiguration.addProperty("smilesBase", "/image/smile/");
+        }
+
+        serverConfiguration.addProperty("useGoogleAnalytics", siteConfiguration.getGoogleAnalyticsResource() != null);
+
+        RecordModelCache recordModelCache = this.dataCache.get(RecordModelCache.class);
+        serverConfiguration.addProperty("loginModelId", recordModelCache.getDefinition(LoginModel.class).getId());
+
+        serverConfiguration.addProperty("pageSize", engineConfiguration.getRecordsPerPage());
+
+        this.context.serverConfiguration = serverConfiguration.toString();
+    }
+
+    private void prepareLanguages() {
+        JsonArray languages = new JsonArray();
+
+        LanguageCache languageCache = this.dataCache.get(LanguageCache.class);
+
+        for (Language sourceLanguage: languageCache.getLanguages()) {
+            JsonObject targetLanguage = new JsonObject();
+            targetLanguage.addProperty("selected", false);
+            targetLanguage.addProperty("id", sourceLanguage.getShortName().toLowerCase());
+            targetLanguage.addProperty("shortName", sourceLanguage.getShortName());
+            targetLanguage.addProperty("name", sourceLanguage.getName());
+            targetLanguage.addProperty("isDefault", sourceLanguage.getIsDefault());
+            targetLanguage.addProperty("iconUrl", sourceLanguage.getIconId().isPresent() ? ImageHelper.getImageUrl(sourceLanguage.getIconId().getAsLong()) : "");
+
+            JsonObject translations = new JsonObject();
+
+            for (Map.Entry<String, String> translation : sourceLanguage.getTranslations().entrySet()) {
+                translations.addProperty(translation.getKey(), translation.getValue());
+            }
+
+            targetLanguage.add("translations", translations);
+
+            languages.add(targetLanguage);
+        }
+
+        this.context.languages = languages.toString();
     }
     
     public boolean initialize(String path) {
@@ -136,7 +244,7 @@ public class NodeEntryPointModel {
             context.onlyBody = true;
         }
         
-        String nodeLoadError = null;
+        this.nodeLoadError = null;
         
         viewData = DependencyResolver.resolve(LoadNodeViewModel.class);
         try {
@@ -144,20 +252,21 @@ public class NodeEntryPointModel {
                 return false;
             }
         } catch (Exception e) {
-            nodeLoadError = e.getMessage();
-            if (nodeLoadError == null) {
-                nodeLoadError = e.toString();
+            this.nodeLoadError = e.getMessage();
+            if (this.nodeLoadError == null) {
+                this.nodeLoadError = e.toString();
             }
         }
         
         NodeCache nodeCache = this.dataCache.get(NodeCache.class);
-        RecordModelCache recordModelCache = this.dataCache.get(RecordModelCache.class);
-        
+
         CachedNodeInformation rootNode = nodeCache.getRootNode();
         
         context.title = rootNode.getTitle();
         
-        initializeSiteProperties(requestContext, initialData);
+        prepareInitialData(requestContext, path);
+        prepareServerConfiguration(requestContext);
+        prepareLanguages();
         
         if (context.noScript) {
             /*int pos = context.body.indexOf(Constants.Engine.NO_SCRIPT_BLOCK);
@@ -172,76 +281,9 @@ public class NodeEntryPointModel {
             return true;
         }
         
-        initialData.addProperty("rootPath", requestContext.getRootPath());
-        initialData.addProperty("path", path != null ? path : "");
-        initialData.addProperty("showConfiguration", this.currentUser.isAdministrator());
-        initialData.addProperty("configurationPath", "/" + Constants.NodePath.CONFIGURATION);
-        initialData.addProperty("profilePath", "/" + Constants.NodePath.PROFILE);
-        initialData.addProperty("forgotPasswordPath", "/" + Constants.NodePath.FORGOT_PASSWORD);
-        initialData.addProperty("loggedIn", this.currentUser.getUserId().isPresent());
-        initialData.addProperty("userNotVerified", !this.currentUser.isApproved() || !this.currentUser.emailConfirmed());
-        if (this.currentUser.getUserName() != null) {
-            initialData.addProperty("userName", this.currentUser.getUserName());
-        }
-        initialData.add("viewData", this.viewData.toJson());
-        if (nodeLoadError != null) {
-            initialData.addProperty("nodeLoadError", nodeLoadError);
-        }
-        initialData.addProperty("recaptchaPublicKey", requestContext.getEngineConfiguration().getRecaptchaPublicKey());
-        initialData.addProperty("loginModelId", recordModelCache.getDefinition(LoginModel.class).getId());
-
-        context.initialData = getInitialData();
-        context.configurationData = getConfigurationData();
-
         return true;
     }
-    
-    private void initializeSiteProperties(RequestContext request) {
-        ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
-        OptionalLong versionId = changesCache.getLastChangeId();
-        if (versionId.isPresent()) {
-            initialValues.addProperty("versionId", versionId.getAsLong());
-        } else {
-            initialValues.add("versionId", JsonNull.INSTANCE);
-        }
-        SiteConfiguration siteConfiguration = this.dataCache.get(SiteConfiguration.class);
-        String adminLoginPage = siteConfiguration.getAdminLoginPage();
-        if (adminLoginPage == null || adminLoginPage.length() == 0) {
-            adminLoginPage = RequestContextHolder.getContext().getEngineConfiguration().getAdminLoginPage();
-        }
-        initialValues.addProperty("hasLogin", siteConfiguration.getHasUsers() || adminLoginPage == null || adminLoginPage.length() == 0);
-        initialValues.addProperty("getHasSearch", siteConfiguration.getHasSearch());
-        
-        UserInterfaceElementsModel notificationsModel = DependencyResolver.resolve(UserInterfaceElementsModel.class);
-        notificationsModel.handle(initialValues, versionId);
-        
-        if (siteConfiguration.getHasLanguages()) {
-            LanguageCache languageCache = this.dataCache.get(LanguageCache.class);
-            OptionalLong languageId = languageCache.getCurrentLanguageId();
 
-            JsonArray languages = new JsonArray();
-            
-            for (Language language: languageCache.getLanguages()) {
-                JsonObject data = new JsonObject();
-                data.addProperty("id", language.getLanguageId());
-                data.addProperty("name", language.getName());
-                data.addProperty("shortName", language.getShortName());
-                data.addProperty("url", "/language/" + Long.toString(language.getLanguageId()));
-                if (language.getIconId().isPresent()) {
-                    data.addProperty("imageUrl", ImageHelper.getImageUrl(language.getIconId().getAsLong()));
-                }
-                data.addProperty("selected", languageId.isPresent() && languageId.getAsLong() == language.getLanguageId());
-                languages.add(data);
-            }
-            
-            initialValues.add("languages", languages);
-        }
-        
-        initialValues.addProperty("rootTitle", siteConfiguration.getSiteName());
-        initialValues.addProperty("maximumFileSize", siteConfiguration.getMaximumFileSize());
-        initialValues.addProperty("useGoogleAnalytics", siteConfiguration.getGoogleAnalyticsResource() != null);
-    }
-    
     public void handleRequest() throws ServletException, IOException {
         RequestContext requestContext = RequestContextHolder.getContext();
         ResourceCache resourceCache = dataCache.get(ResourceCache.class, dataCache.get(LanguageCache.class).getCurrentLanguageId());

@@ -7,7 +7,7 @@ public class DependencyResolver {
     private final ClassPathXmlApplicationContext context;
 
     private DependencyResolver() {
-        context = new ClassPathXmlApplicationContext("main/applicationContext.xml");
+        context = new ClassPathXmlApplicationContext("config/application.context.xml");
     }
 
     private static class LazyHolder {
@@ -16,7 +16,7 @@ public class DependencyResolver {
 
     public static <T> T resolve(Class<T> type) {
         DependencyResolver instance = LazyHolder.INSTANCE;
-        return (T) instance.context.getBean(type);
+        return instance.context.getBean(type);
     }
 /*
 

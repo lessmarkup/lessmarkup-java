@@ -1,7 +1,7 @@
-<li ng-repeat="notification in notifications" class="navbar-notification scriptonly" ng-show="notification.count > 0">
-    <a href="{{rootPath+notification.path}}" ng-click="gotoNotification(notification)">
-        <span ng-if="notification.icon" class="glyphicon" ng-class="notification.icon"></span>
-        <span ng-bind="notification.title"></span>
-        <span class="badge" ng-bind="notification.count" ng-class="notificationClass(notification)"></span>
-    </a>
+<li ng-repeat="collection in collections" class="navbar-notification scriptonly" ng-show="collections.count > 0">
+    <node-link path="collection.path">
+        <span ng-if="collection.icon" class="glyphicon" ng-class="collection.icon"></span>
+        <span ng-bind="collection.title"></span>
+        <span class="badge" ng-bind="collection.count" ng-class="collectionClass(collection)"></span>
+    </node-link>
 </li>

@@ -29,7 +29,7 @@
     "ts": {
       "files": [{
         "expand": true,
-        "cwd": "../src/scripts",
+        "cwd": "../client/scripts",
         "dest": "../scripts",
         "src": ["**/*.js"]
       }]
@@ -41,7 +41,7 @@
     },
     "files": {
       "expand": true,
-      "src": ["..src/styles/main.scss"],
+      "src": ["../client/styles/main.scss"],
       "dest": "../css",
       "ext": ".css"
     }
@@ -51,7 +51,7 @@
     },
     "files": {
       "expand": true,
-      "cwd": "../src/styles",
+      "cwd": "../client/styles",
       "src": ["**.*.less"],
       "dest": "../css",
       "ext": ".css"
@@ -65,11 +65,14 @@
         "sourceMap": false,
         "declaration": false,
         "comments": false,
-        "fast": "never"
+        "fast": "never",
+        "sourceRoot": "../",
+        "sourceMap": true,
+        "failOnTypeErrors": true
       },
-      "files": [{
-          "src": ["../types/all.d.ts", "../src/scripts/**/*.ts"]
-        }]
+      "files": [
+        {"src": ["../types/all.d.ts", "../client/scripts/**/*.ts"]}
+      ]
     }
   },
   "tsd": {
