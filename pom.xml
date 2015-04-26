@@ -128,11 +128,11 @@
                             <target name="building">
                                 <echo>--- Executing gem install sass ---</echo>
 
-                                <exec executable="cmd" dir="${project.build.outputDirectory}/build" failonerror="true" osfamily="windows">
+                                <exec executable="cmd" failonerror="false" osfamily="windows">
                                     <arg line="/c 'gem install sass'"/>
                                 </exec>
 
-                                <exec executable="bash" dir="${project.build.outputDirectory}/build" failonerror="true" osfamily="unix">
+                                <exec executable="bash" failonerror="false" osfamily="unix">
                                     <arg line="gem install sass"/>
                                 </exec>
                             </target>
