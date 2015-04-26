@@ -37,14 +37,8 @@
   },
   "sass": {
     "options": {
-      "style": "expanded"
     },
-    "files": {
-      "expand": true,
-      "src": ["../client/styles/main.scss"],
-      "dest": "../css",
-      "ext": ".css"
-    }
+    "files": { "../client/styles/main.scss": "../css/main.css" }
   },
   "less": {
     "options": {
