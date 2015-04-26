@@ -232,7 +232,7 @@ public class SitePropertiesModel implements SiteConfiguration {
     @Override
     public String getProperty(String key) {
         try {
-            return getClass().getMethod("get" + key).invoke(this).toString();
+            return getClass().getMethod("get" + StringHelper.fromJsonCase(key)).invoke(this).toString();
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             LoggingHelper.logException(getClass(), ex);
             return "";

@@ -31,7 +31,7 @@
         "expand": true,
         "cwd": "../client/scripts",
         "dest": "../scripts",
-        "src": ["**/*.js"]
+        "src": ["**/*.{js,map}"]
       }]
     }
   },

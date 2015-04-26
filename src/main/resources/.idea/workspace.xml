@@ -1,138 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c8ac08a-feb6-416a-8aeb-7c70e2ae0b33" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/scripts/datatypes/FileReadResponse.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/scripts/controllers/FlatPageControllerConfiguration.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/scripts/controllers/FlatPageControllerScope.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/googleAnalytics.html" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\main\applicationContext.xml" afterPath="$PROJECT_DIR$/config/application.context.xml" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\app.ts" afterPath="$PROJECT_DIR$/client/scripts/app.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\config\paths.ts" afterPath="$PROJECT_DIR$/client/scripts/config/paths.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\ConfigurationController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/ConfigurationController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\DialogController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/DialogController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\FlatPageController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/FlatPageController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\InputFormController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/InputFormController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\InputFormMessageController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/InputFormMessageController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\InputFormQuestionController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/InputFormQuestionController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\MainController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/MainController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\NodeListController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/NodeListController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\TabPageController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/TabPageController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\index.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/index.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\module.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/module.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\GetRecordIdsData.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/GetRecordIdsData.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordActionType.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordActionType.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListAction.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListAction.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListActionDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListActionDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListColumn.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListColumn.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListController.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListController.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListControllerConfiguration.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListControllerConfiguration.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListControllerScope.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListControllerScope.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListLink.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListLink.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListRecord.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListRecord.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListRow.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListRow.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\controllers\recordList\RecordListUpdateProperties.ts" afterPath="$PROJECT_DIR$/client/scripts/controllers/recordList/RecordListUpdateProperties.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\Alert.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/Alert.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\Breadcrumb.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/Breadcrumb.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\DynamicInputFieldDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/DynamicInputFieldDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\InitialData.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/InitialData.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\InputFieldDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/InputFieldDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\InputFormDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/InputFormDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\Language.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/Language.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\MenuItem.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/MenuItem.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\RegisterModelRequest.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/RegisterModelRequest.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\SearchResponse.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/SearchResponse.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\SearchResult.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/SearchResult.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\SelectValueDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/SelectValueDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\ServerConfiguration.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/ServerConfiguration.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\ServerResponse.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/ServerResponse.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\ServerResponseUpdates.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/ServerResponseUpdates.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\Smile.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/Smile.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\ToolbarButton.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/ToolbarButton.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\TopMenuItem.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/TopMenuItem.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\TreeNode.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/TreeNode.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\datatypes\UserLoginModel.ts" afterPath="$PROJECT_DIR$/client/scripts/datatypes/UserLoginModel.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\AlertsAndMessagesDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/AlertsAndMessagesDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\BindTemplateDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/BindTemplateDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\BreadcrumbsPanelDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/BreadcrumbsPanelDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\CellShowOptionsDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/CellShowOptionsDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\CkEditorDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/CkEditorDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\CollectionUpdatesDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/CollectionUpdatesDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\FileReadDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/FileReadDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\LanguagesPanelDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/LanguagesPanelDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\LoginDialogDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/LoginDialogDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\MultiFileReadDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/MultiFileReadDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\NavigationTreeDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/NavigationTreeDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\NodeLinkDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/NodeLinkDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\ScrollSpySideDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/ScrollSpySideDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\ScrollSpyTopDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/ScrollSpyTopDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\SearchPanelDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/SearchPanelDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\ToolbarPanelDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/ToolbarPanelDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\UserPanelDirective.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/UserPanelDirective.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\index.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/index.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\directives\module.ts" afterPath="$PROJECT_DIR$/client/scripts/directives/module.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\filters\LocaleDateFilter.ts" afterPath="$PROJECT_DIR$/client/scripts/filters/LocaleDateFilter.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\filters\RelativeDateFilter.ts" afterPath="$PROJECT_DIR$/client/scripts/filters/RelativeDateFilter.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\filters\index.ts" afterPath="$PROJECT_DIR$/client/scripts/filters/index.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\filters\module.ts" afterPath="$PROJECT_DIR$/client/scripts/filters/module.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\BroadcastEvents.ts" afterPath="$PROJECT_DIR$/client/scripts/interfaces/BroadcastEvents.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\Constants.ts" afterPath="$PROJECT_DIR$/client/scripts/interfaces/Constants.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\IEventHandler.ts" afterPath="$PROJECT_DIR$/client/scripts/interfaces/IEventHandler.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\InputFieldTypes.ts" afterPath="$PROJECT_DIR$/client/scripts/interfaces/InputFieldTypes.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\interfaces\PlatformType.ts" afterPath="$PROJECT_DIR$/client/scripts/interfaces/PlatformType.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\BackgroundRefreshService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/BackgroundRefreshService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\CommandProcessorService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/CommandProcessorService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\EventHandlerService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/EventHandlerService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\FriendlyFormattingService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/FriendlyFormattingService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\InputFormService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/InputFormService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\LanguageService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/LanguageService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\MessagingService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/MessagingService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\ModuleLoaderService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/ModuleLoaderService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\NavigationTreeService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/NavigationTreeService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\RecordSearchService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/RecordSearchService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\collectionUpdates\CollectionDefinition.ts" afterPath="$PROJECT_DIR$/client/scripts/services/collectionUpdates/CollectionDefinition.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\collectionUpdates\CollectionStateChange.ts" afterPath="$PROJECT_DIR$/client/scripts/services/collectionUpdates/CollectionStateChange.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\collectionUpdates\CollectionUpdatesService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/collectionUpdates/CollectionUpdatesService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\index.ts" afterPath="$PROJECT_DIR$/client/scripts/services/index.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\module.ts" afterPath="$PROJECT_DIR$/client/scripts/services/module.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\nodeLoader\NodeConfiguration.ts" afterPath="$PROJECT_DIR$/client/scripts/services/nodeLoader/NodeConfiguration.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\nodeLoader\NodeLoadData.ts" afterPath="$PROJECT_DIR$/client/scripts/services/nodeLoader/NodeLoadData.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\nodeLoader\NodeLoaderService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/nodeLoader/NodeLoaderService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\userSecurity\UserSecurityService.ts" afterPath="$PROJECT_DIR$/client/scripts/services/userSecurity/UserSecurityService.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\userSecurity\UserState.ts" afterPath="$PROJECT_DIR$/client/scripts/services/userSecurity/UserState.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\services\userSecurity\UserStateUpdate.ts" afterPath="$PROJECT_DIR$/client/scripts/services/userSecurity/UserStateUpdate.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\tsconfig.json" afterPath="$PROJECT_DIR$/client/scripts/tsconfig.json" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\types\Autolinker.d.ts" afterPath="$PROJECT_DIR$/client/scripts/types/Autolinker.d.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\scripts\utilities\WebSocketConnection.ts" afterPath="$PROJECT_DIR$/client/scripts/utilities/WebSocketConnection.ts" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_configuration.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_configuration.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_dialog.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_dialog.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_flatpage.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_flatpage.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_nodelist.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_nodelist.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_properties.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_properties.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\controllers\_recordlist.scss" afterPath="$PROJECT_DIR$/client/styles/controllers/_recordlist.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\main.scss" afterPath="$PROJECT_DIR$/client/styles/main.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_bootstrap.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_bootstrap.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_breadcrumb.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_breadcrumb.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_dropdownmenu.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_dropdownmenu.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_filelist.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_filelist.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_footer.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_footer.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_layout.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_layout.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_login.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_login.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_navbar.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_navbar.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_search.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_search.scss" />
-      <change type="MOVED" beforePath="C:\Users\Oleg\Source\LessMarkupJava\lessmarkup-java\src\main\resources\src\styles\partials\_spinner.scss" afterPath="$PROJECT_DIR$/client/styles/partials/_spinner.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/engine/language/CachedLanguage.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/engine/language/CachedLanguage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/framework/helpers/DependencyResolver.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/framework/helpers/DependencyResolver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/JsonEntryPointModel.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/JsonEntryPointModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/interfaces/system/Language.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/interfaces/system/Language.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../LessMarkup.iml" afterPath="$PROJECT_DIR$/../../../LessMarkup.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/NodeEntryPointModel.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/NodeEntryPointModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/UserInterfaceElementsModel.java" afterPath="$PROJECT_DIR$/../java/com/lessmarkup/userinterface/model/structure/UserInterfaceElementsModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/collectionUpdates.html" afterPath="$PROJECT_DIR$/views/collectionUpdates.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/config/grunt.config.json" afterPath="$PROJECT_DIR$/build/config/grunt.config.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="6c8ac08a-feb6-416a-8aeb-7c70e2ae0b33" name="Default" comment="" />
     <ignored path="resources.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -197,7 +66,7 @@
       <file leaf-file-name="FlatPageController.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/scripts/controllers/FlatPageController.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4071856">
+            <state vertical-scroll-proportion="0.0">
               <caret line="18" column="43" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
               <folding />
             </state>
@@ -231,8 +100,8 @@
       <file leaf-file-name="grunt.config.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build/config/grunt.config.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.576923">
-              <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -389,6 +258,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -641,8 +512,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -720,25 +589,25 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1170" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24895833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291866" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3291866" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3291866" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -894,7 +763,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15118577">
           <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -902,7 +770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -910,7 +777,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -918,7 +784,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="46" column="17" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -926,7 +791,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25449103">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -934,7 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -942,7 +805,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -950,7 +812,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18535826">
           <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -958,7 +819,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5384617">
           <caret line="37" column="30" selection-start-line="37" selection-start-column="30" selection-end-line="37" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -966,7 +826,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4071856">
           <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -974,7 +833,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.17814371">
           <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -990,7 +848,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -998,7 +855,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1014,7 +870,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28742516">
           <caret line="49" column="30" selection-start-line="49" selection-start-column="30" selection-end-line="49" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1040,7 +895,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1056,7 +910,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="234" column="66" selection-start-line="234" selection-start-column="66" selection-end-line="234" selection-end-column="66" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1064,9 +917,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.032934133">
           <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1092,8 +942,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build/config/grunt.config.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.576923">
-          <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="75" column="23" selection-start-line="75" selection-start-column="23" selection-end-line="75" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -1144,13 +994,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.12724552">
           <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/scripts/controllers/FlatPageController.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4071856">
+        <state vertical-scroll-proportion="0.0">
           <caret line="18" column="43" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
           <folding />
         </state>

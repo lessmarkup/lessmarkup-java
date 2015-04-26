@@ -1,80 +1,41 @@
-<div class="body1">
-    <div class="body2">
-        <header class="navbar navbar-default navbar-fixed-top" id="header">
-            <div class="navbar-inner" ui-scrollfix>
-                <div class="container" ng-cloak>
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" ng-click="showXsMenu = !showXsMenu">
-                            <span class="sr-only">[[#text]]ToggleNavigation[[/text]]</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <node-link class="navbar-brand visible-xs" path="">
-                            [[>views/logoXs.html]]
-                        </node-link>
-                        
-                        <div class="visible-xs navbar-notifications scriptonly">
-                            <collection-updates platform="mobile" />
-                        </div>
-                    </div>
+<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+    <md-toolbar>
+        <h1 class="md-toolbar-icons">
+            <node-link path="/" layout="row" flex>
+                <md-icon md-svg-src="menu"></md-icon>
+                <div>[[#property]]SiteName[[/property]]</div>
+            </node-link>
+        </h1>
+    </md-toolbar>
+    <md-content flex role="navigation">
+        <navigation-tree platform="desktop" />
+    </md-content>
+</md-sidenav>
 
-                    <nav class="hidden-xs">
-                        <ul class="nav navbar-nav navbar-left" id="navbar-menu">
-
-                            <navigation-tree platform="desktop" />
-
-                            [[topMenu]]
-                        </ul>
-
-                        <search-panel />
-
-                        <languages-panel />
-
-                        <ul class="nav navbar-nav navbar-right">
-
-                            [[>views/topMenuPlugins.html]]
-
-                            <collection-updates platform="desktop" />
-
-                            <user-panel platform="desktop" />
-
-                        </ul>
-                    </nav>
-                    
-                    <nav class="visible-xs" collapse="!showXsMenu">
-                        <ul class="nav navbar-nav" id="navbar-menu-small">
-
-                            <user-panel platform="mobile" />
-
-                            <navigation-tree platform="mobile" />
-
-                            [[topMenu]]
-                            [[>views/topMenuPlugins.html]]
-                        </ul>
-                    </nav>
-                </div>
+<div layout="column" tabindex="-1" role="main" flex>
+    <md-toolbar>
+        <div class="md-toolbar-tools" tabindex="-1">
+            <div layout="row" flex>
+                <breadcrumbs />
+                [[topMenu]]
+                [[>views/topMenuPlugins.html]]
+                <search-panel />
+                <languages-panel />
+                [[>views/topMenuPlugins.html]]
+                <collection-updates platform="desktop" />
+                <user-panel platform="desktop" />
             </div>
-        </header>
-
-        <breadcrumbs />
-
-        <div class="loadmessage container scriptonly" ng-cloak>[[#text]]PleaseWaitLoading[[/text]]</div>
-
-        <div class="contents container" ng-cloak>
-
-            <alerts-and-messages />
-
-            <bind-template class="scriptonly" template="template" configuration="configuration">
-                [[#text]]PleaseWaitLoading[[/text]]
-            </bind-template>
-            [[noScriptBlock]]
         </div>
-    </div>
-</div>
-
-<div class="footer">
-    <div class="container">
+    </md-toolbar>
+    <md-content flex>
+        <div class="scriptonly" ng-cloak>[[#text]]PleaseWaitLoading[[/text]]</div>
+        <alerts-and-messages />
+        <bind-template class="scriptonly" template="template" configuration="configuration">
+            [[#text]]PleaseWaitLoading[[/text]]
+        </bind-template>
+        [[noScriptBlock]]
+    </md-content>
+    <md-bottom-sheet>
         <p>This site is built on <a href="http://www.lessmarkup.com" target="_new">LessMarkup Engine</a></p>
-    </div>
+    </md-bottom-sheet>
 </div>
