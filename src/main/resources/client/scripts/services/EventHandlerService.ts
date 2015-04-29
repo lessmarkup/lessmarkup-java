@@ -65,8 +65,9 @@ class EventHandlerService {
     }
 }
 
-import servicesModule = require('./module');
-servicesModule.service('eventHandler', [
+import module = require('./module');
+
+module.service('eventHandler', [
     EventHandlerService]);
 
 export = EventHandlerService;

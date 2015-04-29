@@ -60,9 +60,9 @@ class FileReadDirectiveLink {
 
 import module = require('./module');
 
-module.directive('fileRead', [() => {
+module.directive('fileRead', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective>{
-        templateUrl: '/views/fileRead.html',
+        templateUrl: serverConfiguration.rootPath + '/views/fileRead.html',
         restrict: 'E',
         replace: false,
         scope: {

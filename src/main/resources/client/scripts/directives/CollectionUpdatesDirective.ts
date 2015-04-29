@@ -24,8 +24,8 @@ class CollectionUpdatesDirective {
     constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, nodeLoader: NodeLoaderService) {
 
         $scope.getTemplateUrl = () => {
-            return $scope.platform === PlatformType.DESKTOP ?
-                CollectionUpdatesDirective.VIEW_PATH_NORMAL : CollectionUpdatesDirective.VIEW_PATH_MOBILE;
+            return serverConfiguration.rootPath + ($scope.platform === PlatformType.DESKTOP ?
+                CollectionUpdatesDirective.VIEW_PATH_NORMAL : CollectionUpdatesDirective.VIEW_PATH_MOBILE);
         };
 
         $scope.collections = collectionUpdates.getCollections();

@@ -49,7 +49,7 @@ class CollectionUpdatesService {
     }
 }
 
-import servicesModule = require('../module');
-servicesModule.service('collectionUpdates', ['serverConfiguration', CollectionUpdatesService]);
+import module = require('../module');
+module.service('collectionUpdates', ['serverConfiguration', CollectionUpdatesService]);
 
 export = CollectionUpdatesService;

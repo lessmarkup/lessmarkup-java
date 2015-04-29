@@ -1,4 +1,4 @@
-///<amd-dependency path="FileReadResponse.ts" />
+///<amd-dependency path="../datatypes/FileReadResponse" />
 
 class MultiFileReadResponse {
     files: FileReadResponse[];
@@ -90,9 +90,9 @@ class MultiFileReadDirectiveLink {
 
 import module = require('./module');
 
-module.directive('multiFileRead', [() => {
+module.directive('multiFileRead', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective>{
-        templateUrl: '/views/multiFileRead.html',
+        templateUrl: serverConfiguration.rootPath + '/views/multiFileRead.html',
         restrict: 'E',
         replace: false,
         scope: {

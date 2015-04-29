@@ -1,4 +1,4 @@
-///<amd-dependency path="../types/Autolinker.d.ts" />
+///<amd-dependency path="autolinker" />
 
 class FriendlyFormattingService {
 
@@ -80,8 +80,9 @@ class FriendlyFormattingService {
     }
 }
 
-import servicesModule = require('./module');
-servicesModule.service('friendlyFormatting', [
+import module = require('./module');
+
+module.service('friendlyFormatting', [
     'serverConfiguration',
     FriendlyFormattingService]);
 

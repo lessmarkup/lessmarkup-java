@@ -11,7 +11,7 @@ class ModuleLoaderService {
     private static RUN_BLOCKS:string = "_runBlocks";
     private static PROPERTY_REQUIRES:string = "requires";
 
-    public initialize(application: ng.IModule,
+    constructor(application: ng.IModule,
         controllerProvider: ng.IControllerProvider,
         compileProvider: ng.ICompileProvider,
         filterProvider: ng.IFilterProvider,
@@ -128,8 +128,5 @@ class ModuleLoaderService {
         this.application.requires.push(name);
     }
 }
-
-import module = require('./module');
-module.service('moduleLoader', [ModuleLoaderService]);
 
 export = ModuleLoaderService;

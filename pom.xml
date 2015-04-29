@@ -88,7 +88,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>WEB-INF/classes/build/**,WEB-INF/classes/client/**,WEB-INF/classes/types/**</packagingExcludes>
+                    <packagingExcludes>WEB-INF/classes/build/**,WEB-INF/classes/client/**,WEB-INF/classes/types/**,WEB-INF/classes/.idea/**</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>

@@ -32,9 +32,9 @@ class AlertsAndMessagesDirectiveController {
 
 import module = require('./module');
 
-module.directive('alertsAndMessages', [() => {
+module.directive('alertsAndMessages', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective>{
-        templateUrl: '/views/alertsAndMessages.html',
+        templateUrl: serverConfiguration.rootPath + '/views/alertsAndMessages.html',
         restrict: 'E',
         replace: true,
         scope: true,

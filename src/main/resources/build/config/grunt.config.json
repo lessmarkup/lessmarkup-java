@@ -6,7 +6,7 @@
         "cwd": "bower_components",
         "dest": "../lib",
         "src": [
-          "**/*.{css,js,svg,map,eot,svg,ttf,woff,woff2,fla,gif,html,jpg,png}",
+          "**/*.{css,js,ts,svg,map,eot,svg,ttf,woff,woff2,fla,gif,html,jpg,png}",
           "!jquery/**",
           "!**/examples/**",
           "!**/samples/**",
@@ -31,7 +31,7 @@
         "expand": true,
         "cwd": "../client/scripts",
         "dest": "../scripts",
-        "src": ["**/*.{js,map}"]
+        "src": ["**/*.js"]
       }]
     }
   },
@@ -56,13 +56,11 @@
       "options": {
         "module": "amd",
         "target": "es5",
-        "sourceMap": false,
         "declaration": false,
         "comments": false,
         "fast": "never",
-        "sourceRoot": "../",
-        "sourceMap": true,
-        "failOnTypeErrors": true
+        "failOnTypeErrors": true,
+        "sourceMap": false
       },
       "files": [
         {"src": ["../types/all.d.ts", "../client/scripts/**/*.ts"]}

@@ -10,9 +10,9 @@ class BreadcrumbsPanelDirectiveController {
 
 import module = require('./module');
 
-module.directive('breadcrumbsPanel', [() => {
+module.directive('breadcrumbsPanel', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective> {
-        templateUrl: '/views/breadcrumbsPanel.html',
+        templateUrl: serverConfiguration.rootPath + '/views/breadcrumbsPanel.html',
         restrict: 'E',
         replace: true,
         scope: true,

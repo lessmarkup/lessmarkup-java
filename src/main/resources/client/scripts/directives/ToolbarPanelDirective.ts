@@ -22,9 +22,9 @@ class ToolbarPanelDirective {
 
 import module = require('./module');
 
-module.directive('toolbarPanel', [() => {
+module.directive('toolbarPanel', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective> {
-        template: '/views/toolbarPanel.html',
+        template: serverConfiguration.rootPath + '/views/toolbarPanel.html',
         restrict: 'E',
         replace: true,
         scope: true,

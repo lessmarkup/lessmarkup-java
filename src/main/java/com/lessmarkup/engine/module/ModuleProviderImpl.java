@@ -73,7 +73,17 @@ public class ModuleProviderImpl implements ModuleProvider {
     }
     
     private void listAllFileSystemModuleElements(String basePath, File directory, List<String> elements) {
-        for (File file : directory.listFiles()) {
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            String userName = System.getProperty("user.name");
+            try (PrintWriter writer = new PrintWriter(System.out)) {
+                writer.write(userName);
+            }
+            return;
+        }
+
+        for (File file : files) {
             if (file.isDirectory()) {
                 listAllFileSystemModuleElements(basePath, file, elements);
             } else {

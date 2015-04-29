@@ -1,5 +1,3 @@
-import ng=require('angular');
-
 class BackgroundRefreshService {
 
     private timeout: ng.ITimeoutService;
@@ -54,5 +52,9 @@ class BackgroundRefreshService {
         }
     }
 }
+
+import module = require('./module');
+
+module.service('backgroundRefresh', BackgroundRefreshService);
 
 export = BackgroundRefreshService;

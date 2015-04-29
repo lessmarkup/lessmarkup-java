@@ -49,9 +49,9 @@ class LanguagesPanelDirectiveController {
 
 import module = require('./module');
 
-module.directive('languagesPanel', [() => {
+module.directive('languagesPanel', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective>{
-        templateUrl: '/views/languagesPanel.html',
+        templateUrl: serverConfiguration.rootPath + '/views/languagesPanel.html',
         restrict: 'E',
         replace: true,
         scope: true,

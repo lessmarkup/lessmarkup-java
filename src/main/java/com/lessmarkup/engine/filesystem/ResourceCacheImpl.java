@@ -64,6 +64,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
                     case "ttf":
                     case "woff":
                     case "map":
+                    case "ts":
                         addResource(module, element);
                         break;
                 }
@@ -146,7 +147,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
             }
 
             if (resource.getBinary() != null) {
-                if ("js".equals(extension) || "html".equals(extension) || "css".equals(extension)) {
+                if ("html".equals(extension)) {
                     String body = StringHelper.binaryToString(resource.getBinary());
                     if (body.contains("[[")) {
                         Template template = compiler.compile(body);

@@ -4,19 +4,17 @@
 ///<amd-dependency path="services/index" />
 ///<amd-dependency path="angular.touch" />
 ///<amd-dependency path="angular.translate" />
+///<amd-dependency path="./services/ModuleLoaderServiceProvider" />
 
 import ng = require('angular');
 import document = require('domready');
 import _ = require('lodash');
-import ModuleLoaderService = require('./services/ModuleLoaderService');
 
-interface IApplication extends ng.IModule {
-    initialize: (initialData: InitialData, serverConfiguration: ServerConfiguration, languages: Language[]) => void;
-}
+import ModuleLoaderServiceProvider = require('./services/ModuleLoaderServiceProvider');
 
 var appModule = <IApplication> ng.module('app', [
-    'angular.material',
-    'angular.touch',
+    'ngMaterial',
+    'ngTouch',
     'pascalprecht.translate',
     'app.controllers',
     'app.directives',
@@ -30,21 +28,10 @@ appModule.initialize = (initialData: InitialData, serverConfiguration: ServerCon
     appModule.value('languages', languages);
 
     appModule.config([
-        '$controllerProvider',
-        '$compileProvider',
-        '$routeProvider',
-        '$filterProvider',
-        '$provide',
         '$translateProvider',
-        '$rootElement',
-        'moduleLoader',
-        (controllerProvider: ng.IControllerProvider,
-         compileProvider: ng.ICompileProvider,
-         filterProvider: ng.IFilterProvider,
-         provide: ng.auto.IProvideService,
-         translateProvider: angular.translate.ITranslateProvider,
-         rootElement: ng.IRootElementService,
-         moduleLoader: ModuleLoaderService) => {
+        'moduleLoaderProvider',
+        (translateProvider: angular.translate.ITranslateProvider,
+         moduleLoaderProvider: ModuleLoaderServiceProvider) => {
 
             _.forEach(languages, (language: Language) => {
                 translateProvider.translations(language.id, language.translations);
@@ -57,7 +44,7 @@ appModule.initialize = (initialData: InitialData, serverConfiguration: ServerCon
                 language.translations = null;
             });
 
-            moduleLoader.initialize(appModule, controllerProvider, compileProvider, filterProvider, provide, rootElement);
+            moduleLoaderProvider.initialize(appModule);
 
         }]);
 

@@ -1,3 +1,3 @@
 import ng = require('angular');
-var module = ng.module('lmApp.services', []);
+var module = ng.module('app.services', []);
 export = module;

@@ -67,9 +67,9 @@ class LoginDialogDirectiveController {
 
 import module = require('./module');
 
-module.directive('loginDialog', [() => {
+module.directive('loginDialog', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective>{
-        templateUrl: '/views/login.html',
+        templateUrl: serverConfiguration.rootPath + '/views/login.html',
         restrict: 'E',
         replace: true,
         scope: true,

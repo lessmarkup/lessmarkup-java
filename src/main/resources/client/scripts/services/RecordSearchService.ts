@@ -71,8 +71,8 @@ class RecordSearchService {
     }
 }
 
-import servicesModule = require('./module');
-servicesModule.service('recordSearch', [
+import module = require('./module');
+module.service('recordSearch', [
     '$timeout',
     'commandProcessor',
     '$sce',

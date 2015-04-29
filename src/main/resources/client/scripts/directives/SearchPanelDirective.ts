@@ -10,9 +10,9 @@ class SearchPanelDirectiveLink {
 
 import module = require('./module');
 
-module.directive('searchPanel', [() => {
+module.directive('searchPanel', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective> {
-        templateUrl: '/views/searchPanel.html',
+        templateUrl: serverConfiguration.rootPath + '/views/searchPanel.html',
         restrict: 'E',
         replace: true,
         scope: true,

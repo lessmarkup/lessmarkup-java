@@ -83,6 +83,12 @@ public class ResourceModel {
             case "woff":
                 this.contentType = "application/font-woff";
                 break;
+            case "map":
+                this.contentType = "text/map";
+                break;
+            case "ts":
+                this.contentType = "text/typescript";
+                break;
             default:
                 return false;
         }
@@ -101,9 +107,7 @@ public class ResourceModel {
         byte[] resourceBytes;
         
         switch (this.extension) {
-            case "css":
             case "html":
-            case "js":
                 resourceBytes = resourceCache.parseText(this.path).getBytes(StandardCharsets.UTF_8);
                 break;
             default:

@@ -10,9 +10,9 @@ class NavigationTreeDirectiveLink {
 
 import module = require('./module');
 
-module.directive('navigationTree', [() => {
+module.directive('navigationTree', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective> {
-        templateUrl: '/views/navigationTree.html',
+        templateUrl: serverConfiguration.rootPath + '/views/navigationTree.html',
         restrict: 'E',
         replace: true,
         scope: true,

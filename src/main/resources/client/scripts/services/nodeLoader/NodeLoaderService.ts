@@ -232,7 +232,7 @@ class NodeLoaderService {
 
 }
 
-import servicesModule = require('../module');
-servicesModule.service('nodeLoader', ['commandProcessor', '$rootScope', 'serverConfiguration', '$browser', '$q', NodeLoaderService]);
+import module = require('../module');
+module.service('nodeLoader', ['commandProcessor', '$rootScope', 'serverConfiguration', '$browser', '$q', NodeLoaderService]);
 
 export = NodeLoaderService;

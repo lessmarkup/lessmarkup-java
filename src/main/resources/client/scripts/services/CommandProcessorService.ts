@@ -134,8 +134,9 @@ class CommandProcessorService {
     }
 }
 
-import servicesModule = require('./module');
-servicesModule.service('commandProcessor', [
+import module = require('./module');
+
+module.service('commandProcessor', [
     '$http',
     '$rootScope',
     'backgroundRefresh',

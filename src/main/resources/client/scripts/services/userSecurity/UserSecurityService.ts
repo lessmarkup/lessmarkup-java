@@ -206,7 +206,8 @@ class UserSecurityService {
     }
 }
 
-import servicesModule = require('../module');
-servicesModule.service('userSecurity', ['$rootScope', 'commandProcessor', 'messaging', 'nodeLoader', '$q', UserSecurityService]);
+import module = require('../module');
+
+module.service('userSecurity', ['$rootScope', 'commandProcessor', 'messaging', 'nodeLoader', '$q', UserSecurityService]);
 
 export = UserSecurityService;

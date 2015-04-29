@@ -8,10 +8,10 @@ class UserPanelDirectiveController {
     private static VIEW_PATH_MOBILE = "/views/userPanelMobile.html";
     private static VIEW_PATH_NORMAL = "/views/userPanel.html";
 
-    constructor($scope: UserPanelDirectiveScope) {
+    constructor($scope: UserPanelDirectiveScope, serverConfiguration: ServerConfiguration) {
         $scope.getTemplateUrl = () => {
-            return $scope.platform === PlatformType.DESKTOP ?
-                UserPanelDirectiveController.VIEW_PATH_NORMAL : UserPanelDirectiveController.VIEW_PATH_MOBILE;
+            return serverConfiguration.rootPath + ($scope.platform === PlatformType.DESKTOP ?
+                UserPanelDirectiveController.VIEW_PATH_NORMAL : UserPanelDirectiveController.VIEW_PATH_MOBILE);
         };
     }
 }
@@ -26,6 +26,6 @@ module.directive('userPanel', [() => {
         scope: {
             platform: '='
         },
-        controller: ['$scope', UserPanelDirectiveController]
+        controller: ['$scope', 'serverConfiguration', UserPanelDirectiveController]
     };
 }]);

@@ -10,8 +10,10 @@
 ///<amd-dependency path="./MultiFileReadDirective" />
 ///<amd-dependency path="./NavigationTreeDirective" />
 ///<amd-dependency path="./NodeLinkDirective" />
+///<amd-dependency path="./ScrollSpySideDirective" />
+///<amd-dependency path="./ScrollSpyTopDirective" />
 ///<amd-dependency path="./SearchPanelDirective" />
 ///<amd-dependency path="./ToolbarPanelDirective" />
-///<amd-dependency path="./UserLoginDirective" />
+///<amd-dependency path="./UserPanelDirective" />
 
 import ng = require('angular');

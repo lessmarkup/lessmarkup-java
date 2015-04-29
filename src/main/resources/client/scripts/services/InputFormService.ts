@@ -192,7 +192,7 @@ class InputFormServiceProvider implements ng.IServiceProvider {
     }
 }
 
-import app = require('app');
-app.provider('inputForm', InputFormServiceProvider);
+import module = require('./module');
+module.provider('inputForm', InputFormServiceProvider);
 
 export = InputFormService;

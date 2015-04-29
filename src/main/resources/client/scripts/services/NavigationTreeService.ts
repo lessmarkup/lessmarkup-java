@@ -34,7 +34,9 @@ class NavigationTreeService {
     }
 }
 
-require('./module').service('navigationTree', [
+import module = require('./module');
+
+module.service('navigationTree', [
     'serverConfiguration',
     NavigationTreeService
 ]);

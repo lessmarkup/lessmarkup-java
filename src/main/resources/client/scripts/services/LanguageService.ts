@@ -19,8 +19,8 @@ class LanguageService {
     }
 }
 
-import servicesModule = require('./module');
-servicesModule.service('language', [
+import module = require('./module');
+module.service('language', [
     'languages',
     LanguageService]);
 
