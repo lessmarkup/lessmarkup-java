@@ -4,6 +4,8 @@
 
 import NodeLoaderService = require('../services/nodeLoader/NodeLoaderService');
 import MessagingService = require('../services/MessagingService');
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
+import NodeConfiguration = require('../datatypes/NodeConfiguration');
 
 interface MainControllerScope extends ng.IScope {
     showXsMenu: boolean;

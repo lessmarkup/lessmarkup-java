@@ -5,6 +5,7 @@ import BackgroundRefreshService = require('./BackgroundRefreshService');
 import UserSecurityService = require('./userSecurity/UserSecurityService');
 import CollectionUpdatesService = require('./collectionUpdates/CollectionUpdatesService');
 import NavigationTreeService = require('./NavigationTreeService');
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
 
 class CommandProcessorService {
 
@@ -12,7 +13,6 @@ class CommandProcessorService {
     private versionId: number;
     private updateProperties: {};
     private backgroundRefresh: BackgroundRefreshService;
-    private userSecurity: UserSecurityService;
     private collectionUpdates: CollectionUpdatesService;
     private navigationTree: NavigationTreeService;
     private path: string;
@@ -22,7 +22,6 @@ class CommandProcessorService {
     constructor(http: ng.IHttpService,
                 rootScope: ng.IRootScopeService,
                 backgroundRefresh: BackgroundRefreshService,
-                userSecurity: UserSecurityService,
                 collectionUpdates: CollectionUpdatesService,
                 navigationTree: NavigationTreeService,
                 initialData: InitialData,
@@ -31,7 +30,6 @@ class CommandProcessorService {
         this.http = http;
         this.versionId = initialData.versionId;
         this.backgroundRefresh = backgroundRefresh;
-        this.userSecurity = userSecurity;
         this.collectionUpdates = collectionUpdates;
         this.navigationTree = navigationTree;
         this.qService = qService;
@@ -44,7 +42,7 @@ class CommandProcessorService {
     private onSuccess<T>(response: ng.IHttpPromiseCallbackArg<ServerResponse<T>>, defer: ng.IDeferred<T>): void {
         this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
 
-        this.userSecurity.updateState(response.data.user);
+        this.rootScope.$broadcast(BroadcastEvents.USER_STATE_UPDATED, response.data.user);
 
         if (!response.data.success) {
             var message:string = response.data.message || "Error";
@@ -140,7 +138,6 @@ module.service('commandProcessor', [
     '$http',
     '$rootScope',
     'backgroundRefresh',
-    'userSecurity',
     'collectionUpdates',
     'navigationTree',
     'initialData',

@@ -7,6 +7,7 @@ import _ = require('lodash');
 import CommandProcessorService = require('../../services/CommandProcessorService');
 import InputFormService = require('../../services/InputFormService');
 import NodeLoaderService = require('../../services/nodeLoader/NodeLoaderService');
+import BroadcastEvents = require('../../interfaces/BroadcastEvents');
 
 class RecordListController {
 

@@ -1,4 +1,5 @@
 import ng = require('angular');
+import BroadcastEvents = require('../../interfaces/BroadcastEvents');
 
 class LoginStage1Request {
     user: string;
@@ -48,9 +49,13 @@ class UserSecurityService {
         this.messaging = messaging;
         this.nodeLoader = nodeLoader;
         this.qService = qService;
+
+        rootScope.$on(BroadcastEvents.USER_STATE_UPDATED, (event: ng.IAngularEvent, state: UserStateUpdate) => {
+            this.onUserStateUpdated(state);
+        });
     }
 
-    public updateState(stateUpdate: UserStateUpdate) {
+    private onUserStateUpdated(stateUpdate: UserStateUpdate) {
         if (!stateUpdate.loggedIn) {
             if (this.userState.loggedIn) {
                 this.doLogout();

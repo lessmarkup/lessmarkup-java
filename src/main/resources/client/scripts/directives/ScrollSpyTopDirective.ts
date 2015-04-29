@@ -1,5 +1,6 @@
 import $ = require('jquery');
 import FlatPageController = require('../controllers/FlatPageController');
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
 
 interface ScrollSpyTopDirectiveScope extends ng.IScope {
 

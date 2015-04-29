@@ -2,6 +2,8 @@ import ng = require('angular');
 import _ = require('lodash');
 
 import CommandProcessorService = require('../CommandProcessorService');
+import BroadcastEvents = require('../../interfaces/BroadcastEvents');
+import NodeConfiguration = require('../../datatypes/NodeConfiguration');
 
 class NodeLoaderService {
 

@@ -54,7 +54,5 @@ class BackgroundRefreshService {
 }
 
 import module = require('./module');
-
-module.service('backgroundRefresh', BackgroundRefreshService);
-
+module.service('backgroundRefresh', ['$timeout', BackgroundRefreshService]);
 export = BackgroundRefreshService;

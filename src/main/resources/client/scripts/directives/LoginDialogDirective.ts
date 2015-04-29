@@ -6,6 +6,7 @@ import InputFormService = require('../services/InputFormService');
 import UserSecurityService = require('../services/userSecurity/UserSecurityService');
 import CommandProcessorService = require('../services/CommandProcessorService');
 import MessagingService = require('../services/MessagingService');
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
 
 class LoginDialogDirectiveController {
 

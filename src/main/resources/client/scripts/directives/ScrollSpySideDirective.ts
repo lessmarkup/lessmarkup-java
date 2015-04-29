@@ -1,4 +1,5 @@
 import FlatPageController = require('../controllers/FlatPageController');
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
 
 function ScrollSpySideDirectiveLink(scope: FlatPageControllerScope) {
     scope.$applyAsync(() => {

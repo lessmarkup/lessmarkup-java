@@ -5,3 +5,5 @@ class NodeConfiguration {
     title: string;
     template: string;
 }
+
+export = NodeConfiguration;
