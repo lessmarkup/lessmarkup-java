@@ -4,27 +4,17 @@ html, body {
   height: 100%;
 }
 
-.body1 {
-  height: auto;
+#body-wrapper {
   min-height: 100%;
-}
-
-.body2 {
-  padding-bottom: 50px;
-  padding-top: 60px;
-}
-
-.footer {
-  clear: both;
+  height: 100%;
   position: relative;
-  margin-top: -50px;
-  height: 50px;
 }
 
-.container {
-  padding: 0;
+#body-wrapper > div {
+  height: 100%;
 }
 
-.container-fluid {
-  padding: 0;
+.fixed {
+  margin: 0 auto;
+  width: 900px;
 }

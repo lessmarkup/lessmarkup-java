@@ -23,23 +23,8 @@
             }
         </style>
     </head>
-    <body layout="row">
-        [[#useScripts]]
-        [[>views/inputFormTemplate.html]]
-        [[/useScripts]]
+    <body>
         [[>views/body.html]]
-        [[#useScripts]]
-        document.getElementById("noscript").innerHTML = "";
-        <script type="text/javascript" src="[[#map]]scripts/config/paths.js[[/map]]"></script>
-        <script type="text/javascript">
-            require.baseUrl = "[[#map]]scripts[[/map]]";
-        </script>
-        <script type="text/javascript" src="[[#map]]lib/requirejs/require.js[[/map]]"></script>
-        <script type="text/javascript">
-            require(['app'], function(app) {
-                app.initialize([[initialData]], [[serverConfiguration]], [[languages]]);
-            });
-        </script>
-        [[/useScripts]]
+        [[#useScripts]][[>views/bootstrap.html]][[/useScripts]]
     </body>
 </html>

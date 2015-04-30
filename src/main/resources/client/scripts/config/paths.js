@@ -15,12 +15,13 @@ var require = {
         'Codemirror': '../lib/codemirror/lib/codemirror',
         'tinymce': '../lib/tinymce/tinymce',
         'domready': '../lib/requirejs-domready/domReady',
-        'Recaptcha': 'http://www.google.com/recaptcha/api/js/recaptcha_ajax'
+        'Recaptcha': 'http://www.google.com/recaptcha/api/js/recaptcha_ajax',
+        'requirejs.text': '../lib/requirejs-text/text'
     },
     shim: {
         'angular':{
             exports: 'angular',
-            deps: ['jquery']
+            deps: ['jquery', 'requirejs.text']
         },
         'jquery': {
             exports: '$'

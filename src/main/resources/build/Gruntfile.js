@@ -10,5 +10,5 @@ module.exports = function(grunt) {
     grunt.initConfig(grunt.file.readJSON('config/grunt.config.json'));
     
     grunt.registerTask('default', []);
-    grunt.registerTask('build', ['tsd', 'ts', 'copy:ts', 'copy:bower', 'sass', 'less', 'cssmin']);
+    grunt.registerTask('build', ['tsd', 'ts', 'copy:ts', 'copy:bower', 'sass', 'cssmin']);
 };

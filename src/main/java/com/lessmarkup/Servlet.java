@@ -87,6 +87,7 @@ public class Servlet extends HttpServlet {
         if (resourceModel.initialize(path)) {
             LoggingHelper.getLogger(getClass()).info("Handling resource access request");
             resourceModel.handleRequest();
+            LoggingHelper.getLogger(getClass()).info("Finished handling resource access request");
             return true;
         }
         

@@ -1,41 +1,9 @@
-<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
-    <md-toolbar>
-        <h1 class="md-toolbar-icons">
-            <node-link path="/" layout="row" flex>
-                <md-icon md-svg-src="menu"></md-icon>
-                <div>[[#property]]SiteName[[/property]]</div>
-            </node-link>
-        </h1>
-    </md-toolbar>
-    <md-content flex role="navigation">
-        <navigation-tree platform="desktop" />
-    </md-content>
-</md-sidenav>
-
-<div layout="column" tabindex="-1" role="main" flex>
-    <md-toolbar>
-        <div class="md-toolbar-tools" tabindex="-1">
-            <div layout="row" flex>
-                <breadcrumbs />
-                [[topMenu]]
-                [[>views/topMenuPlugins.html]]
-                <search-panel />
-                <languages-panel />
-                [[>views/topMenuPlugins.html]]
-                <collection-updates platform="desktop" />
-                <user-panel platform="desktop" />
-            </div>
-        </div>
-    </md-toolbar>
-    <md-content flex>
-        <div class="scriptonly" ng-cloak>[[#text]]PleaseWaitLoading[[/text]]</div>
-        <alerts-and-messages />
-        <bind-template class="scriptonly" template="template" configuration="configuration">
-            [[#text]]PleaseWaitLoading[[/text]]
-        </bind-template>
-        [[noScriptBlock]]
-    </md-content>
-    <md-bottom-sheet>
-        <p>This site is built on <a href="http://www.lessmarkup.com" target="_new">LessMarkup Engine</a></p>
-    </md-bottom-sheet>
+<div id="body-wrapper" class="fixed">
+    <div layout="row">
+        [[>views/contents.html]]
+    </div>
 </div>
+
+<footer class="fixed">
+    <div>This site is built on <a href="http://www.lessmarkup.com" target="_new">LessMarkup Engine</a></div>
+</footer>

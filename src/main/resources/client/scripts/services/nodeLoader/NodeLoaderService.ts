@@ -17,6 +17,7 @@ class NodeLoaderService {
     private templates: {[name: string]: string } = {};
     private serverConfiguration: ServerConfiguration;
     private qService: ng.IQService;
+    private rootPath: string;
 
     constructor(commandProcessor: CommandProcessorService, rootScope: ng.IRootScopeService, serverConfiguration: ServerConfiguration, $browser: ng.IBrowserService, qService: ng.IQService) {
         this.qService = qService;
@@ -24,6 +25,7 @@ class NodeLoaderService {
         this.rootScope = rootScope;
         this.serverConfiguration = serverConfiguration;
         this.initializeBrowser($browser);
+        this.rootPath = window.location['origin'] + this.serverConfiguration.rootPath;
         commandProcessor.onPathChanged(this.path);
         this.resetPageProperties();
 
@@ -84,7 +86,11 @@ class NodeLoaderService {
             query += key + "=" + value;
         }, this);
 
-        var newFullPath = window.location.protocol + "//" + window.location.host + this.path;
+        var newFullPath = this.rootPath + this.path;
+
+        if (newFullPath[newFullPath.length-1] == '/') {
+            newFullPath = newFullPath.substring(0, newFullPath.length-1);
+        }
 
         if (query.length > 0) {
             newFullPath += "?" + query;
@@ -227,11 +233,6 @@ class NodeLoaderService {
     public getPath(): string {
         return this.path;
     }
-
-    public getFullPath(path: string): string {
-        return this.path + "/" + path;
-    }
-
 }
 
 import module = require('../module');
