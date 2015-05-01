@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 interface FileReadDirectiveScope extends ng.IScope {
     value: FileReadResponse;
     clear: () => void;
@@ -15,9 +21,7 @@ class FileReadDirectiveLink {
 
         var fileElement = element.find('file');
 
-        scope.chooseFile = () => {
-            fileElement.click();
-        };
+        scope.chooseFile = () => fileElement.click();
 
         scope.clear = () => {
             fileElement.val('');
@@ -25,18 +29,14 @@ class FileReadDirectiveLink {
             scope.value = null;
         };
 
-        fileElement.bind("change", function (changeEvent) {
-            this.onFileSelected(changeEvent);
-        });
+        fileElement.bind("change", (changeEvent) => this.onFileSelected(changeEvent) );
     }
 
     private onFileSelected(changeEvent) {
         this.scope.comment = changeEvent.target.value[0].name;
         var reader = new FileReader();
-        reader.onload = function (loadEvent) {
-            this.scope.$apply(() => {
-                this.onReadFinished(loadEvent, changeEvent);
-            });
+        reader.onload = (loadEvent) => {
+            this.scope.$apply(() => this.onReadFinished(loadEvent, changeEvent));
         };
         reader.readAsDataURL(changeEvent.target.value[0]);
     }

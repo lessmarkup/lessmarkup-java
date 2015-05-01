@@ -1,29 +1,15 @@
-///<amd-dependency path="angular.material" />
 ///<amd-dependency path="Recaptcha" />
+
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 import _ = require('lodash');
 
-interface InputFormControllerScope extends ng.IScope {
-    fields: InputFieldDefinition[];
-    submitError: string;
-    isApplying: boolean;
-    submitWithCaptcha: boolean;
-    isDisabled(): boolean;
-    codeMirrorDefaultOptions: CodeMirror.EditorConfiguration;
-    isNewObject: boolean;
-    object: any;
-    fieldValueSelected: (field: InputFieldDefinition, select: SelectValueDefinition) => boolean;
-    getValue: (field: InputFieldDefinition) => any;
-    readOnly: (field: InputFieldDefinition) => string;
-    hasErrors: (field: InputFieldDefinition) => boolean;
-    getErrorText: (field: InputFieldDefinition) => string;
-    getHelpText: (field: InputFieldDefinition) => string;
-    fieldVisible: (field: InputFieldDefinition) => boolean;
-    getTypeahead: (field: InputFieldDefinition, searchText: string) => string[];
-    submit: () => void;
-    cancel: () => void;
-    showDateTimeField: (event, field: InputFieldDefinition) => void;
-}
+import InputFormControllerScope = require('./InputFormControllerScope');
+import InputFieldTypes = require('../interfaces/InputFieldTypes');
 
 class InputFormController {
 
@@ -58,51 +44,17 @@ class InputFormController {
         this.validationErrors = {};
         this.resolver = resolver;
 
-        scope.fields = definition.fields;
         scope.submitError = '';
         scope.isApplying = false;
         scope.submitWithCaptcha = definition.submitWithCaptcha;
-        scope.isDisabled = () => {
-            return scope.isApplying;
-        };
-        scope.codeMirrorDefaultOptions = {
-            mode: 'text/html',
-            lineNumbers: true,
-            lineWrapping: true,
-            indentWithTabs: true,
-            theme: 'default',
-            extraKeys: {
-                "F11": function (cm) {
-                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-                },
-                "Esc": function (cm) {
-                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
-                }
-            }
-        };
+        scope.isDisabled = () => scope.isApplying;
+
+        scope.codeMirrorDefaultOptions = this.getCodeMirrorDefaultOptions();
 
         scope.isNewObject = object == null;
         scope.object = object != null ? _.cloneDeep(object) : {};
 
-        scope.fieldValueSelected = (field: InputFieldDefinition, select: SelectValueDefinition) => {
-            var value = scope.object[field.property];
-            switch (field.type) {
-                case InputFieldTypes.SELECT:
-                    return select.value == value;
-                case InputFieldTypes.MULTI_SELECT:
-                    if (!value) {
-                        return false;
-                    }
-                    for (var i = 0; i < value.length; i++) {
-                        if (value[i] == select.value) {
-                            return true;
-                        }
-                    }
-                    return false;
-                default:
-                    return false;
-            }
-        };
+        scope.fieldValueSelected = this.onFieldValueSelected;
 
         scope.getValue = (field: InputFieldDefinition) => {
             if (field.type === InputFieldTypes.RICH_TEXT && scope.readOnly(field).length > 0) {
@@ -111,29 +63,11 @@ class InputFormController {
             return object[field.property];
         };
 
-        scope.hasErrors = (field: InputFieldDefinition): boolean => {
-            return this.validationErrors.hasOwnProperty(field.property);
-        };
+        scope.hasErrors = (field) => this.validationErrors.hasOwnProperty(field.property);
+        scope.getErrorText = (field) => this.validationErrors[field.property];
+        scope.getHelpText = (field) => this.onGetHelpText(field);
 
-        scope.getErrorText = (field: InputFieldDefinition): string => {
-            return this.validationErrors[field.property];
-        };
-
-        scope.getHelpText = (field: InputFieldDefinition): string => {
-            var ret = field.helpText;
-            if (ret == null) {
-                ret = "";
-            }
-            if (scope.hasErrors(field)) {
-                if (ret.length) {
-                    ret += " / ";
-                }
-                ret += scope.getErrorText(field);
-            }
-            return ret;
-        };
-
-        scope.fieldVisible = (field: InputFieldDefinition) => {
+        scope.fieldVisible = (field) => {
             if (!field.visibleFunction) {
                 return true;
             }
@@ -154,27 +88,82 @@ class InputFormController {
             return field.readOnlyFunction(scope.object) ? "readonly" : "";
         };
 
-        scope.submit = this.onSubmit;
-        scope.cancel = this.onCancel;
+        scope.submit = () => this.onSubmit();
+        scope.cancel = () => this.onCancel();
 
         scope.showDateTimeField = (event, field: InputFieldDefinition) => {
             event.preventDefault();
             event.stopPropagation();
             field.isOpen = true;
-        }
+        };
 
-        _.forEach(definition.fields, (field: InputFieldDefinition) => {
-            if (!scope.object.hasOwnProperty(field.property)) {
+        this.initializeFields();
+    }
+
+    private onGetHelpText(field: InputFieldDefinition): string {
+        var ret = field.helpText;
+        if (ret == null) {
+            ret = "";
+        }
+        if (this.scope.hasErrors(field)) {
+            if (ret.length) {
+                ret += " / ";
+            }
+            ret += this.scope.getErrorText(field);
+        }
+        return ret;
+    }
+
+    private getCodeMirrorDefaultOptions(): any {
+        return {
+            mode: 'text/html',
+            lineNumbers: true,
+            lineWrapping: true,
+            indentWithTabs: true,
+            theme: 'default',
+            extraKeys: {
+                "F11": (cm) => cm.setOption("fullScreen", !cm.getOption("fullScreen")),
+                "Esc": (cm) => {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                }
+            }
+        };
+    }
+
+    private onFieldValueSelected (field: InputFieldDefinition, select: SelectValueDefinition) {
+        var value = this.scope.object[field.property];
+        switch (field.type) {
+            case InputFieldTypes.SELECT:
+                return select.value == value;
+            case InputFieldTypes.MULTI_SELECT:
+                if (!value) {
+                    return false;
+                }
+                for (var i = 0; i < value.length; i++) {
+                    if (value[i] == select.value) {
+                        return true;
+                    }
+                }
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private initializeFields() {
+        this.scope.fields = [];
+        _.forEach(this.definition.fields, (field: InputFieldDefinition) => {
+            if (!this.scope.object.hasOwnProperty(field.property)) {
                 if (typeof (field.defaultValue) != "undefined") {
-                    scope.object[field.property] = field.defaultValue;
+                    this.scope.object[field.property] = field.defaultValue;
                 } else {
-                    scope.object[field.property] = "";
+                    this.scope.object[field.property] = "";
                 }
             }
 
             if (field.type == InputFieldTypes.DYNAMIC_FIELD_LIST) {
 
-                var dynamicFields: DynamicInputFieldDefinition[] = scope.object[field.property];
+                var dynamicFields: DynamicInputFieldDefinition[] = this.scope.object[field.property];
 
                 if (dynamicFields == null) {
                     return;
@@ -183,10 +172,10 @@ class InputFormController {
                 _.forEach(dynamicFields, (dynamicField: DynamicInputFieldDefinition) => {
                     var dynamicDefinition: InputFieldDefinition = _.cloneDeep<InputFieldDefinition>(dynamicField.field);
                     dynamicDefinition.property = field.property + "$" + dynamicDefinition.property;
-                    scope.fields.push(dynamicDefinition);
+                    this.scope.fields.push(dynamicDefinition);
                     dynamicDefinition.dynamicSource = dynamicField;
                     this.initializeField(dynamicDefinition);
-                    scope.object[dynamicDefinition.property] = dynamicField.value;
+                    this.scope.object[dynamicDefinition.property] = dynamicField.value;
                 });
 
                 for (var j = 0; j < dynamicFields.length; j++) {
@@ -196,7 +185,7 @@ class InputFormController {
             }
 
             if (field.type !== InputFieldTypes.HIDDEN) {
-                scope.fields.push(field);
+                this.scope.fields.push(field);
                 this.initializeField(field);
             }
         });
@@ -334,7 +323,9 @@ class InputFormController {
             this.resolver(changed).then(() => {
                 this.scope.isApplying = false;
                 this.dialogService.hide();
-                this.defer.resolve(changed);
+                if (this.defer != null) {
+                    this.defer.resolve(changed);
+                }
             }, (message: string) => {
                 this.scope.isApplying = false;
                 this.scope.submitError = message;
@@ -390,3 +381,5 @@ module.controller('inputForm', [
     'resolver',
     InputFormController
 ]);
+
+export = InputFormController;

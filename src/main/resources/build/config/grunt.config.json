@@ -79,10 +79,7 @@
   },
   "cssmin": {
     "default": {
-      "src": [
-        "../css/*.css",
-        "!*.min.css"
-      ],
+      "src": "../css/main.css",
       "dest": "../css/main.min.css"
     }
   }

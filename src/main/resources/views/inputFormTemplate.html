@@ -1,13 +1,13 @@
 <div class="modal-header">
     <h3 class="modal-title">{{definition.title}}</h3>
 </div>
-<div class="modal-body" id="inputform-template-body">
+<div class="modal-body">
     [[>views/inputFormTemplateBody.html]]
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="submit()" ng-disabled="okDisabled()">
+    <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="okDisabled()">
         <span>[[#text]]ButtonOk[[/text]]</span>
         <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0,position:'relative'}" ng-show="isApplying"></span>
-    </button>
-    <button class="btn btn-warning" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</button>
+    </md-button>
+    <md-button class="md-raised" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</md-button>
 </div>

@@ -1,5 +1,11 @@
 ///<amd-dependency path="../datatypes/FileReadResponse" />
 
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 class MultiFileReadResponse {
     files: FileReadResponse[];
 }
@@ -30,13 +36,9 @@ class MultiFileReadDirectiveLink {
 
         this.fileElement = element.find('file');
 
-        scope.chooseFile = () => {
-            this.fileElement.click();
-        };
+        scope.chooseFile = () => this.fileElement.click();
 
-        this.fileElement.bind('change', (changeEvent) => {
-            this.onFilesSelected(changeEvent);
-        });
+        this.fileElement.bind('change', (changeEvent) => this.onFilesSelected(changeEvent));
 
         scope.removeFile = (file: FileReadResponse) => {
             for (var i = 0; i < scope.value.files.length; i++) {
@@ -79,10 +81,8 @@ class MultiFileReadDirectiveLink {
     private readFile(sourceFile, changeEvent, sourceFiles) {
         var fileName = sourceFile.name;
         var reader = new FileReader();
-        reader.onload = function (loadEvent) {
-            this.scope.$apply(function () {
-                this.onReadFinished(changeEvent, sourceFile, sourceFiles);
-            });
+        reader.onload = () => {
+            this.scope.$apply(() => this.onReadFinished(changeEvent, sourceFile, sourceFiles));
         };
         reader.readAsDataURL(sourceFile);
     }

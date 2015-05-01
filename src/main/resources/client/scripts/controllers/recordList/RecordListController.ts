@@ -66,17 +66,16 @@ class RecordListController {
         this.currentRecordId = null;
         this.currentRecord = null;
 
-        scope.searchRecords = () => { this.onSearchRecords(); };
-
-        scope.toggleRecordSearch = () => { this.toggleRecordSearch(); }
+        scope.searchRecords = () => this.onSearchRecords();
+        scope.toggleRecordSearch = () => this.toggleRecordSearch();
 
         this.unsubscribeReceivedUpdates = scope.$on(BroadcastEvents.RECORD_UPDATES, (scope, data: ServerResponseUpdates) => {
             this.onUpdatesReceived(data);
         });
 
-        scope.$on('$destroy', () => { this.unsubscribeReceivedUpdates(); });
+        scope.$on('$destroy', () => this.unsubscribeReceivedUpdates());
 
-        scope.refreshNewRecords = () => { this.refreshNewRecords(); };
+        scope.refreshNewRecords = () => this.refreshNewRecords();
 
         this.initializeColumnScopes();
         this.initializeActions();
@@ -87,11 +86,9 @@ class RecordListController {
             scope.columns[0].colSpan = 2;
         }
 
-        scope.onToolbarButtonClick = (action: RecordListAction) => { this.onToolbarButtonClick(action); };
+        scope.onToolbarButtonClick = (action: RecordListAction) => this.onToolbarButtonClick(action);
 
-        scope.onClickOptions = (record: RecordListRecord, column: RecordListColumn, event) => {
-            this.onClickOptions(record, column, event);
-        };
+        scope.onClickOptions = (record: RecordListRecord, column: RecordListColumn, event) => this.onClickOptions(record, column, event);
 
         scope.isActionVisible = (action: RecordListAction) => {
             if (this.currentRecord === null || !scope.showOptions) {
@@ -100,7 +97,7 @@ class RecordListController {
             return action.visible(this.currentRecord);
         };
 
-        scope.sortColumn = (column: RecordListColumn) => { this.sortColumn(column); }
+        scope.sortColumn = (column: RecordListColumn) => this.sortColumn(column);
 
         scope.navigateToLink = (link) => {
             this.nodeLoader.loadNode(this.nodeLoader.getPath() + "/" + this.extractLink(link.url, this.currentRecord));
@@ -113,9 +110,7 @@ class RecordListController {
             return this.nodeLoader.getPath() + "/" + this.extractLink(link.url, this.currentRecord);
         };
 
-        scope.getColumnLink = (column, row) => {
-            return this.nodeLoader.getPath() + "/" + this.extractLink(column.url, row);
-        };
+        scope.getColumnLink = (column, row) => this.nodeLoader.getPath() + "/" + this.extractLink(column.url, row);
 
         this.initializeColumns();
 
@@ -145,8 +140,8 @@ class RecordListController {
 
                 this.commandProcessor.sendCommand(action.name, { newObject: record })
                     .then(
-                    (data) => { this.handleActionResult(data, null, deferred); },
-                    (message: string) => { deferred.reject(message); });
+                    (data) => this.handleActionResult(data, null, deferred),
+                    (message: string) => deferred.reject(message) );
 
                 return deferred.promise;
             });

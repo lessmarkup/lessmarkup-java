@@ -1,0 +1,9 @@
+<label>{{label}}</label>
+<div>
+    <div>
+        <input ng-if="!readOnly()" type="file" fileread="model[field.property]" />
+    </div>
+    <div style="margin-top: 1em;">
+        <img ng-if="model[field.property] != null" ng-src="/Image/Thumbnail/{{model[field.property]}}" />
+    </div>
+</div>

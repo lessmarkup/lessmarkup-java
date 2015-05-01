@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 interface NodeListNode {
     data: TreeNode;
     level: number;
@@ -79,9 +85,7 @@ class NodeListController {
             return true;
         };
 
-        scope.upDisabled = (node: NodeListNode): boolean => {
-            return node.index == 0;
-        };
+        scope.upDisabled = (node: NodeListNode) => node.index == 0;
 
         scope.downDisabled = (node: NodeListNode): boolean => {
             if (node.parent == null) {
@@ -90,18 +94,14 @@ class NodeListController {
             return node.parentIndex == node.parent.data.children.length - 1 && node.parent.parent == null;
         };
 
-        scope.leftDisabled = (node: NodeListNode) => {
-            return node.parent == null || node.index == 0;
-        };
+        scope.leftDisabled = (node: NodeListNode) => node.parent == null || node.index == 0;
 
-        scope.rightDisabled = (node: NodeListNode) => {
-            return node.parentIndex == 0;
-        };
+        scope.rightDisabled = (node: NodeListNode) => node.parentIndex == 0;
 
 
-        scope.moveUp = (node: NodeListNode) => { this.moveUp(node); };
+        scope.moveUp = (node: NodeListNode) => this.moveUp(node);
 
-        scope.moveDown = (node: NodeListNode) => { this.moveDown(node); };
+        scope.moveDown = (node: NodeListNode) => this.moveDown(node);
 
         scope.moveLeft = (node: NodeListNode) => {
             if (node.parent == null) {
@@ -119,19 +119,12 @@ class NodeListController {
             this.changeParent(node, scope.nodes[node.index - 1], 0);
         };
 
-        scope.createNode = (parentNode: NodeListNode) => { this.createNode(parentNode); };
-
-        scope.canBeDeleted = (node: NodeListNode): boolean => {
-            return node.data.children.length == 0;
-        };
-
-        scope.deleteNode = (node: NodeListNode) => { this.deleteNode(node); };
-
+        scope.createNode = (parentNode: NodeListNode) => this.createNode(parentNode);
+        scope.canBeDeleted = (node: NodeListNode): boolean => node.data.children.length == 0;
+        scope.deleteNode = (node: NodeListNode) => this.deleteNode(node);
         scope.hasSettings = (node: NodeListNode): boolean => { return node.data.customizable; };
-
-        scope.changeSettings = (node: NodeListNode) => { this.changeSettings(node); };
-
-        scope.changeProperties = (node: NodeListNode) => { this.changeProperties(node); };
+        scope.changeSettings = (node: NodeListNode) => this.changeSettings(node);
+        scope.changeProperties = (node: NodeListNode) => this.changeProperties(node);
 
         this.refreshFlatList();
     }

@@ -8,10 +8,11 @@ import BroadcastEvents = require('../interfaces/BroadcastEvents');
 import NodeConfiguration = require('../datatypes/NodeConfiguration');
 
 interface MainControllerScope extends ng.IScope {
-    showXsMenu: boolean;
-    hideXsMenu: () => void;
     template: string;
     configuration: any;
+    lockSidenav: boolean;
+    toggleSidenav: () => void;
+    title: string;
 }
 
 class MainController {
@@ -20,32 +21,38 @@ class MainController {
     private templates: string[] = [];
     private scope: MainControllerScope;
     private viewData: any = null;
+    private sidenavService: angular.material.MDSidenavService;
 
-    constructor($scope: MainControllerScope, initialData: InitialData, nodeLoader: NodeLoaderService, messaging: MessagingService) {
+    constructor(
+        $scope: MainControllerScope,
+        initialData: InitialData,
+        nodeLoader: NodeLoaderService,
+        messaging: MessagingService,
+        sidenavService: angular.material.MDSidenavService) {
+
         this.scope = $scope;
+        this.sidenavService = sidenavService;
+        this.scope.template = '';
+        this.scope.title = '';
+        this.scope.configuration = '';
         this.initializeScope(initialData);
+
+        this.scope.$on(BroadcastEvents.NODE_LOADED, (event: ng.IAngularEvent, configuration: NodeConfiguration) => {
+            this.scope.configuration = configuration.viewData;
+            this.scope.template = configuration.template;
+            this.scope.title = configuration.title;
+        });
 
         if (initialData.nodeLoadError && initialData.nodeLoadError.length > 0) {
             messaging.showError(initialData.nodeLoadError);
         } else {
             nodeLoader.onNodeLoaded(initialData.loadedNode, initialData.path);
         }
-
-        this.scope.$on(BroadcastEvents.NODE_LOADED, (event: ng.IAngularEvent, configuration: NodeConfiguration) => {
-            this.scope.configuration = configuration.viewData;
-            this.scope.template = configuration.template;
-        });
     }
 
     private initializeScope(initialData: InitialData) {
-        this.scope.showXsMenu = false;
-        this.scope.hideXsMenu = () => {
-            if (this.scope.showXsMenu) {
-                this.scope.$apply((scope: ng.IScope) => {
-                    this.scope.showXsMenu = false;
-                });
-            }
-        }
+        this.scope.lockSidenav = false;
+        this.scope.toggleSidenav = () => this.sidenavService('left').toggle();
     }
 }
 
@@ -56,5 +63,6 @@ module.controller('main', [
     'initialData',
     'nodeLoader',
     'messaging',
+    '$mdSidenav',
     MainController
 ]);

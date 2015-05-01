@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 interface LoginDialogDirectiveScope extends ng.IScope {
     showLogin: () => void;
 }
@@ -39,8 +45,8 @@ class LoginDialogDirectiveController {
             var deferred: ng.IDeferred<void> = this.qService.defer<void>();
 
             this.userSecurity.loginUser(model.email, model.password, model.remember).then(
-                () => { deferred.resolve(); },
-                (message: string) => { this.messagingService.showError(message); });
+                () => deferred.resolve(),
+                (message) => this.messagingService.showError(message) );
 
             return deferred.promise;
         });
@@ -56,8 +62,8 @@ class LoginDialogDirectiveController {
                 var deferred: ng.IDeferred<void> = this.qService.defer<void>();
 
                 this.commandProcessor.sendCommand("register", { user: registerObject }).then(
-                    () => { deferred.resolve(); },
-                    (message: string) => { deferred.reject(message); }
+                    () => deferred.resolve(),
+                    (message) => deferred.reject(message)
                 );
 
                 return deferred.promise;

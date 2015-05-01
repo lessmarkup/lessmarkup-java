@@ -18,3 +18,9 @@ html, body {
   margin: 0 auto;
   width: 900px;
 }
+
+@media (max-width: 900px) {
+  .fixed {
+    width: 100%;
+  }
+}

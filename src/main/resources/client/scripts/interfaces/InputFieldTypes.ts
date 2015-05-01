@@ -13,4 +13,11 @@ class InputFieldTypes {
     public static IMAGE: string = "IMAGE";
     public static DATE: string = "DATE";
     public static HIDDEN: string = "HIDDEN";
+    public static TEXT: string = "TEXT";
+    public static CHECK_BOX: string = "CHECK_BOX";
+    public static TYPEAHEAD: string = "TYPEAHEAD";
+    public static MULTILINE_TEXT: string = "MULTILINE_TEXT";
+    public static LABEL: string = "LABEL";
 }
+
+export = InputFieldTypes;

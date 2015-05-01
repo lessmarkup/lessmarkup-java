@@ -3,34 +3,31 @@
         <div class="md-toolbar-tools" tabindex="-1">
             <div layout="row" flex>
                 <h1 class="logo">
-                    <node-link path="'/'" layout="row" flex>
-                        <!--<md-icon md-svg-src="menu"></md-icon>-->
-                        <span>[[#property]]SiteName[[/property]]</span>
-                    </node-link>
+                    <span ng-click="toggleSidenav()">[[#property]]SiteName[[/property]]</span>
                 </h1>
-                <breadcrumbs />
+                <breadcrumbs></breadcrumbs>
                 [[topMenu]]
                 [[>views/topMenuPlugins.html]]
-                <search-panel />
-                <languages-panel />
+                <search-panel></search-panel>
+                <languages-panel></languages-panel>
                 [[>views/topMenuPlugins.html]]
-                <collection-updates platform="desktop" />
-                <user-panel platform="desktop" />
+                <collection-updates platform="desktop"></collection-updates>
+                <user-panel platform="desktop"></user-panel>
             </div>
         </div>
     </md-toolbar>
     <div layout="row" flex>
-        <md-sidenav class="site-sidenav md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+        <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="lockSidenav">
             <md-content flex role="navigation">
-                <navigation-tree platform="desktop" />
+                <navigation-tree platform="desktop"></navigation-tree>
             </md-content>
         </md-sidenav>
         <md-content flex>
-            <div class="scriptonly" ng-cloak>[[#text]]PleaseWaitLoading[[/text]]</div>
-            <alerts-and-messages />
-            <bind-template class="scriptonly" template="template" configuration="configuration">
+            <md-subheader ng-bind="title"></md-subheader>
+            <alerts-and-messages></alerts-and-messages>
+            <bind-module class="scriptonly" template="template" configuration="configuration">
                 [[#text]]PleaseWaitLoading[[/text]]
-            </bind-template>
+            </bind-module>
             [[noScriptBlock]]
         </md-content>
     </div>

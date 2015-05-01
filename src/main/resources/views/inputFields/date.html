@@ -1,0 +1,12 @@
+<label>{{label}}</label>
+<span>
+    <input type="text" ng-model="model"
+        ng-readonly="readonly()" datepicker-popup close-text="[[#text]]Close[[/text]]"
+        clear-text="[[#text]]Clear[[/text]]" current-text="[[#text]]Today[[/text]]"
+        is-open="field.isOpen"/>
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="showDateTimeField($event, field)">
+            <i class="glyphicon glyphicon-calendar"></i>
+        </button>
+    </span>
+</span>

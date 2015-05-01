@@ -7,6 +7,7 @@ class FormRequestCommand {
 
 import CommandProcessorService = require('./CommandProcessorService');
 import ModuleLoaderService = require('./ModuleLoaderService');
+import InputFieldTypes = require('../interfaces/InputFieldTypes');
 
 class InputFormService {
 

@@ -36,7 +36,7 @@ class FlatPageController {
 
         FlatPageController.scrollSetManually = true;
 
-        $("html,body").stop().animate({ scrollTop: position }, 1000, "swing", function () {
+        $("html,body").stop().animate({ scrollTop: position }, 1000, "swing", () => {
             FlatPageController.scrollSetManually = false;
         });
     }
@@ -57,7 +57,7 @@ class FlatPageController {
         var pageToScope = {};
 
         if (scope.configuration.scripts.length > 0) {
-            require(scope.configuration.scripts, this.initializePages);
+            require(scope.configuration.scripts, () => this.initializePages);
         } else {
             this.initializePages();
         }

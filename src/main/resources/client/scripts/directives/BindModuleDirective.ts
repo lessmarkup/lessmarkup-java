@@ -2,35 +2,33 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-interface BindTemplateDirectiveScope extends ng.IScope {
+interface BindModuleDirectiveScope extends ng.IScope {
     template: string;
     configuration: any;
 }
 
-interface BindTemplateDirectiveInnerScope extends ng.IScope {
+interface BindModuleDirectiveInnerScope extends ng.IScope {
     configuration: any;
 }
 
 import ModuleLoaderService = require('../services/ModuleLoaderService');
 
-class BindTemplateDirectiveLink {
+class BindModuleDirectiveLink {
 
-    private scope: BindTemplateDirectiveScope;
+    private scope: BindModuleDirectiveScope;
     private compileService: ng.ICompileService;
-    private innerScope: BindTemplateDirectiveInnerScope;
+    private innerScope: BindModuleDirectiveInnerScope;
     private element: JQuery;
     private moduleLoader: ModuleLoaderService;
 
-    constructor(scope: BindTemplateDirectiveScope, element: JQuery, attrs, compileService: ng.ICompileService, moduleLoader: ModuleLoaderService) {
+    constructor(scope: BindModuleDirectiveScope, element: JQuery, compileService: ng.ICompileService, moduleLoader: ModuleLoaderService) {
         this.scope = scope;
         this.compileService = compileService;
-        this.innerScope = <BindTemplateDirectiveInnerScope> scope.$new(true);
+        this.innerScope = <BindModuleDirectiveInnerScope> scope.$new(true);
         this.element = element;
         this.moduleLoader = moduleLoader;
 
-        scope.$watch('template', (newValue: string) => {
-            this.onTemplateChanged(newValue);
-        });
+        scope.$watch('template', (newValue: string) => this.onTemplateChanged(newValue) );
     }
 
     private onTemplateChanged(newValue: string) {
@@ -48,19 +46,21 @@ class BindTemplateDirectiveLink {
 
 import module = require('./module');
 
-module.directive('bindTemplate', [() => {
-    return <ng.IDirective>{
-        template: '<div></div>',
-        restrict: 'E',
-        replace: false,
-        scope: {
-            template: '=',
-            configuration: '='
-        },
-        controller: [
-            '$compile',
-            'moduleLoader',
-            BindTemplateDirectiveLink
-        ]
-    };
-}]);
+module.directive('bindModule', [
+    '$compile',
+    'moduleLoader',
+    (compileService: ng.ICompileService, moduleLoader: ModuleLoaderService) => {
+        return <ng.IDirective>{
+            template: '<div></div>',
+            restrict: 'E',
+            replace: false,
+            scope: {
+                template: '=',
+                configuration: '='
+            },
+            link: (scope: BindModuleDirectiveScope, element: JQuery) => {
+                new BindModuleDirectiveLink(scope, element, compileService, moduleLoader);
+            }
+        };
+    }
+]);

@@ -1,0 +1,5 @@
+<label>{{label}}</label>
+<div>
+    <textarea ng-if="!readOnly()" ck-editor ng-model="model[field.property]" cols="10"></textarea>
+    <div ng-if="readOnly()" ng-bind-html="model[field.property]"></div>
+</div>

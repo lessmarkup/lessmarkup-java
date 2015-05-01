@@ -21,29 +21,24 @@ class CollectionUpdatesDirective {
     private static VIEW_PATH_MOBILE = "/views/collectionUpdatesMobile.html";
     private static VIEW_PATH_NORMAL = "/views/collectionUpdates.html";
 
-    constructor($scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, nodeLoader: NodeLoaderService) {
+    constructor(scope: CollectionUpdatesDirectiveScope, serverConfiguration: ServerConfiguration, collectionUpdates: CollectionUpdatesService, nodeLoader: NodeLoaderService) {
 
-        $scope.getTemplateUrl = () => {
-            return serverConfiguration.rootPath + ($scope.platform === PlatformType.DESKTOP ?
+        scope.getTemplateUrl = () => {
+            return serverConfiguration.rootPath + (scope.platform === PlatformType.DESKTOP ?
                 CollectionUpdatesDirective.VIEW_PATH_NORMAL : CollectionUpdatesDirective.VIEW_PATH_MOBILE);
         };
 
-        $scope.collections = collectionUpdates.getCollections();
+        scope.collections = collectionUpdates.getCollections();
 
-        $scope.$watch(
-            ():number => { return collectionUpdates.getVersion() },
-            ():void => { $scope.collections = collectionUpdates.getCollections(); }
+        scope.$watch(() => collectionUpdates.getVersion(),
+            () => { scope.collections = collectionUpdates.getCollections(); }
         );
 
-        $scope.gotoCollection = (collection : CollectionDefinition) => {
-            nodeLoader.loadNode(collection.path);
-        };
+        scope.gotoCollection = (collection) => nodeLoader.loadNode(collection.path);
 
-        $scope.hasCollections = () => {
-            return $scope.collections && $scope.collections.length > 0;
-        };
+        scope.hasCollections = () => scope.collections && scope.collections.length > 0;
 
-        $scope.collectionClass = (collection : CollectionDefinition) => {
+        scope.collectionClass = (collection) => {
             if (collection.count > 0) {
                 return "active-notification";
             }

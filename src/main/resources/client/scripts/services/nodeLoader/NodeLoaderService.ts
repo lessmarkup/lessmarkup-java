@@ -19,12 +19,15 @@ class NodeLoaderService {
     private qService: ng.IQService;
     private rootPath: string;
 
-    constructor(commandProcessor: CommandProcessorService, rootScope: ng.IRootScopeService, serverConfiguration: ServerConfiguration, $browser: ng.IBrowserService, qService: ng.IQService) {
+    constructor(commandProcessor: CommandProcessorService, rootScope: ng.IRootScopeService, serverConfiguration: ServerConfiguration, browserService: ng.IBrowserService, qService: ng.IQService) {
+
         this.qService = qService;
-        this.path = "";
-        this.rootScope = rootScope;
         this.serverConfiguration = serverConfiguration;
-        this.initializeBrowser($browser);
+        this.rootScope = rootScope;
+        this.commandProcessor = commandProcessor;
+
+        this.path = '';
+        this.initializeBrowser(browserService);
         this.rootPath = window.location['origin'] + this.serverConfiguration.rootPath;
         commandProcessor.onPathChanged(this.path);
         this.resetPageProperties();

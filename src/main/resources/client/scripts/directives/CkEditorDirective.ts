@@ -44,10 +44,10 @@ class CkEditorDirectiveLink {
 
         this.ck = CKEDITOR.replace(<any>element[0], this.options);
 
-        this.ck.on('change', this.applyChanges);
-        this.ck.on('key', this.applyChanges);
+        this.ck.on('change', () => this.applyChanges);
+        this.ck.on('key', () => this.applyChanges);
 
-        ngModel.$render = function () { this.render(); };
+        ngModel.$render = () => this.render();
     }
 
     private render() {
@@ -61,24 +61,27 @@ class CkEditorDirectiveLink {
     }
 
     private applyChanges() {
-        this.scope.$apply(() => {
+        this.scope.$apply(() => this.setViewValue() );
+    }
 
-            var text = this.ck.getData();
+    private setViewValue() {
+        var text = this.ck.getData();
 
-            if (this.friendlyFormatting.getSmilesExpression() != null) {
-                text = text.replace(/<img\s+alt="([^"]*)"\s+src="[^"]*"\s+(?:style="[^"]*"\s+)?title="([^"]*)"\s+\/?>/gi, function (match, alt, title) {
-                    if (!alt || !title || alt != title) {
-                        return match;
-                    }
-                    if (!this.smileCodeToId.hasOwnProperty(alt)) {
-                        return match;
-                    }
-                    return alt;
-                });
-            }
+        if (this.friendlyFormatting.getSmilesExpression() != null) {
+            text = text.replace(/<img\s+alt="([^"]*)"\s+src="[^"]*"\s+(?:style="[^"]*"\s+)?title="([^"]*)"\s+\/?>/gi, (match, alt, title) => {
 
-            this.ngModel.$setViewValue(text);
-        });
+                if (!alt || !title || alt != title) {
+                    return match;
+                }
+
+                if (!this.smileCodeToId.hasOwnProperty(alt)) {
+                    return match;
+                }
+                return alt;
+            });
+        }
+
+        this.ngModel.$setViewValue(text);
     }
 
     private initializeSmiles() {
