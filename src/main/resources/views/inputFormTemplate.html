@@ -1,13 +1,15 @@
-<div class="modal-header">
-    <h3 class="modal-title">{{definition.title}}</h3>
-</div>
-<div class="modal-body">
-    [[>views/inputFormTemplateBody.html]]
-</div>
-<div class="modal-footer">
-    <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="okDisabled()">
-        <span>[[#text]]ButtonOk[[/text]]</span>
-        <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0,position:'relative'}" ng-show="isApplying"></span>
-    </md-button>
-    <md-button class="md-raised" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</md-button>
+<div ng-form="form">
+    <div class="modal-header">
+        <h3 class="modal-title">{{definition.title}}</h3>
+    </div>
+    <div class="modal-body">
+        [[>views/inputFormTemplateBody.html]]
+    </div>
+    <div class="modal-footer">
+        <md-button class="md-raised md-primary" ng-click="submit(form)" ng-disabled="okDisabled(form)">
+            <span>[[#text]]ButtonOk[[/text]]</span>
+            <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0,position:'relative'}" ng-show="isApplying"></span>
+        </md-button>
+        <md-button class="md-raised" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</md-button>
+    </div>
 </div>

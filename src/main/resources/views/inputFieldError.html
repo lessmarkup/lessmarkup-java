@@ -1,0 +1,12 @@
+<div ng-messages="form[field.property].$error" ng-show="form[field.property].$dirty">
+    <div ng-message="required">{{ 'Main.InputFieldRequired' | translate }}</div>
+    <div ng-message="maxlength">{{ maxLengthMessage }}</div>
+    <div ng-message="minlength">{{ minLengthMessage }}</div>
+    <div ng-message="email">{{ 'Main.InputFieldEmailError' | translate }}</div>
+    <div ng-message="url">{{ 'Main.InputFieldUrlError' | translate }}</div>
+    <div ng-message="pattern">{{ 'Main.InputFieldPatternMatchError' | translate }}</div>
+    <div ng-message="date">{{ 'Main.InputFieldDateError' | translate }}</div>
+    <div ng-message="time">{{ 'Main.InputFieldTimeError' | translate }}</div>
+    <div ng-message="number">{{ 'Main.InputFieldNumberError' | translate }}</div>
+    <div ng-message="password_match">{{ 'Main.InputFieldPasswordError' | translate }}</div>
+</div>

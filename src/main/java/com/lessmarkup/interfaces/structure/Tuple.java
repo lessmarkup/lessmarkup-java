@@ -19,11 +19,12 @@ public class Tuple<T1, T2> {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object other) {
-        Tuple<T1, T2> other2 = (Tuple<T1, T2>) other;
-        if (other2 == null) {
+        if (other == null) {
             return false;
         }
+        Tuple<T1, T2> other2 = (Tuple<T1, T2>) other;
         return other2.t1 == this.t1 && other2.t2 == this.t2;
     }
     

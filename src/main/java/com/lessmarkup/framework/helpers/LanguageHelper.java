@@ -2,7 +2,6 @@ package com.lessmarkup.framework.helpers;
 
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.system.LanguageCache;
-import java.util.OptionalLong;
 
 public final class LanguageHelper {
     
@@ -23,18 +22,8 @@ public final class LanguageHelper {
         
         return translation;
     }
-    
-    public static String getText(OptionalLong languageId, String moduleType, String id, Object ... args) {
-        if (id == null) {
-            return null;
-        }
-        
-        String translation = getLanguageCache().getTranslation(languageId, id, moduleType);
-        
-        if (args.length > 0) {
-            translation = String.format(translation, args);
-        }
-        
-        return translation;
+
+    public static String getFullTextId(String moduleType, String id) {
+        return moduleType + "." + id;
     }
 }

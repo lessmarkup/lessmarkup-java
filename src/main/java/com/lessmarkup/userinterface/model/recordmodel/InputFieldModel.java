@@ -27,6 +27,9 @@ public class InputFieldModel {
     private final String id;
     private final boolean required;
     private final double width;
+    private final int minWidth;
+    private final int maxWidth;
+    private final int position;
     private final String readOnlyCondition;
     private final String visibleCondition;
     private final String property;
@@ -38,10 +41,13 @@ public class InputFieldModel {
         this.readOnly = source.isReadOnly();
         this.readOnlyCondition = source.getReadOnlyCondition();
         this.required = source.isRequired();
-        this.text = source.getTextId() != null ? LanguageHelper.getText(definition.getModuleType(), source.getTextId()) : null;
+        this.text = LanguageHelper.getFullTextId(definition.getModuleType(), source.getTextId());
         this.type = source.getType();
         this.visibleCondition = source.getVisibleCondition();
         this.width = source.getWidth();
+        this.minWidth = source.getMinWidth();
+        this.maxWidth = source.getMaxWidth();
+        this.position = source.getPosition();
         this.property = StringHelper.toJsonCase(source.getProperty().getName());
         this.defaultValue = source.getDefaultValue();
         this.helpText = null;
@@ -62,12 +68,15 @@ public class InputFieldModel {
         ret.addProperty("id", StringHelper.toJsonCase(this.id));
         ret.addProperty("required", this.required);
         ret.addProperty("width", this.width);
+        ret.addProperty("minWidth", this.minWidth);
+        ret.addProperty("maxWidth", this.maxWidth);
+        ret.addProperty("position", this.position);
         ret.addProperty("readOnlyCondition", this.readOnlyCondition);
         ret.addProperty("visibleCondition", this.visibleCondition);
         ret.addProperty("property", this.property);
         ret.addProperty("helpText", this.helpText);
         ret.addProperty("defaultValue", this.defaultValue);
-        
+
         JsonArray array = new JsonArray();
         
         if (this.selectValues != null) {

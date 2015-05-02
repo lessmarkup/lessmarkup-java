@@ -6,6 +6,7 @@ import UserSecurityService = require('./userSecurity/UserSecurityService');
 import CollectionUpdatesService = require('./collectionUpdates/CollectionUpdatesService');
 import NavigationTreeService = require('./NavigationTreeService');
 import BroadcastEvents = require('../interfaces/BroadcastEvents');
+import ServerResponse = require('../datatypes/ServerResponse');
 
 class CommandProcessorService {
 

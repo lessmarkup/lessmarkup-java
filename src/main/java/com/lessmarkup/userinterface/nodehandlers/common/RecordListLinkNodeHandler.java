@@ -88,7 +88,7 @@ public abstract class RecordListLinkNodeHandler<T extends RecordModel> extends R
 
         ChildHandlerSettings ret = new ChildHandlerSettings();
         ret.setPath(localPath);
-        ret.setTitle(LanguageHelper.getText(getRecordModel().getModuleType(), cellLinkHandler.getText()));
+        ret.setTitle(LanguageHelper.getFullTextId(getRecordModel().getModuleType(), cellLinkHandler.getText()));
         ret.setHandler(handler);
         ret.setId(OptionalLong.of(recordId));
         ret.setRest(localPath);

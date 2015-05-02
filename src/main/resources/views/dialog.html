@@ -1,17 +1,3 @@
 ﻿<div ng-controller="dialog">
-    <div ng-if="!changesApplied">
-        [[>views/inputFormTemplateBody.html]]
-        <md-content layout-padding>
-            <md-button class="md-raised md-primary" ng-click="submit()" ng-disabled="!hasChanges || isApplying">
-                <span ng-bind="applyCaption"></span>
-                <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0}" ng-show="isApplying"></span>
-            </md-button>
-        </md-content>
-    </div>
-    <div ng-if="changesApplied">
-        <div class="bg-success dialog-notification" ng-bind="submitSuccess"></div>
-        <md-content layout-padding>
-            <md-button class="md-raised" ng-click="openForm()">[[#text]]OpenForm[[/text]]</md-button>
-        </md-content>
-    </div>
+    [[>views/dialogForm.html]]
 </div>

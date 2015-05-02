@@ -6,6 +6,7 @@ var require = {
         'angular.animate': '../lib/angular-animate/angular-animate',
         'angular.aria': '../lib/angular-aria/angular-aria',
         'angular.material': '../lib/angular-material/angular-material',
+        'angular.messages': '../lib/angular-messages/angular-messages',
         'angular.spinner': '../lib/angular-spinner/angular-spinner',
         'angular.translate': '../lib/angular-translate/angular-translate',
         'angular.touch': '../lib/angular-touch/angular-touch',
@@ -35,8 +36,11 @@ var require = {
         'angular.animate': {
             deps: ['angular']
         },
+        'angular.messages': {
+            deps: ['angular']
+        },
         'angular.material': {
-            deps: ['angular', 'angular.animate', 'angular.aria']
+            deps: ['angular', 'angular.animate', 'angular.aria', 'angular.messages']
         },
         'angular.spinner': {
             deps: ['angular']

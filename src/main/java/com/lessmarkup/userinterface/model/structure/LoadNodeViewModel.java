@@ -8,7 +8,6 @@ import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.structure.NodeCache;
 import com.lessmarkup.interfaces.structure.NodeHandler;
-import com.lessmarkup.interfaces.system.LanguageCache;
 import com.lessmarkup.interfaces.system.ResourceCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -171,7 +170,7 @@ public class LoadNodeViewModel {
     
     public static String getViewTemplate(NodeHandler handler, DataCache dataCache) {
         String viewPath = getViewPath(handler.getViewType());
-        ResourceCache resourceCache = dataCache.get(ResourceCache.class, dataCache.get(LanguageCache.class).getCurrentLanguageId());
+        ResourceCache resourceCache = dataCache.get(ResourceCache.class);
         String template = resourceCache.parseText(viewPath + ".html");
         List<String> stylesheets = handler.getStylesheets();
         if (stylesheets != null && stylesheets.size() > 0) {

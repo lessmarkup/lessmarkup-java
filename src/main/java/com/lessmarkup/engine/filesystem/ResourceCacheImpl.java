@@ -1,7 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.filesystem;
 
 import com.lessmarkup.dataobjects.SiteCustomization;
-import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -42,31 +47,46 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
         this.dataCache = dataCache;
     }
 
+    private static boolean isExtensionSupported(String extension) {
+        switch (extension) {
+            case "jpg":
+            case "gif":
+            case "png":
+            case "html":
+            case "xml":
+            case "js":
+            case "css":
+            case "eot":
+            case "svg":
+            case "ttf":
+            case "woff":
+            case "map":
+            case "ts":
+                return true;
+        }
+
+        return false;
+    }
+
+    private static String extractExtension(String path) {
+        int pos = path.lastIndexOf('.');
+        if (pos <= 0) {
+            return null;
+        }
+
+        return path.substring(pos+1).toLowerCase();
+    }
+
     @Override
     public void initialize(OptionalLong objectId) {
+
         for (ModuleConfiguration module : moduleProvider.getModules()){
             for (String element : module.getElements()) {
-                int pos = element.lastIndexOf('.');
-                if (pos < 0) {
-                    continue;
-                }
-                String extension = element.substring(pos+1).toLowerCase();
-                switch (extension) {
-                    case "jpg":
-                    case "gif":
-                    case "png":
-                    case "html":
-                    case "xml":
-                    case "js":
-                    case "css":
-                    case "eot":
-                    case "svg":
-                    case "ttf":
-                    case "woff":
-                    case "map":
-                    case "ts":
-                        addResource(module, element);
-                        break;
+
+                String extension = extractExtension(element);
+
+                if (extension != null && isExtensionSupported(extension)) {
+                    addResource(module, element, extension);
                 }
             }
         }
@@ -74,9 +94,6 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
         loadDatabaseResources();
         
         this.compiler = TemplateContext.createCompiler(this);
-        
-        ResourceMinifier minifier = DependencyResolver.resolve(ResourceMinifier.class);
-        minifier.minify(resources, this);
     }
     
     private void loadDatabaseResources() {
@@ -85,7 +102,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
         }
         
         try (DomainModel domainModel = domainModelProvider.create()) {
-            domainModel.query().from(SiteCustomization.class).toList(SiteCustomization.class).forEach(record -> {
+            for (SiteCustomization record : domainModel.query().from(SiteCustomization.class).toList(SiteCustomization.class)) {
                 String recordPath = record.getPath().toLowerCase();
                 
                 ResourceReference reference;
@@ -97,7 +114,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
                         System.arraycopy(reference.getBinary(), 0, binary, 0, reference.getBinary().length);
                         System.arraycopy(record.getBody(), 0, binary, reference.getBinary().length, record.getBody().length);
                         reference.setBinary(binary);
-                        return;
+                        continue;
                     }
                 }
                 
@@ -106,14 +123,15 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
                 reference.setBinary(record.getBody());
                 
                 resources.put(recordPath, reference);
-            });
+            }
         }
     }
     
-    private void addResource(ModuleConfiguration module, String path) {
+    private void addResource(ModuleConfiguration module, String path, String extension) {
         ResourceReference reference = new ResourceReference();
         reference.setModule(module);
         reference.setPath(path);
+        reference.setExtension(extension);
         resources.put(path, reference);
     }
     
@@ -132,13 +150,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
             return resource;
         }
         
-        String extension = "";
-        
-        int pos = path.lastIndexOf('.');
-        if (pos > 0) {
-            extension = path.substring(pos+1).toLowerCase();
-        }
-        
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized(resource) {
             try {
                 resource.setBinary(resource.getModule().getResourceAsBytes(path));
@@ -147,7 +159,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
             }
 
             if (resource.getBinary() != null) {
-                if ("html".equals(extension)) {
+                if ("html".equals(resource.getExtension())) {
                     String body = StringHelper.binaryToString(resource.getBinary());
                     if (body.contains("[[")) {
                         Template template = compiler.compile(body);

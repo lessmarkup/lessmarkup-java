@@ -2,8 +2,9 @@
     <md-toolbar>
         <div class="md-toolbar-tools" tabindex="-1">
             <div layout="row" flex>
-                <h1 class="logo">
-                    <span ng-click="toggleSidenav()">[[#property]]SiteName[[/property]]</span>
+                <h1 class="logo" ng-click="toggleSidenav()">
+                    <md-icon md-svg-icon="[[#map]]icons/menu.svg[[/map]]"></md-icon>
+                    <span>[[#property]]SiteName[[/property]]</span>
                 </h1>
                 <breadcrumbs></breadcrumbs>
                 [[topMenu]]

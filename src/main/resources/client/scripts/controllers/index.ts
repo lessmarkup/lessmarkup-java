@@ -5,6 +5,7 @@
 ///<amd-dependency path="./InputFormController" />
 ///<amd-dependency path="./InputFormMessageController" />
 ///<amd-dependency path="./InputFormQuestionController" />
+///<amd-dependency path="./LoginDialogController" />
 ///<amd-dependency path="./NodeListController" />
 ///<amd-dependency path="./TabPageController" />
 

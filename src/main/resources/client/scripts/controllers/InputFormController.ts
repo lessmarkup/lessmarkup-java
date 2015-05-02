@@ -11,6 +11,45 @@ import _ = require('lodash');
 import InputFormControllerScope = require('./InputFormControllerScope');
 import InputFieldTypes = require('../interfaces/InputFieldTypes');
 
+function getFieldTemplate(type: String):string {
+    switch (type) {
+        case InputFieldTypes.TEXT:
+            return 'text';
+        case InputFieldTypes.CODE_TEXT:
+            return 'codeText';
+        case InputFieldTypes.CHECK_BOX:
+            return 'checkBox';
+        case InputFieldTypes.DATE:
+            return 'date';
+        case InputFieldTypes.EMAIL:
+            return 'email';
+        case InputFieldTypes.FILE:
+            return 'file';
+        case InputFieldTypes.FILE_LIST:
+            return 'fileList';
+        case InputFieldTypes.IMAGE:
+            return 'image';
+        case InputFieldTypes.LABEL:
+            return 'label';
+        case InputFieldTypes.MULTILINE_TEXT:
+            return 'multilineText';
+        case InputFieldTypes.MULTI_SELECT:
+            return 'multiSelect';
+        case InputFieldTypes.NUMBER:
+            return 'number';
+        case InputFieldTypes.PASSWORD:
+            return 'password';
+        case InputFieldTypes.PASSWORD_REPEAT:
+            return 'passwordRepeat';
+        case InputFieldTypes.RICH_TEXT:
+            return 'richText';
+        case InputFieldTypes.SELECT:
+            return 'select';
+        case InputFieldTypes.TYPEAHEAD:
+            return 'typeahead';
+    }
+}
+
 class InputFormController {
 
     private scope: InputFormControllerScope;
@@ -20,7 +59,6 @@ class InputFormController {
     private defer: ng.IDeferred<any>;
     private sceService: ng.ISCEService;
     private serverConfiguration: ServerConfiguration;
-    private validationErrors: { [key: string]: string };
     private resolver: (object: any) => ng.IPromise<void>;
 
     private static PASSWORD_REPEAT_SUFFIX = "$Repeat";
@@ -41,20 +79,20 @@ class InputFormController {
         this.defer = defer;
         this.sceService = sceService;
         this.serverConfiguration = serverConfiguration;
-        this.validationErrors = {};
         this.resolver = resolver;
 
         scope.submitError = '';
         scope.isApplying = false;
         scope.submitWithCaptcha = definition.submitWithCaptcha;
-        scope.isDisabled = () => scope.isApplying;
+
+        scope.okDisabled = (form) => this.okDisabled(form);
 
         scope.codeMirrorDefaultOptions = this.getCodeMirrorDefaultOptions();
 
-        scope.isNewObject = object == null;
+        scope.isNewObject = object === null;
         scope.object = object != null ? _.cloneDeep(object) : {};
 
-        scope.fieldValueSelected = this.onFieldValueSelected;
+        scope.fieldValueSelected = (field, select) => this.onFieldValueSelected(field, select);
 
         scope.getValue = (field: InputFieldDefinition) => {
             if (field.type === InputFieldTypes.RICH_TEXT && scope.readOnly(field).length > 0) {
@@ -63,8 +101,6 @@ class InputFormController {
             return object[field.property];
         };
 
-        scope.hasErrors = (field) => this.validationErrors.hasOwnProperty(field.property);
-        scope.getErrorText = (field) => this.validationErrors[field.property];
         scope.getHelpText = (field) => this.onGetHelpText(field);
 
         scope.fieldVisible = (field) => {
@@ -72,6 +108,10 @@ class InputFormController {
                 return true;
             }
             return field.visibleFunction(scope.object);
+        };
+
+        scope.getFieldTemplate = (field) => {
+            return serverConfiguration.rootPath + '/views/inputFields/' + getFieldTemplate(field.type) + '.html';
         };
 
         scope.getTypeahead = (field: InputFieldDefinition, searchText: string): string[] => {
@@ -88,7 +128,7 @@ class InputFormController {
             return field.readOnlyFunction(scope.object) ? "readonly" : "";
         };
 
-        scope.submit = () => this.onSubmit();
+        scope.submit = form => this.onSubmit(form);
         scope.cancel = () => this.onCancel();
 
         scope.showDateTimeField = (event, field: InputFieldDefinition) => {
@@ -100,16 +140,14 @@ class InputFormController {
         this.initializeFields();
     }
 
+    protected okDisabled(form: ng.IFormController): boolean {
+        return this.scope.isApplying || form.$invalid;
+    }
+
     private onGetHelpText(field: InputFieldDefinition): string {
         var ret = field.helpText;
         if (ret == null) {
             ret = "";
-        }
-        if (this.scope.hasErrors(field)) {
-            if (ret.length) {
-                ret += " / ";
-            }
-            ret += this.scope.getErrorText(field);
         }
         return ret;
     }
@@ -191,28 +229,28 @@ class InputFormController {
         });
     }
 
-    private validateField(value: any, field: InputFieldDefinition): void {
+    private validateField(value: any, field: InputFieldDefinition, formField: ng.INgModelController): void {
         switch (field.type) {
             case InputFieldTypes.FILE:
                 if (field.required && this.scope.isNewObject && (value == null || value.file == null || value.file.length == 0)) {
-                    this.validationErrors[field.property] = "Field is required";
+                    formField.$setValidity('required', false);
                 }
 
                 if (value.file.length > this.serverConfiguration.maximumFileSize) {
-                    this.validationErrors[field.property] = "File is too big";
+                    formField.$setValidity('maxlength', false);
                 }
                 return;
 
             case InputFieldTypes.FILE_LIST:
                 if (field.required && this.scope.isNewObject && (value == null || value.length == 0)) {
-                    this.validationErrors[field.property] = "Field is required";
+                    formField.$setValidity('required', false);
                 }
 
                 if (value != null) {
                     for (var j = 0; j < value.length; j++) {
                         var file = value[j];
                         if (file.file != null && file.file.length > this.serverConfiguration.maximumFileSize) {
-                            this.validationErrors[field.property] = "File is too big";
+                            formField.$setValidity('maxlength', false);
                             break;
                         }
                     }
@@ -225,26 +263,26 @@ class InputFormController {
 
         if (typeof (value) == 'undefined' || value == null || value.toString().trim().length == 0) {
             if (field.required) {
-                this.validationErrors[field.property] = "Field is required";
+                formField.$setValidity('required', false);
             }
             return;
         }
 
         switch (field.type) {
             case InputFieldTypes.NUMBER:
-                if (isNaN(parseFloat(value))) {
-                    this.validationErrors[field.property] = "Field '" + field.text + "' is not a number";
+                if (_.isNaN(parseFloat(value))) {
+                    formField.$setValidity('number', false);
                 }
                 break;
             case InputFieldTypes.EMAIL:
-                if (!value.search(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/)) {
-                    this.validationErrors[field.property] = "Field'" + field.text + "' is not an e-mail";
+                if (!_.isString(value) || !value.search(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/)) {
+                    formField.$setValidity('email', false);
                 }
                 break;
             case InputFieldTypes.PASSWORD_REPEAT:
                 var repeatPassword = this.scope.object[field.property + InputFormController.PASSWORD_REPEAT_SUFFIX];
-                if (typeof (repeatPassword) == 'undefined' || repeatPassword == null || repeatPassword != value) {
-                    this.validationErrors[field.property] = 'Passwords must be equal';
+                if (!_.isString(repeatPassword) || repeatPassword != value) {
+                    formField.$setValidity('password_match', false);
                 }
         }
     }
@@ -253,10 +291,8 @@ class InputFormController {
         this.dialogService.cancel('cancel');
     }
 
-    private onSubmit() {
+    private onSubmit(form: ng.IFormController) {
         var valid = true;
-
-        this.validationErrors = {};
 
         for (var i = 0; i < this.scope.fields.length; i++) {
             var field = this.scope.fields[i];
@@ -267,10 +303,10 @@ class InputFormController {
 
             var value = this.scope.object[field.property];
 
-            this.validateField(value, field);
+            this.validateField(value, field, form[field.property]);
         }
 
-        if (!_.isEmpty(this.validationErrors)) {
+        if (form.$invalid) {
             return;
         }
 
@@ -346,8 +382,11 @@ class InputFormController {
         } else if (field.type == InputFieldTypes.IMAGE || field.type == InputFieldTypes.FILE) {
             this.scope.object[field.property] = null;
         }
-        if (field.type == InputFieldTypes.SELECT && field.selectValues != null && field.selectValues.length > 0) {
-            this.scope.object[field.property] = field.selectValues[0].value;
+        if (field.type == InputFieldTypes.SELECT && field.selectValues != null) {
+            var valueDefinitions: SelectValueDefinition[] = <any> field.selectValues; // to hide compilation bug in IntelliJ IDEA
+            if (valueDefinitions.length > 0) {
+                this.scope.object[field.property] = valueDefinitions[0].value;
+            }
         }
 
         if (field.type == InputFieldTypes.DATE) {

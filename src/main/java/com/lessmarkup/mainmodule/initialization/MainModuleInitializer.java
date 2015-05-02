@@ -102,6 +102,7 @@ public class MainModuleInitializer implements ModuleInitializer {
         ret.add(UserGroupMembership.class);
         ret.add(UserLoginIpAddress.class);
         ret.add(UserPropertyDefinition.class);
+        ret.add(Smile.class);
         return ret;
     }
 

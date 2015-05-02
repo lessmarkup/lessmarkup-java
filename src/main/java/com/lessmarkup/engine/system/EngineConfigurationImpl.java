@@ -51,7 +51,7 @@ class CustomizationFileEntry {
 
 class EngineConfigurationImpl implements EngineConfiguration {
 
-    private final String CONFIGURATION_DIRECTORY = "/config";
+    private final String CONFIGURATION_DIRECTORY = ".config";
     private final String CONFIGURATION_FILE = CONFIGURATION_DIRECTORY + "/engine.xml";
 
     private final ServletConfig servletConfig;
@@ -66,6 +66,7 @@ class EngineConfigurationImpl implements EngineConfiguration {
         XStream xStream = new XStream();
         xStream.alias("file", CustomizationFile.class);
         xStream.alias("entry", CustomizationFileEntry.class);
+        xStream.alias("entries", LinkedList.class);
         return xStream;
     }
 

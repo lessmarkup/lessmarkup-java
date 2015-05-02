@@ -13,21 +13,16 @@ class ResourceReference {
     private byte[] binary;
     private boolean minified;
     private String path;
+    private String extension;
     private ModuleConfiguration module;
     private Template template;
 
-    long getRecordId() {
-        return recordId;
-    }
-
-    void setRecordId(long recordId) {
-        this.recordId = recordId;
-    }
+    long getRecordId() { return recordId; }
+    void setRecordId(long recordId) { this.recordId = recordId; }
 
     byte[] getBinary() {
         return binary;
     }
-
     void setBinary(byte[] binary) {
         this.binary = binary;
     }
@@ -35,7 +30,6 @@ class ResourceReference {
     boolean isMinified() {
         return minified;
     }
-
     void setMinified(boolean minified) {
         this.minified = minified;
     }
@@ -43,7 +37,6 @@ class ResourceReference {
     String getPath() {
         return path;
     }
-
     void setPath(String path) {
         this.path = path;
     }
@@ -51,7 +44,6 @@ class ResourceReference {
     ModuleConfiguration getModule() {
         return module;
     }
-
     void setModule(ModuleConfiguration module) {
         this.module = module;
     }
@@ -59,8 +51,10 @@ class ResourceReference {
     public Template getTemplate() {
         return template;
     }
-
     public void setTemplate(Template template) {
         this.template = template;
     }
+
+    public String getExtension() { return extension; }
+    public void setExtension(String extension) { this.extension = extension; }
 }

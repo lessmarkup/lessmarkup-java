@@ -15,6 +15,7 @@ import ModuleLoaderServiceProvider = require('./services/ModuleLoaderServiceProv
 var appModule = <IApplication> ng.module('app', [
     'ngMaterial',
     'ngTouch',
+    'ngMessages',
     'pascalprecht.translate',
     'app.controllers',
     'app.directives',
@@ -33,16 +34,23 @@ appModule.initialize = (initialData: InitialData, serverConfiguration: ServerCon
         (translateProvider: angular.translate.ITranslateProvider,
          moduleLoaderProvider: ModuleLoaderServiceProvider) => {
 
+            var defaultLanguage: Language = null;
+
             _.forEach(languages, (language: Language) => {
-                translateProvider.translations(language.id, language.translations);
+                translateProvider.translations(language.shortName, language.translations);
 
                 if (language.isDefault) {
                     language.selected = true;
-                    translateProvider.preferredLanguage(language.id);
+                    defaultLanguage = language;
+                    translateProvider.preferredLanguage(language.shortName);
                 }
 
                 language.translations = null;
             });
+
+            if (defaultLanguage == null && languages.length > 0) {
+                translateProvider.preferredLanguage(languages[0].shortName);
+            }
 
             moduleLoaderProvider.initialize(appModule);
 

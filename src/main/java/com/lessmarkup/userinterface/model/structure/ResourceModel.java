@@ -2,7 +2,6 @@ package com.lessmarkup.userinterface.model.structure;
 
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
-import com.lessmarkup.interfaces.system.LanguageCache;
 import com.lessmarkup.interfaces.system.RequestContext;
 import com.lessmarkup.interfaces.system.ResourceCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class ResourceModel {
             return false;
         }
         
-        ResourceCache resourceCache = dataCache.get(ResourceCache.class, dataCache.get(LanguageCache.class).getCurrentLanguageId());
+        ResourceCache resourceCache = dataCache.get(ResourceCache.class);
         
         if (!resourceCache.resourceExists(path)) {
             return false;
@@ -102,7 +101,7 @@ public class ResourceModel {
         RequestContext requestContext = RequestContextHolder.getContext();
         requestContext.addHeader("Cache-Control", "public, max-age=3600");
         requestContext.addHeader("Content-Type", this.contentType);
-        ResourceCache resourceCache = this.dataCache.get(ResourceCache.class, this.dataCache.get(LanguageCache.class).getCurrentLanguageId());
+        ResourceCache resourceCache = this.dataCache.get(ResourceCache.class);
         
         byte[] resourceBytes;
         

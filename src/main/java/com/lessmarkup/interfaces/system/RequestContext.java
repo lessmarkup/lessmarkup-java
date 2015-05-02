@@ -14,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
 public interface RequestContext {
-    OptionalLong getLanguageId();
+    String getLanguageId();
     void setLanguageId(long languageId);
     String getBasePath();
     String getPath();

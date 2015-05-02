@@ -38,6 +38,19 @@
           "src": ["**/*.js"]
         }
       ]
+    },
+    "resources": {
+      "files": [{
+        "expand": true,
+        "cwd": "../client/icons",
+        "dest": "../icons",
+        "src": ["**/*"]
+      }, {
+        "expand": true,
+        "cwd": "../client/images",
+        "dest": "../images",
+        "src": ["**/*"]
+      }]
     }
   },
   "sass": {

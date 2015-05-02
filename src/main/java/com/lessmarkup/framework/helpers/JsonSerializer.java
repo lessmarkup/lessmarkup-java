@@ -62,7 +62,8 @@ public final class JsonSerializer {
     public static JsonElement deserializeToTree(String data) {
         return new JsonParser().parse(data);
     }
-    
+
+    @SuppressWarnings("unchecked")
     public static <T> T deserializePojo(Class<T> type, JsonElement data) {
         
         if (type.equals(int.class)) {

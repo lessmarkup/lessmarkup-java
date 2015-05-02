@@ -6,6 +6,8 @@ interface InputFieldDefinition {
     id: string;
     required: boolean;
     width?: number;
+    maxLength?: number;
+    minLength?: number;
     readOnlyCondition: string;
     visibleCondition: string;
     property: string;

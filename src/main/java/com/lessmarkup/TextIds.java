@@ -49,6 +49,7 @@ public final class TextIds {
     public static final String USER_NAME = "UserName";
     public static final String USER_EMAIL = "UserEmail";
     public static final String PASSWORD = "Password";
+    public static final String REMEMBER_ME = "RememberMe";
     public static final String IS_ADMINISTRATOR = "IsAdministrator";
     public static final String SIGNATURE = "Signature";
     public static final String UNKNOWN_ERROR = "UnknownError";
@@ -113,4 +114,5 @@ public final class TextIds {
     public static final String USERS = "Users";
     public static final String SITE_PROPERTIES = "SiteProperties";
     public static final String EMAIL_CONFIGURATION = "EmailConfiguration";
+    public static final String LOGIN = "Login";
 }

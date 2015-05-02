@@ -184,7 +184,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             }
 
             Action action = new Action();
-            action.setText(LanguageHelper.getText(recordModel.getModuleType(), actionAttribute.nameTextId()));
+            action.setText(LanguageHelper.getFullTextId(recordModel.getModuleType(), actionAttribute.nameTextId()));
             action.setVisible(actionAttribute.visible());
             action.setType(actionAttribute.createType().equals(Object.class) ? ActionType.RECORD_CREATE : ActionType.RECORD);
 
@@ -248,7 +248,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
     protected void addRecordLink(String text, String url, boolean external) {
         Link link = new Link();
-        link.setText(LanguageHelper.getText(recordModel.getModuleType(), text));
+        link.setText(LanguageHelper.getFullTextId(recordModel.getModuleType(), text));
         link.setUrl(url);
         link.setExternal(external);
         links.add(link);
@@ -257,7 +257,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     protected void addRecordAction(String name, String moduleType, String text, String visible) {
         Action action = new Action();
         action.setName(name);
-        action.setText(LanguageHelper.getText(moduleType, text));
+        action.setText(LanguageHelper.getFullTextId(moduleType, text));
         action.setVisible(visible);
         action.setType(ActionType.RECORD);
         actions.add(action);
@@ -268,7 +268,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         String typeId = type == null ? null : dataCache.get(RecordModelCache.class).getDefinition(type).getId();
         Action action = new Action();
         action.setName(name);
-        action.setText(LanguageHelper.getText(moduleType, text));
+        action.setText(LanguageHelper.getFullTextId(moduleType, text));
         action.setType(ActionType.CREATE);
         action.setParameter(typeId);
         actions.add(action);
@@ -288,7 +288,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     public JsonObject getViewData() {
         SiteConfiguration siteConfiguration = dataCache.get(SiteConfiguration.class);
         int recordsPerPage = siteConfiguration.getRecordsPerPage();
-        ResourceCache resourceCache = dataCache.get(ResourceCache.class, dataCache.get(LanguageCache.class).getCurrentLanguageId());
+        ResourceCache resourceCache = dataCache.get(ResourceCache.class);
 
         try (DomainModel domainModel = domainModelProvider.create()) {
             JsonObject data = new JsonObject();
@@ -342,7 +342,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
                 o.addProperty("width", getColumnWidth(c));
                 o.addProperty("name", StringHelper.toJsonCase(c.getProperty().getName()));
-                o.addProperty("text", LanguageHelper.getText(recordModel.getModuleType(), c.getTextId()));
+                o.addProperty("text", LanguageHelper.getFullTextId(recordModel.getModuleType(), c.getTextId()));
                 String link = getColumnLink(c.getProperty().getName());
                 o.addProperty("url", link != null ? link : c.getCellUrl());
                 o.addProperty("sortable", c.isSortable());

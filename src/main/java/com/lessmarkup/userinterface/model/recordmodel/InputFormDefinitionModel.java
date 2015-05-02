@@ -58,11 +58,9 @@ public class InputFormDefinitionModel {
         if (definition == null) {
             return;
         }
-        
-        if (definition.getTitleTextId() != null) {
-            this.title = LanguageHelper.getText(definition.getModuleType(), definition.getTitleTextId());
-        }
-        
+
+        this.title = definition.getTitleTextId();
+
         if (definition.isSubmitWithCaptcha()) {
             EngineConfiguration engineConfiguration = RequestContextHolder.getContext().getEngineConfiguration();
             String privateKey = engineConfiguration.getRecaptchaPrivateKey();
@@ -79,7 +77,7 @@ public class InputFormDefinitionModel {
             
             if (source.getEnumValues() != null && source.getEnumValues().size() > 0) {
                 for (InputFieldEnum value : source.getEnumValues()) {
-                    target.getSelectValues().add(new SelectValueModel(LanguageHelper.getText(definition.getModuleType(), value.getTextId()), value.getValue()));
+                    target.getSelectValues().add(new SelectValueModel(LanguageHelper.getFullTextId(definition.getModuleType(), value.getTextId()), value.getValue()));
                 }
             } else if (source.getType() == InputFieldType.SELECT || source.getType() == InputFieldType.SELECT_TEXT || source.getType() == InputFieldType.MULTI_SELECT) {
                 if (inputSource == null && InputSource.class.isAssignableFrom(definition.getModelType())) {
@@ -99,8 +97,8 @@ public class InputFormDefinitionModel {
 
         JsonObject ret = new JsonObject();
 
-        ret.add("title", new JsonPrimitive(this.title));
-        ret.add("submitWithCaptcha", new JsonPrimitive(this.submitWithCaptcha));
+        ret.addProperty("title", this.title);
+        ret.addProperty("submitWithCaptcha", this.submitWithCaptcha);
 
         JsonArray fieldsArray = new JsonArray();
 

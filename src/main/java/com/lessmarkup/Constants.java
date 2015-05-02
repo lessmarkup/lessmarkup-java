@@ -5,10 +5,6 @@
  */
 package com.lessmarkup;
 
-/**
- *
- * @author User
- */
 public final class Constants {
     
     public final class Engine {
@@ -29,12 +25,7 @@ public final class Constants {
     }
     
     public final class ModuleType {
-        public static final String MAIN = "MainModule";
-    }
-    
-    public final class Minify {
-        public static final String JS_MINIFY = "minify.js";
-        public static final String CSS_MINIFY = "minify.css";
+        public static final String MAIN = "Main";
     }
     
     public final class Encrypt {
@@ -45,11 +36,11 @@ public final class Constants {
     }
     
     public final class MailTemplates {
-        public static final String PASSWORD_GENERATED_NOTIFICATION = "Views/EmailTemplates/PasswordGeneratedNotification.html";
-        public static final String USER_NEW_USER_CREATED = "Views/EmailTemplates/UserNewUserCreated.html";
-        public static final String VALIDATE_USER = "Views/EmailTemplates/ValidateUser.html";
-        public static final String ADMIN_NEW_USER_CREATED = "Views/EmailTemplates/AdminNewUserCreated.html";
-        public static final String RESET_PASSWORD = "Views/EmailTemplates/ResetPassword.html";
+        public static final String PASSWORD_GENERATED_NOTIFICATION = "views/emailTemplates/passwordGeneratedNotification.html";
+        public static final String USER_NEW_USER_CREATED = "views/emailTemplates/userNewUserCreated.html";
+        public static final String VALIDATE_USER = "views/emailTemplates/validateUser.html";
+        public static final String ADMIN_NEW_USER_CREATED = "views/emailTemplates/adminNewUserCreated.html";
+        public static final String RESET_PASSWORD = "views/emailTemplates/resetPassword.html";
     }
     
     public final class ModuleActions {

@@ -74,7 +74,10 @@ public abstract class AbstractNodeHandler implements NodeHandler {
     }
     
     protected <T> T getSettings(Class<T> type) {
-        return (T) this.settings;
+        if (this.settings == null || !type.isInstance(this.settings)) {
+            return null;
+        }
+        return (T) type.cast(this.settings);
     }
     
     protected void addScript(String script) {
@@ -125,7 +128,7 @@ public abstract class AbstractNodeHandler implements NodeHandler {
             }
 
             if (name.equals(method.getName())) {
-                return new Tuple<>(this, method);
+                return new Tuple<>((Object)this, method);
             }
         }
         return null;

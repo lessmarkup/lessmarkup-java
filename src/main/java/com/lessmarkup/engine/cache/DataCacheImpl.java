@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.OptionalLong;
 import java.util.Random;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,23 +41,38 @@ public class DataCacheImpl implements DataCache, ChangeListener {
 
     private final HashMap<Integer, List<CacheItem>> hashedCollectionIds = new HashMap<>();
     private final HashMap<Tuple<Class<?>, OptionalLong>, CacheItem> items = new HashMap<>();
-    
     private final ChangeTracker changeTracker;
+    private boolean initialized = false;
     
     @Autowired
     public DataCacheImpl(ChangeTracker changeTracker) {
         this.changeTracker = changeTracker;
     }
     
-    @PostConstruct public void initialize() {
+    private synchronized void initialize() {
+        if (initialized) {
+            return;
+        }
         this.changeTracker.subscribe(this);
+        initialized = true;
+    }
+
+    private void checkInitialize() {
+        if (!initialized) {
+            initialize();
+        }
     }
     
     @PreDestroy public void close() {
-        this.changeTracker.unsubscribe(this);
+        if (initialized) {
+            this.changeTracker.unsubscribe(this);
+        }
     }
     
     synchronized private <T extends CacheHandler> void set(Class<T> type, T cachedObject, OptionalLong objectId) {
+
+        checkInitialize();
+
         Tuple<Class<?>, OptionalLong> key = new Tuple<>(type, objectId);
         CacheItem cacheItem = new CacheItem(type, objectId, cachedObject);
         
@@ -90,13 +104,21 @@ public class DataCacheImpl implements DataCache, ChangeListener {
     
     @Override
     synchronized public <T extends CacheHandler> T get(Class<T> type, OptionalLong objectId, boolean create) {
+
+        checkInitialize();
+
         Tuple<Class<?>, OptionalLong> key = new Tuple<>(type, objectId);
         CacheItem ret = this.items.get(key);
         if (ret != null) {
             if (ret.getCachedObject().isExpired()) {
                 this.items.remove(key);
             } else {
-                return (T) ret.getCachedObject();
+                CacheHandler obj = ret.getCachedObject();
+                if (type.isInstance(obj)) {
+                    return type.cast(obj);
+                } else {
+                    return null;
+                }
             }
         }
         
@@ -113,7 +135,12 @@ public class DataCacheImpl implements DataCache, ChangeListener {
             throw e;
         }
         ret = items.get(key);
-        return (T) ret.getCachedObject();
+        CacheHandler obj = ret.getCachedObject();
+        if (type.isInstance(obj)) {
+            return type.cast(obj);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -185,8 +212,6 @@ public class DataCacheImpl implements DataCache, ChangeListener {
             return;
         }
         
-        itemsToRemove.stream().forEach(item -> {
-            remove(new Tuple<>(item.getType(), item.getObjectId()));
-        });
+        itemsToRemove.stream().forEach(item -> remove(new Tuple<>(item.getType(), item.getObjectId())));
     }
 }

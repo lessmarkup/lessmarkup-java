@@ -38,7 +38,6 @@ public class NodeEntryPointModel {
 
     public static class Context extends TemplateContext {
         private boolean noScript = false;
-        private boolean onlyBody = false;
         private String title;
         private final DataCache dataCache;
         private String initialData;
@@ -86,7 +85,7 @@ public class NodeEntryPointModel {
             if (StringHelper.isNullOrWhitespace(resourceId)) {
                 return "";
             }
-            return String.format(this.dataCache.get(ResourceCache.class, this.dataCache.get(LanguageCache.class).getCurrentLanguageId()).readText("/views/googleAnalytics.html"), resourceId);
+            return String.format(this.dataCache.get(ResourceCache.class).readText("/views/googleAnalytics.html"), resourceId);
         }
     }
 
@@ -105,10 +104,6 @@ public class NodeEntryPointModel {
         this.currentUser = currentUser;
         this.context = new Context(dataCache);
         this.domainModelProvider = domainModelProvider;
-    }
-
-    public String getResource(String path) {
-        return dataCache.get(ResourceCache.class).readText(path);
     }
 
     private void checkBrowser(RequestContext requestContext) {
@@ -241,7 +236,6 @@ public class NodeEntryPointModel {
         
         if (queryString != null && (queryString.endsWith("?noscript") || "noscript".equals(queryString))){
             context.noScript = true;
-            context.onlyBody = true;
         }
         
         this.nodeLoadError = null;
@@ -286,7 +280,7 @@ public class NodeEntryPointModel {
 
     public void handleRequest() throws ServletException, IOException {
         RequestContext requestContext = RequestContextHolder.getContext();
-        ResourceCache resourceCache = dataCache.get(ResourceCache.class, dataCache.get(LanguageCache.class).getCurrentLanguageId());
+        ResourceCache resourceCache = dataCache.get(ResourceCache.class);
         Mustache.Compiler compiler = TemplateContext.createCompiler(resourceCache);
         Template template = compiler.compile(resourceCache.readText("views/entrypoint.html"));
         String html = template.execute(context);

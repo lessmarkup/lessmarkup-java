@@ -5,7 +5,7 @@
 ///<amd-dependency path="./CkEditorDirective" />
 ///<amd-dependency path="./CollectionUpdatesDirective" />
 ///<amd-dependency path="./FileReadDirective" />
-///<amd-dependency path="./InputFieldDirective" />
+///<amd-dependency path="./InputFieldErrorDirective" />
 ///<amd-dependency path="./LanguagesPanelDirective" />
 ///<amd-dependency path="./LoginDialogDirective" />
 ///<amd-dependency path="./MultiFileReadDirective" />

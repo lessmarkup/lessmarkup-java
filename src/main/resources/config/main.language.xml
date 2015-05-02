@@ -1,429 +1,393 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <file name="English" id="en" shortName="EN">
     <translations>
-        <translation id="SafeMode" text="Safe Mode"/>
-        <translation id="EngineConfiguration" text="Engine Configuration"/>
-        <translation id="DisableSafeMode" text="Disable Automatic Safe Mode Activation On Fatal Error"/>
-        <translation id="FatalErrorsEmail" text="E-mail For Fatal Errors"/>
-        <translation id="RecaptchaPublicKey" text="ReCAPTCHA Public Key"/>
-        <translation id="RecaptchaPrivateKey" text="ReCAPTCHA Private Key"/>
-        <translation id="RecordsPerPage" text="Records To Show On Page"/>
-        <translation id="AuthCookieName" text="Authentication Cookie Name"/>
-        <translation id="AuthCookieTimeout" text="Authentication Cookie Timeout"/>
-        <translation id="AuthCookiePath" text="Authentication Cookie Path"/>
-        <translation id="AutoRefresh" text="Automatically Rebuild Engine During Startup (If Required)"/>
-        <translation id="NoAdminName" text="Name Of Administrator When No Administrator Is Defined"/>
-        <translation id="LogLevel" text="Logger Level"/>
-        <translation id="BackgroundJobInterval" text="Time Interval For Background Job (ms)"/>
-        <translation id="DefaultHostName" text="Global Host Name"/>
-        <translation id="AdminLoginPage" text="IP Addresses Of Administrators Allowed To Login"/>
-        <translation id="AdminLoginAddress" text="Administrators Login Address"/>
-        <translation id="EmailConfiguration" text="Setup E-mail System"/>
-        <translation id="SmtpServer" text="Server Address"/>
-        <translation id="SmtpUsername" text="Username"/>
-        <translation id="SmtpPassword" text="Password"/>
-        <translation id="SmtpUseSsl" text="Use SSL"/>
-        <translation id="UseTestMail" text="Use Test E-Mail System"/>
-        <translation id="NoReplyEmail" text="E-mail For Non-Reply Messages"/>
-        <translation id="NoReplyName" text="Username For Non-Reply Messages"/>
-        <translation id="UserId" text="User ID"/>
-        <translation id="UserName" text="User Name"/>
-        <translation id="UserEmail" text="E-mail"/>
-        <translation id="Password" text="Password"/>
-        <translation id="Administrators" text="Administrators"/>
-        <translation id="EditAdministrator" text="Edit Administrator"/>
-        <translation id="EditSite" text="Edit Site"/>
-        <translation id="SiteId" text="Site ID"/>
-        <translation id="Name" text="Name"/>
-        <translation id="Title" text="Title"/>
-        <translation id="Host" text="Host"/>
-        <translation id="Enabled" text="Enabled"/>
-        <translation id="Sites" text="Sites"/>
-        <translation id="IsAdministrator" text="Administrator"/>
-        <translation id="IsBinary" text="Binary"/>
-        <translation id="Path" text="Path"/>
-        <translation id="File" text="File"/>
-        <translation id="Text" text="Text"/>
-        <translation id="EditCustomization" text="Edit Customization"/>
-        <translation id="Enable" text="Enable"/>
-        <translation id="Disable" text="Disable"/>
-        <translation id="NodeSettings" text="Node Settings"/>
-        <translation id="Handler" text="Handler"/>
         <translation id="AccessType" text="Access Type"/>
-        <translation id="User" text="User"/>
-        <translation id="Group" text="Group"/>
-        <translation id="Description" text="Description"/>
-        <translation id="Users" text="Users"/>
-        <translation id="Groups" text="Groups"/>
-        <translation id="Modules" text="Modules"/>
-        <translation id="Customize" text="Customize"/>
-        <translation id="FlatPageSettings" text="Flat Page Settings"/>
-        <translation id="LoadOnShow" text="Load Nodes On Show"/>
-        <translation id="SiteConfiguration" text="Site Configuration"/>
-        <translation id="GlobalConfiguration" text="Global Configuration"/>
-        <translation id="Position" text="Position"/>
-        <translation id="Email" text="Email"/>
-        <translation id="Register" text="Register"/>
-        <translation id="UserAgreement" text="User Agreement"/>
-        <translation id="Agree" text="I Agree"/>
-        <translation id="SiteProperties" text="Site Properties"/>
-        <translation id="ViewsTree" text="Views Tree"/>
-        <translation id="AdministratorLogin" text="Administrator Login"/>
-        <translation id="UserProfile" text="User Profile"/>
-        <translation id="Append" text="Append"/>
-        <translation id="MigrateDataLossAllowed" text="Allow Data Loss During Database Migration"/>
-        <translation id="AddRecord" text="Add"/>
-        <translation id="ModifyRecord" text="Modify"/>
-        <translation id="RemoveRecord" text="Remove"/>
-        <translation id="Nodes" text="Nodes"/>
-        <translation id="Properties" text="Properties"/>
         <translation id="ActionAccessException" text="You do not have enough rights to run this operation"/>
-        <translation id="RememberMe" text="Remember me"/>
-        <translation id="SignIn" text="Sign in"/>
-        <translation id="Profile" text="Profile"/>
-        <translation id="Logout" text="Logout"/>
-        <translation id="PleaseWaitLoading" text="Please wait, the site is loading..."/>
-        <translation id="SearchGo" text="Go"/>
-        <translation id="ToggleNavigation" text="Toggle Navigation"/>
-        <translation id="Signature" text="Signature"/>
-        <translation id="UserCards" text="Users"/>
-        <translation id="GetNewRecords" text="Get New Records"/>
-        <translation id="GeneratePassword" text="Generate Password"/>
+        <translation id="ActivateHistory" text="Activate History"/>
+        <translation id="AddAdministrator" text="Add Administrator"/>
+        <translation id="AddChild" text="Add Child"/>
+        <translation id="AddedMissingTranslations" text="Added missing translations"/>
+        <translation id="AddMissingTranslations" text="Add Missing"/>
+        <translation id="AddRecord" text="Add"/>
+        <translation id="AddToMenu" text="Add To Menu"/>
+        <translation id="AdminApproveNewUsers" text="Administrator Approves New Users"/>
+        <translation id="Administrator" text="Administrator"/>
+        <translation id="AdministratorEmail" text="Administrator E-Mail"/>
+        <translation id="AdministratorLogin" text="Administrator Login"/>
+        <translation id="AdministratorPassword" text="Administrator Password"/>
+        <translation id="Administrators" text="Administrators"/>
+        <translation id="AdministratorUsername" text="Administrator User Name"/>
+        <translation id="AdminLoginAddress" text="Administrators Login Address"/>
+        <translation id="AdminLoginPage" text="Admin login page, will be routed as System/{pagename}"/>
+        <translation id="AdminNotifyNewUsers" text="Administrator Notify Of New Users"/>
+        <translation id="Agree" text="I Agree"/>
+        <translation id="AllRoles" text="All Roles"/>
+        <translation id="AnyItem" text="Any Item"/>
+        <translation id="AnyUser" text="Any User"/>
+        <translation id="Append" text="Append"/>
+        <translation id="ApplyButton" text="Apply"/>
+        <translation id="ApproveUsers" text="Approve Users"/>
+        <translation id="AustralianDollar" text="Australian Dollar"/>
+        <translation id="AuthCookieName" text="Authentication Cookie Name"/>
+        <translation id="AuthCookiePath" text="Authentication Cookie Path"/>
+        <translation id="AuthCookieTimeout" text="Authentication Cookie Timeout (ms)"/>
+        <translation id="AutoRefresh" text="Automatically Rebuild Engine During Startup (If Required)"/>
+        <translation id="BackgroundJobInterval" text="Time Interval For Background Job (ms)"/>
+        <translation id="Block" text="Block"/>
+        <translation id="Blocked" text="Blocked"/>
+        <translation id="BlockReason" text="Block Reason"/>
+        <translation id="BlockUser" text="Block User"/>
+        <translation id="Body" text="Body"/>
+        <translation id="BrazilianReal" text="Brazilian Real"/>
+        <translation id="BulgarianLev" text="Bulgarian Lev"/>
+        <translation id="ButtonCancel" text="Cancel"/>
+        <translation id="ButtonNo" text="No"/>
+        <translation id="ButtonOk" text="OK"/>
+        <translation id="ButtonYes" text="Yes"/>
+        <translation id="CanadianDollar" text="Canadian Dollar"/>
+        <translation id="CancelHistory" text="Cancel History"/>
+        <translation id="CannotConvertToBool" text="Cannot convert to boolean value"/>
+        <translation id="CannotConvertToInt" text="Cannot convert to int value"/>
+        <translation id="CannotCreateUser" text="Cannot create user, error: {0}"/>
+        <translation id="CannotDeleteUser" text="Cannot delete user"/>
+        <translation id="CannotHaveTwoRootNodes" text="Cannot have two root nodes"/>
+        <translation id="CannotRegisterNewUser" text="Cannot register new user"/>
+        <translation id="CannotUpdateConfiguration" text="Cannot update configuration: {0}"/>
+        <translation id="CannotUpdateUser" text="Cannot update user, error: {0}"/>
+        <translation id="Caption" text="Caption"/>
+        <translation id="CategoryName" text="Category Name"/>
+        <translation id="ChangePassword" text="Change Password"/>
+        <translation id="ChineseYuanRenminbi" text="Chinese Yuan Renminbi"/>
+        <translation id="ChooseFile" text="Choose File"/>
+        <translation id="Clear" text="Clear"/>
+        <translation id="ClearFile" text="Clear"/>
+        <translation id="Close" text="Close"/>
+        <translation id="Code" text="Code"/>
+        <translation id="ColumnDefault" text="Default"/>
+        <translation id="ColumnId" text="ID"/>
+        <translation id="ColumnRoleId" text="Role ID"/>
+        <translation id="ColumnShort" text="Short"/>
+        <translation id="ColumnSiteId" text="Site ID"/>
+        <translation id="ColumnUserId" text="User ID"/>
+        <translation id="Configuration" text="Configuration"/>
+        <translation id="ConfirmPassword" text="Confirm Password"/>
+        <translation id="ConnectionString" text="Connection String"/>
+        <translation id="ContactEmail" text="Contact Email"/>
+        <translation id="ContactFormSent" text="Successfully sent contact form data"/>
+        <translation id="ContactSubject" text="Contact Email Subject"/>
+        <translation id="ControllerCode" text="Controller Code"/>
+        <translation id="CreateCategory" text="Create Category"/>
+        <translation id="CreateRootNode" text="Create Root Node"/>
+        <translation id="CroatianKuna" text="Croatian Kuna"/>
+        <translation id="Customize" text="Customize"/>
+        <translation id="CzechKoruna" text="Czech Koruna"/>
+        <translation id="DanishKrone" text="Danish Krone"/>
+        <translation id="DatabaseChangeError" text="Database error: %s" />
+        <translation id="DatabaseChangeSuccess" text="Database configuration successfully applied" />
+        <translation id="DatabaseConfiguration" text="Database Configuration" />
+        <translation id="DatabaseConnection" text="Database Connection"/>
+        <translation id="DateSent" text="Date Sent"/>
+        <translation id="DaysAgo" text="days ago"/>
+        <translation id="DebugCompilationPath" text="Debug Compilation Path"/>
+        <translation id="DefaultCronJobId" text="Default Cron Job Id"/>
+        <translation id="DefaultHostName" text="Default Host Name"/>
+        <translation id="DefaultUserGroup" text="Default User Group"/>
+        <translation id="Delete" text="Delete"/>
+        <translation id="DeleteMe" text="Delete Me"/>
+        <translation id="DeleteUser" text="Delete User"/>
+        <translation id="DeleteUserConfirmMessage" text="Please confirm you want to delete the user"/>
+        <translation id="DeleteYourself" text="Delete Yourself"/>
+        <translation id="Description" text="Description"/>
+        <translation id="Disable" text="Disable"/>
+        <translation id="DisableCustomizations" text="Disable Customizations"/>
+        <translation id="DisableSafeMode" text="Disable Automatic Safe Mode Activation On Fatal Error"/>
+        <translation id="DocumentRoot" text="Document Root"/>
+        <translation id="Down" text="Down"/>
+        <translation id="EditAccess" text="Edit Access"/>
+        <translation id="EditAdministrator" text="Edit Administrator"/>
+        <translation id="EditArticle" text="Edit Article"/>
+        <translation id="EditCategory" text="Edit Category"/>
+        <translation id="EditContactForm" text="Contact Form Properties"/>
+        <translation id="EditCustomization" text="Edit Customization"/>
+        <translation id="EditFile" text="Edit File"/>
+        <translation id="EditPage" text="Edit Page"/>
+        <translation id="EditSite" text="Edit Site"/>
+        <translation id="Email" text="Email"/>
+        <translation id="EmailConfiguration" text="Setup E-mail System"/>
+        <translation id="EmailForNoReply" text="Email for no-reply messages"/>
+        <translation id="EmailIsNotSpecified" text="E-mail is not specified"/>
         <translation id="EmailNotVerified" text="E-mail is not verified or not approved. Please check your inbox."/>
-        <translation id="Login" text="Login"/>
+        <translation id="Enable" text="Enable"/>
+        <translation id="Enabled" text="Enabled"/>
+        <translation id="EngineConfiguration" text="Engine Configuration"/>
+        <translation id="EnterPassword" text="Enter Password"/>
+        <translation id="EnterPasswordToConfirmDelete" text="Please enter your password to confirm you want to delete yourself."/>
+        <translation id="Excluded" text="Excluded"/>
+        <translation id="Export" text="Export"/>
+        <translation id="ExternalLoginOrCap" text="Or"/>
+        <translation id="ExternalLoginOrLow" text="or"/>
+        <translation id="ExternalOrLoginWith" text="Or login with"/>
+        <translation id="FatalErrorsEmail" text="E-mail For Fatal Errors"/>
+        <translation id="FatalErrorsNotificationEmail" text="Email for notifications of fatal errors"/>
+        <translation id="File" text="File"/>
+        <translation id="FileName" text="File Name"/>
+        <translation id="Files" text="Files"/>
+        <translation id="FileToImport" text="File to import"/>
+        <translation id="FlatPageSettings" text="Flat Page Settings"/>
         <translation id="ForgotPassword" text="Forgot Password"/>
         <translation id="ForgotPasswordMessage" text="Enter your e-mail address. You will receive e-mail with instructions on how to restore your account. Please ensure that you have entered valid password for this account as if there is no user with specified e-mail then no hint will be given for security purposes."/>
-        <translation id="RestorePassword" text="Restore Password"/>
-        <translation id="RestorePasswordRequestSent" text="Password restore request was sent to the specified e-mail address."/>
-        <translation id="PasswordChanged" text="Password was successfully changed. Now you can login using your new password and your e-mail."/>
-        <translation id="PasswordChangeError" text="Cannot change password"/>
-        <translation id="ChangePassword" text="Change Password"/>
-        <translation id="AddToMenu" text="Add To Menu"/>
-        <translation id="JustNow" text="just now"/>
-        <translation id="SecondsAgo" text="seconds ago"/>
-        <translation id="MinuteAgo" text="a minute ago"/>
-        <translation id="MinutesAgo" text="minutes ago"/>
+        <translation id="FromEmail" text="FromEmail"/>
+        <translation id="GeneratePassword" text="Generate Password And Send By E-Mail"/>
+        <translation id="GetNewRecords" text="Get New Records"/>
+        <translation id="GlobalConfiguration" text="Global Configuration"/>
+        <translation id="GoogleAnalyticsResource" text="Google Analytics Resource"/>
+        <translation id="Group" text="Group"/>
+        <translation id="GroupExists" text="Group with specified name already exists"/>
+        <translation id="GroupName" text="Group Name"/>
+        <translation id="Groups" text="Groups"/>
+        <translation id="Handler" text="Handler"/>
+        <translation id="HasNavigationBar" text="Has Navigation Bar"/>
+        <translation id="HasSearch" text="Has Search"/>
+        <translation id="HasUsers" text="Has Users"/>
+        <translation id="HomePage" text="Home Page"/>
+        <translation id="HongKongDollar" text="Hong Kong Dollar"/>
+        <translation id="Host" text="Host"/>
+        <translation id="HostName" text="Host Name"/>
         <translation id="HourAgo" text="an hour ago"/>
         <translation id="HoursAgo" text="hours ago"/>
-        <translation id="Yesterday" text="yesterday"/>
-        <translation id="DaysAgo" text="days ago"/>
-        <translation id="WeekAgo" text="a week ago"/>
-        <translation id="WeeksAgo" text="weeks ago"/>
+        <translation id="HungarianForint" text="Hungarian Forint"/>
+        <translation id="IcelandicKrona" text="Icelandic Krona"/>
+        <translation id="Icon" text="Icon"/>
+        <translation id="IdentifiersNotSpecified" text="Identifiers must be specified"/>
+        <translation id="Image" text="Image"/>
+        <translation id="ImageSizeIsBigger" text="Image size is bigger than allowed ({0})"/>
+        <translation id="Import" text="Import"/>
+        <translation id="ImportFinished" text="Import Finished"/>
+        <translation id="IndianRupee" text="Indian Rupee"/>
+        <translation id="IndonesianRupiah" text="Indonesian Rupiah"/>
+        <translation id="InitialConfiguration" text="Initial Configuration"/>
+        <translation id="InputFieldEmailError" text="Wrong e-mail address" />
+        <translation id="InputFieldMaxLength" text="This field has to be less than {0} characters long" />
+        <translation id="InputFieldRequired" text="This field is mandatory" />
+        <translation id="InvalidEmail" text="Invalid E-mail: '{0}'"/>
+        <translation id="InvalidPassword" text="Invalid password"/>
+        <translation id="InvalidUserName" text="Invalid User Name"/>
+        <translation id="IsAdministrator" text="Administrator"/>
+        <translation id="IsBinary" text="Binary"/>
+        <translation id="IsBlocked" text="Blocked"/>
+        <translation id="IsDefault" text="Default"/>
+        <translation id="IsraeliShekel" text="Israeli Shekel"/>
+        <translation id="IsRequired" text="Required"/>
+        <translation id="JapaneseYen" text="Japanese Yen"/>
+        <translation id="JustNow" text="just now"/>
+        <translation id="Key" text="Key"/>
+        <translation id="Language" text="Language"/>
+        <translation id="Languages" text="Languages"/>
+        <translation id="LanguageWasReset" text="Language was reset"/>
+        <translation id="LastActivity" text="Last Activity"/>
+        <translation id="LastLogin" text="Last Login"/>
+        <translation id="LatvianLats" text="Latvian Lats"/>
+        <translation id="Left" text="Left"/>
+        <translation id="LevelToLoad" text="Level To Load"/>
+        <translation id="LithuanianLitas" text="Lithuanian Litas"/>
+        <translation id="LoadOnShow" text="Load Nodes On Show"/>
+        <translation id="Login" text="Login"/>
+        <translation id="LogLevel" text="Logger Level"/>
+        <translation id="Logout" text="Logout"/>
+        <translation id="MalaysianRinggit" text="Malaysian Ringgit"/>
+        <translation id="MaximumAllowedFailedAttempts" text="Maximum Allowed Failed Attempts"/>
+        <translation id="MaximumFileSize" text="Maximum File Size For Download"/>
+        <translation id="MaximumFileSizeReached" text="File is bigger than allowed ({0})"/>
+        <translation id="MaximumImageHeight" text="Maximum Image Height"/>
+        <translation id="MaximumImageWidth" text="Maximum Image Width"/>
+        <translation id="Message" text="Message"/>
+        <translation id="MexicanPeso" text="Mexican Peso"/>
+        <translation id="MigrateDataLossAllowed" text="Allow Data Loss During Database Migration"/>
+        <translation id="MinuteAgo" text="a minute ago"/>
+        <translation id="MinutesAgo" text="minutes ago"/>
+        <translation id="MinutesToRememberFailedAttempts" text="Minutes To Remember Failed Attempts"/>
+        <translation id="MissingParameter" text="Parameter '{0}' is missing"/>
+        <translation id="ModifyRecord" text="Modify"/>
+        <translation id="Modules" text="Modules"/>
         <translation id="MonthAgo" text="a month ago"/>
         <translation id="MonthsAgo" text="months ago"/>
-        <translation id="YearAgo" text="a year ago"/>
-        <translation id="OverYearAgo" text="over a year ago"/>
-        <translation id="Type" text="Type"/>
-        <translation id="UserProperty" text="User Property"/>
-        <translation id="UserProperties" text="User Properties"/>
-        <translation id="Close" text="Close"/>
-        <translation id="Clear" text="Clear"/>
-        <translation id="Today" text="Today"/>
-        <translation id="BlockUser" text="Block User"/>
-        <translation id="BlockReason" text="Block Reason"/>
-        <translation id="UnblockTime" text="Unblock Time"/>
-        <translation id="Block" text="Block"/>
-        <translation id="Unblock" text="Unblock"/>
-        <translation id="ChooseFile" text="Choose File"/>
-        <translation id="ClearFile" text="Clear"/>
-        <translation id="ButtonOk" text="OK"/>
-        <translation id="ButtonCancel" text="Cancel"/>
-        <translation id="ButtonYes" text="Yes"/>
-        <translation id="ButtonNo" text="No"/>
-        <translation id="OpenForm" text="Open Form"/>
-        <translation id="NoResultsFound" text="No results found"/>
-        <translation id="CreateRootNode" text="Create Root Node"/>
-        <translation id="NodeUp" text="Up"/>
+        <translation id="Name" text="Name"/>
+        <translation id="NameOrEmailExists" text="User with specified name or e-mail already exists"/>
+        <translation id="Namespace" text="Namespace"/>
+        <translation id="NewPassword" text="New Password"/>
+        <translation id="NewRomanianLeu" text="New Romanian Leu"/>
+        <translation id="NewTurkishLira" text="New Turkish Lira"/>
+        <translation id="NewUserPasswordRequired" text="Password is required for new user"/>
+        <translation id="NewZealandDollar" text="New Zealand Dollar"/>
+        <translation id="NoAdminName" text="Name Of Administrator When No Administrator Is Defined"/>
+        <translation id="NodeAccess" text="Node Access"/>
         <translation id="NodeDown" text="Down"/>
         <translation id="NodeLeft" text="Left"/>
+        <translation id="NodeName" text="Section"/>
         <translation id="NodeRight" text="Right"/>
-        <translation id="NodeSettings" text="Settings"/>
-        <translation id="AddChild" text="Add Child"/>
-        <translation id="Delete" text="Delete"/>
-        <translation id="EditAccess" text="Edit Access"/>
-        <translation id="Updating" text="Updating"/>
-        <translation id="CannotHaveTwoRootNodes" text="Cannot have two root nodes"/>
-        <translation id="UnknownSite" text="Unknown site"/>
-        <translation id="UnknownPath" text="Unknown path"/>
-        <translation id="UnknownError" text="Unknown Error Occurred"/>
-        <translation id="UserNotFound" text="User not found or wrong password"/>
-        <translation id="CannotRegisterNewUser" text="Cannot register new user"/>
-        <translation id="NodeAccess" text="Node Access"/>
-        <translation id="LevelToLoad" text="Level To Load"/>
-        <translation id="DisableCustomizations" text="Disable Customizations"/>
-        <translation id="UnknownError" text="Unknown Error Occurred"/>
+        <translation id="Nodes" text="Nodes"/>
+        <translation id="NodeSettings" text="Node Settings"/>
+        <translation id="NodeUp" text="Up"/>
+        <translation id="NoGlobalAdminName" text="Username for global admin that will be used in the case no global admin defined"/>
+        <translation id="NoReplyEmail" text="E-mail For Non-Reply Messages"/>
+        <translation id="NoReplyName" text="Username For Non-Reply Messages"/>
+        <translation id="NoResultsFound" text="No results found"/>
+        <translation id="NorwegianKrone" text="Norwegian Krone"/>
+        <translation id="OldPassword" text="Old Password"/>
+        <translation id="OpenForm" text="Open Form"/>
         <translation id="OperationNotSupported" text="Operation is not supported"/>
-        <translation id="UnknownCommand" text="Unknown Command"/>
+        <translation id="OverYearAgo" text="over a year ago"/>
+        <translation id="Password" text="Password"/>
+        <translation id="PasswordChanged" text="Password was successfully changed. Now you can login using your new password and your e-mail."/>
+        <translation id="PasswordChangeError" text="Cannot change password"/>
+        <translation id="PasswordsDontMatch" text="Passwords don't match"/>
+        <translation id="PasswordTooSimple" text="Password does not meet minimal complexity criteria"/>
+        <translation id="Path" text="Path"/>
+        <translation id="PhilippinePeso" text="Philippine Peso"/>
+        <translation id="PleaseWaitLoading" text="Please wait, the site is loading..."/>
+        <translation id="PolishZloty" text="Polish Zloty"/>
+        <translation id="Position" text="Position"/>
+        <translation id="PoundSterling" text="Pound Sterling"/>
+        <translation id="Profile" text="Profile"/>
+        <translation id="ProfileAvatar" text="Avatar"/>
+        <translation id="ProfileUserImage" text="User Image"/>
+        <translation id="Properties" text="Properties"/>
+        <translation id="PropertyExists" text="Property with the same name already exists"/>
+        <translation id="PropertyMustBeSpecified" text="Property {0} must be specified"/>
+        <translation id="Query" text="Query"/>
         <translation id="RangeNotSpecified" text="Range is not specified"/>
-        <translation id="IdentifiersNotSpecified" text="Identifiers must be specified"/>
+        <translation id="RecaptchaPrivateKey" text="ReCAPTCHA Private Key"/>
+        <translation id="RecaptchaPublicKey" text="ReCAPTCHA Public Key"/>
         <translation id="RecordListAdd" text="Add"/>
         <translation id="RecordListModify" text="Modify"/>
         <translation id="RecordListRemove" text="Remove"/>
-        <translation id="TextRequired" text="Field '{0}' is mandatory"/>
-        <translation id="Configuration" text="Configuration"/>
-        <translation id="MissingParameter" text="Parameter '{0}' is missing"/>
-        <translation id="InvalidEmail" text="Invalid E-mail: '{0}'"/>
-        <translation id="SubmitButtonSave" text="Save"/>
-        <translation id="SubmitButtonContinue" text="Continue"/>
-        <translation id="SafeMode" text="Safe Mode"/>
-        <translation id="DisableSafeMode" text="Disable Safe Mode"/>
-        <translation id="AutoRefresh" text="Auto Refresh"/>
-        <translation id="AuthCookieName" text="Authentication Cookie Name"/>
-        <translation id="AuthCookieTimeout" text="Authentication Cookie Timeout (ms)"/>
-        <translation id="AuthCookiePath" text="Authentication Cookie Path"/>
         <translation id="RecordsPerPage" text="Records Per Page"/>
-        <translation id="MinutesToRememberFailedAttempts" text="Minutes To Remember Failed Attempts"/>
-        <translation id="MaximumAllowedFailedAttempts" text="Maximum Allowed Failed Attempts"/>
-        <translation id="UseTestMailSystem" text="Use Test Mail System"/>
-        <translation id="DebugCompilationPath" text="Debug Compilation Path"/>
-        <translation id="AdminLoginPage" text="Admin login page, will be routed as System/{pagename}"/>
-        <translation id="DefaultHostName" text="Default Host Name"/>
-        <translation id="NoGlobalAdminName" text="Username for global admin that will be used in the case no global admin defined"/>
-        <translation id="InitialConfiguration" text="Initial Configuration"/>
-        <translation id="SmtpServerPort" text="SMTP server : port"/>
-        <translation id="SmtpUserName" text="SMTP user name"/>
-        <translation id="SmtpPassword" text="SMTP password"/>
-        <translation id="FatalErrorsNotificationEmail" text="Email for notifications of fatal errors"/>
-        <translation id="ReCaptchaPublicKey" text="ReCaptcha public key"/>
-        <translation id="ReCaptchaPrivateKey" text="ReCaptcha private key"/>
-        <translation id="EmailForNoReply" text="Email for no-reply messages"/>
-        <translation id="UserNameForNoReply" text="Username for no-reply messages"/>
-        <translation id="CannotUpdateConfiguration" text="Cannot update configuration: {0}"/>
-        <translation id="DeleteUser" text="Delete User"/>
-        <translation id="DeleteUserConfirmMessage" text="Please confirm you want to delete the user"/>
-        <translation id="DatabaseConnection" text="Database Connection"/>
-        <translation id="ConnectionString" text="Connection String"/>
-        <translation id="AddAdministrator" text="Add Administrator"/>
-        <translation id="SubmitButtonCreate" text="Create"/>
-        <translation id="AdministratorUsername" text="Administrator User Name"/>
-        <translation id="AdministratorPassword" text="Administrator Password"/>
-        <translation id="RepeatPassword" text="Repeat Password"/>
-        <translation id="AdministratorEmail" text="Administrator E-Mail"/>
-        <translation id="PasswordsDontMatch" text="Passwords don't match"/>
-        <translation id="CannotCreateUser" text="Cannot create user, error: {0}"/>
-        <translation id="CannotUpdateUser" text="Cannot update user, error: {0}"/>
-        <translation id="Login" text="Login"/>
-        <translation id="UserName" text="User Name"/>
-        <translation id="Password" text="Password"/>
-        <translation id="SavePassword" text="Save Password"/>
-        <translation id="RegisterUser" text="Register User"/>
         <translation id="Register" text="Register"/>
-        <translation id="UserEmail" text="E-Mail"/>
-        <translation id="ConfirmPassword" text="Confirm Password"/>
-        <translation id="SearchUsers" text="Search Users"/>
-        <translation id="Query" text="Query"/>
-        <translation id="EditCategory" text="Edit Category"/>
-        <translation id="CategoryName" text="Category Name"/>
-        <translation id="Description" text="Description"/>
-        <translation id="Path" text="Path"/>
-        <translation id="UnblockUser" text="Unblock User"/>
-        <translation id="DeleteMe" text="Delete Me"/>
-        <translation id="DeleteYourself" text="Delete Yourself"/>
-        <translation id="EnterPasswordToConfirmDelete" text="Please enter your password to confirm you want to delete yourself."/>
-        <translation id="CannotDeleteUser" text="Cannot delete user"/>
-        <translation id="WrongUserPassword" text="Wrong user password"/>
-        <translation id="BlockUser" text="Block User"/>
-        <translation id="CreateCategory" text="Create Category"/>
-        <translation id="SiteCustomization" text="Site Customization"/>
-        <translation id="ColumnId" text="ID"/>
-        <translation id="Name" text="Name"/>
-        <translation id="Namespace" text="Namespace"/>
-        <translation id="Type" text="Type"/>
-        <translation id="Body" text="Body"/>
-        <translation id="Status" text="Status"/>
-        <translation id="StatusOld" text="Old"/>
-        <translation id="StatusShortCustomized" text="Cust"/>
-        <translation id="StatusBase" text="Base"/>
-        <translation id="ChangePassword" text="Change Password"/>
-        <translation id="NewPassword" text="New Password"/>
-        <translation id="OldPassword" text="Old Password"/>
-        <translation id="UserProfile" text="User Profile"/>
-        <translation id="UnknownUser" text="Unknown user"/>
-        <translation id="TooSimplePassword" text="Too simple password"/>
-        <translation id="WrongPassword" text="Wrong password"/>
-        <translation id="UpdateProfile" text="Update Profile"/>
-        <translation id="ProfileAvatar" text="Avatar"/>
-        <translation id="ProfileUserImage" text="User Image"/>
-        <translation id="SubmitButtonSubmit" text="Submit"/>
-        <translation id="UserNameAlreadyExists" text="User with specified name already exists"/>
-        <translation id="UserEmailAlreadyExists" text="User with specified e-mail already exists"/>
-        <translation id="EmailIsNotSpecified" text="E-mail is not specified"/>
-        <translation id="WrongProviderData" text="Wrong Provider Data"/>
-        <translation id="SubmitButtonUpdate" text="Update"/>
-        <translation id="LastLogin" text="Last Login"/>
-        <translation id="Blocked" text="Blocked"/>
-        <translation id="ColumnShort" text="Short"/>
-        <translation id="ColumnDefault" text="Default"/>
-        <translation id="GeneratePassword" text="Generate Password And Send By E-Mail"/>
-        <translation id="SmtpNotConfigured" text="SMTP is not configured"/>
-        <translation id="GroupName" text="Group Name"/>
-        <translation id="GroupExists" text="Group with specified name already exists"/>
         <translation id="Registered" text="Registered"/>
-        <translation id="IsAdministrator" text="Is Administrator"/>
-        <translation id="LastActivity" text="Last Activity"/>
-        <translation id="Title" text="Title"/>
-        <translation id="IsBlocked" text="Is Blocked"/>
-        <translation id="BlockReason" text="Block Reason"/>
-        <translation id="UserNotFound" text="User not found"/>
-        <translation id="NewUserPasswordRequired" text="Password is required for new user"/>
-        <translation id="IsRequired" text="Is Required"/>
-        <translation id="VisibleInPosts" text="Visible In Posts"/>
-        <translation id="PropertyExists" text="Property with the same name already exists"/>
-        <translation id="Value" text="Value"/>
-        <translation id="UnknownPropertyName" text="Unknown property name"/>
-        <translation id="CannotConvertToInt" text="Cannot convert to int value"/>
-        <translation id="CannotConvertToBool" text="Cannot convert to boolean value"/>
-        <translation id="ColumnSiteId" text="Site ID"/>
-        <translation id="HostName" text="Host Name"/>
-        <translation id="Enabled" text="Enabled"/>
-        <translation id="WelcomeHello" text="Hello"/>
-        <translation id="WelcomeLogoff" text="Log off"/>
-        <translation id="WelcomeLogin" text="Log in"/>
-        <translation id="ColumnUserId" text="User ID"/>
         <translation id="RegisteredShortWithDate" text="Reg {0}"/>
-        <translation id="Administrator" text="Administrator"/>
-        <translation id="AnyUser" text="Any User"/>
-        <translation id="DocumentRoot" text="Document Root"/>
-        <translation id="AustralianDollar" text="Australian Dollar"/>
-        <translation id="BulgarianLev" text="Bulgarian Lev"/>
-        <translation id="BrazilianReal" text="Brazilian Real"/>
-        <translation id="CanadianDollar" text="Canadian Dollar"/>
-        <translation id="SwissFranc" text="Swiss Franc"/>
-        <translation id="ChineseYuanRenminbi" text="Chinese Yuan Renminbi"/>
-        <translation id="CzechKoruna" text="Czech Koruna"/>
-        <translation id="DanishKrone" text="Danish Krone"/>
-        <translation id="PoundSterling" text="Pound Sterling"/>
-        <translation id="HongKongDollar" text="Hong Kong Dollar"/>
-        <translation id="CroatianKuna" text="Croatian Kuna"/>
-        <translation id="HungarianForint" text="Hungarian Forint"/>
-        <translation id="IndonesianRupiah" text="Indonesian Rupiah"/>
-        <translation id="IsraeliShekel" text="Israeli Shekel"/>
-        <translation id="IndianRupee" text="Indian Rupee"/>
-        <translation id="IcelandicKrona" text="Icelandic Krona"/>
-        <translation id="JapaneseYen" text="Japanese Yen"/>
-        <translation id="SouthKoreanWon" text="South Korean Won"/>
-        <translation id="LithuanianLitas" text="Lithuanian Litas"/>
-        <translation id="LatvianLats" text="Latvian Lats"/>
-        <translation id="MexicanPeso" text="Mexican Peso"/>
-        <translation id="MalaysianRinggit" text="Malaysian Ringgit"/>
-        <translation id="NorwegianKrone" text="Norwegian Krone"/>
-        <translation id="NewZealandDollar" text="New Zealand Dollar"/>
-        <translation id="PhilippinePeso" text="Philippine Peso"/>
-        <translation id="PolishZloty" text="Polish Zloty"/>
-        <translation id="NewRomanianLeu" text="New Romanian Leu"/>
-        <translation id="RussianRouble" text="Russian Rouble"/>
-        <translation id="SwedishKrona" text="Swedish Krona"/>
-        <translation id="SingaporeDollar" text="Singapore Dollar"/>
-        <translation id="ThaiBaht" text="Thai Baht"/>
-        <translation id="NewTurkishLira" text="New Turkish Lira"/>
-        <translation id="UsDollar" text="US Dollar"/>
-        <translation id="SouthAfricanRand" text="South African Rand"/>
-        <translation id="ColumnRoleId" text="Role ID"/>
-        <translation id="Excluded" text="Excluded"/>
-        <translation id="AllRoles" text="All Roles"/>
-        <translation id="AnyItem" text="Any Item"/>
-        <translation id="ViewHistory" text="View History"/>
-        <translation id="CancelHistory" text="Cancel History"/>
-        <translation id="ActivateHistory" text="Activate History"/>
-        <translation id="HomePage" text="Home Page"/>
-        <translation id="SearchFormSubmit" text="Search"/>
-        <translation id="Administrators" text="Administrators"/>
-        <translation id="Sites" text="Sites"/>
-        <translation id="ExternalOrLoginWith" text="Or login with"/>
-        <translation id="ExternalLoginOrCap" text="Or"/>
-        <translation id="ExternalLoginOrLow" text="or"/>
         <translation id="RegisterHere" text="Register here"/>
-        <translation id="EnterPassword" text="Enter Password"/>
-        <translation id="UserIsNotValidated" text="User is not validated. You cannot submit any data until you complete the validation. You should receive validation instructions by e-mail."/>
-        <translation id="Up" text="Up"/>
-        <translation id="Down" text="Down"/>
-        <translation id="Left" text="Left"/>
-        <translation id="Right" text="Right"/>
-        <translation id="EditArticle" text="Edit Article"/>
-        <translation id="EditContactForm" text="Contact Form Properties"/>
-        <translation id="ContactEmail" text="Contact Email"/>
-        <translation id="ContactSubject" text="Contact Email Subject"/>
-        <translation id="YourEmail" text="Your E-mail Address"/>
-        <translation id="YourMessage" text="Your Message"/>
-        <translation id="SuccessfullySaved" text="Successfully saved"/>
-        <translation id="ApplyButton" text="Apply"/>
-        <translation id="ContactFormSent" text="Successfully sent contact form data"/>
-        <translation id="Message" text="Message"/>
-        <translation id="SendMessage" text="Send Message"/>
-        <translation id="ViewTestMessage" text="View Test Message"/>
-        <translation id="FromEmail" text="FromEmail"/>
-        <translation id="ToEmail" text="ToEmail"/>
-        <translation id="Subject" text="Subject"/>
-        <translation id="DateSent" text="Date Sent"/>
-        <translation id="Template" text="Template"/>
-        <translation id="ViewTestMessages" text="View Test Messages"/>
-        <translation id="DefaultUserGroup" text="Default User Group"/>
-        <translation id="MaximumFileSize" text="Maximum File Size For Download"/>
-        <translation id="HasUsers" text="Has Users"/>
-        <translation id="HasNavigationBar" text="Has Navigation Bar"/>
-        <translation id="HasSearch" text="Has Search"/>
-        <translation id="UseLanguages" text="Use Languages"/>
-        <translation id="UseCurrencies" text="Use Currencies"/>
-        <translation id="DefaultCronJobId" text="Default Cron Job Id"/>
-        <translation id="AdminNotifyNewUsers" text="Administrator Notify Of New Users"/>
-        <translation id="AdminApproveNewUsers" text="Administrator Approves New Users"/>
-        <translation id="UserAgreement" text="User Agreement"/>
-        <translation id="SiteName" text="Site Name"/>
-        <translation id="UniqueId" text="Unique ID"/>
-        <translation id="EditFile" text="Edit File"/>
-        <translation id="FileName" text="File Name"/>
-        <translation id="File" text="File"/>
-        <translation id="Files" text="Files"/>
-        <translation id="UserCommon" text="Common"/>
-        <translation id="PropertyMustBeSpecified" text="Property {0} must be specified"/>
-        <translation id="ThumbnailWidth" text="Thumbnail Width"/>
-        <translation id="ThumbnailHeight" text="Thumbnail Height"/>
-        <translation id="ApproveUsers" text="Approve Users"/>
-        <translation id="NodeName" text="Section"/>
-        <translation id="ShortName" text="Short Name"/>
-        <translation id="Visible" text="Visible"/>
-        <translation id="Icon" text="Icon"/>
-        <translation id="IsDefault" text="Default"/>
-        <translation id="Languages" text="Languages"/>
-        <translation id="Translations" text="Translations"/>
+        <translation id="RegisterUser" text="Register User"/>
+        <translation id="RememberMe" text="Remember me"/>
+        <translation id="RemoveRecord" text="Remove"/>
+        <translation id="RepeatPassword" text="Repeat Password"/>
         <translation id="ResetLanguage" text="Reset Translations"/>
-        <translation id="AddMissingTranslations" text="Add Missing"/>
-        <translation id="LanguageWasReset" text="Language was reset"/>
-        <translation id="AddedMissingTranslations" text="Added missing translations"/>
-        <translation id="Export" text="Export"/>
-        <translation id="Import" text="Import"/>
-        <translation id="FileToImport" text="File to import"/>
-        <translation id="ImportFinished" text="Import Finished"/>
-        <translation id="Key" text="Key"/>
-        <translation id="Text" text="Text"/>
-        <translation id="Translation" text="Translation"/>
-        <translation id="Language" text="Language"/>
+        <translation id="RestorePassword" text="Restore Password"/>
+        <translation id="RestorePasswordRequestSent" text="Password restore request was sent to the specified e-mail address."/>
+        <translation id="Right" text="Right"/>
+        <translation id="RussianRouble" text="Russian Rouble"/>
+        <translation id="SafeMode" text="Safe Mode"/>
+        <translation id="SavePassword" text="Save Password"/>
+        <translation id="SearchFormSubmit" text="Search"/>
+        <translation id="SearchGo" text="Go"/>
+        <translation id="SearchUsers" text="Search Users"/>
+        <translation id="SecondsAgo" text="seconds ago"/>
+        <translation id="SendMessage" text="Send Message"/>
         <translation id="SetDefault" text="Set Default"/>
+        <translation id="ShortName" text="Short Name"/>
+        <translation id="Signature" text="Signature"/>
+        <translation id="Signature" text="Signature"/>
+        <translation id="SignIn" text="Sign in"/>
+        <translation id="SingaporeDollar" text="Singapore Dollar"/>
+        <translation id="SiteConfiguration" text="Site Configuration"/>
+        <translation id="SiteCustomization" text="Site Customization"/>
+        <translation id="SiteId" text="Site ID"/>
+        <translation id="SiteName" text="Site Name"/>
+        <translation id="SiteProperties" text="Site Properties"/>
+        <translation id="Sites" text="Sites"/>
         <translation id="Smile" text="Smile"/>
         <translation id="Smiles" text="Smiles"/>
-        <translation id="Code" text="Code"/>
-        <translation id="Image" text="Image"/>
-        <translation id="GoogleAnalyticsResource" text="Google Analytics Resource"/>
-        <translation id="Signature" text="Signature"/>
-        <translation id="ImageSizeIsBigger" text="Image size is bigger than allowed ({0})"/>
+        <translation id="SmtpNotConfigured" text="SMTP is not configured"/>
+        <translation id="SmtpPassword" text="SMTP password"/>
+        <translation id="SmtpServer" text="Server Address"/>
+        <translation id="SmtpServerPort" text="SMTP server : port"/>
+        <translation id="SmtpUsername" text="SMTP user name"/>
+        <translation id="SmtpUseSsl" text="Use SSL"/>
+        <translation id="SouthAfricanRand" text="South African Rand"/>
+        <translation id="SouthKoreanWon" text="South Korean Won"/>
+        <translation id="Status" text="Status"/>
+        <translation id="StatusBase" text="Base"/>
+        <translation id="StatusOld" text="Old"/>
+        <translation id="StatusShortCustomized" text="Cust"/>
+        <translation id="Subject" text="Subject"/>
+        <translation id="SubmitButtonContinue" text="Continue"/>
+        <translation id="SubmitButtonCreate" text="Create"/>
+        <translation id="SubmitButtonSave" text="Save"/>
+        <translation id="SubmitButtonSubmit" text="Submit"/>
+        <translation id="SubmitButtonUpdate" text="Update"/>
+        <translation id="SuccessfullySaved" text="Successfully saved"/>
+        <translation id="SwedishKrona" text="Swedish Krona"/>
+        <translation id="SwissFranc" text="Swiss Franc"/>
+        <translation id="Template" text="Template"/>
+        <translation id="Text" text="Text"/>
+        <translation id="TextRequired" text="Field '{0}' is mandatory"/>
+        <translation id="ThaiBaht" text="Thai Baht"/>
+        <translation id="ThumbnailHeight" text="Thumbnail Height"/>
+        <translation id="ThumbnailWidth" text="Thumbnail Width"/>
+        <translation id="Title" text="Title"/>
+        <translation id="Today" text="Today"/>
+        <translation id="ToEmail" text="ToEmail"/>
+        <translation id="ToggleNavigation" text="Toggle Navigation"/>
+        <translation id="TooSimplePassword" text="Too simple password"/>
+        <translation id="Translation" text="Translation"/>
+        <translation id="Translations" text="Translations"/>
+        <translation id="Type" text="Type"/>
+        <translation id="Unblock" text="Unblock"/>
+        <translation id="UnblockTime" text="Unblock Time"/>
+        <translation id="UnblockUser" text="Unblock User"/>
+        <translation id="UniqueId" text="Unique ID"/>
+        <translation id="UnknownCommand" text="Unknown Command"/>
+        <translation id="UnknownError" text="Unknown Error Occurred"/>
+        <translation id="UnknownPath" text="Unknown path"/>
+        <translation id="UnknownPropertyName" text="Unknown property name"/>
+        <translation id="UnknownSite" text="Unknown site"/>
+        <translation id="UnknownUser" text="Unknown user"/>
         <translation id="UnsupportedFileType" text="Unsupported file type"/>
-        <translation id="ValidFileType" text="Valid File Type"/>
-        <translation id="ValidFileExtension" text="Valid File Extension"/>
-        <translation id="MaximumFileSizeReached" text="File is bigger than allowed ({0})"/>
-        <translation id="MaximumImageWidth" text="Maximum Image Width"/>
-        <translation id="MaximumImageHeight" text="Maximum Image Height"/>
-        <translation id="Caption" text="Caption"/>
-        <translation id="EditPage" text="Edit Page"/>
-        <translation id="ControllerCode" text="Controller Code"/>
-        <translation id="PasswordTooSimple" text="Password does not meet minimal complexity criteria"/>
-        <translation id="InvalidPassword" text="Invalid password"/>
-        <translation id="InvalidUserName" text="Invalid User Name"/>
-        <translation id="NameOrEmailExists" text="User with specified name or e-mail already exists"/>
-        <translation id="DatabaseChangeError" text="Database error: %s" />
-        <translation id="DatabaseChangeSuccess" text="Database configuration successfully applied" />
-        <translation id="ConnectionString" text="Connection String" />
-        <translation id="DatabaseConfiguration" text="Database Configuration" />
+        <translation id="Up" text="Up"/>
+        <translation id="UpdateProfile" text="Update Profile"/>
+        <translation id="Updating" text="Updating"/>
+        <translation id="UsDollar" text="US Dollar"/>
+        <translation id="UseCurrencies" text="Use Currencies"/>
+        <translation id="UseLanguages" text="Use Languages"/>
+        <translation id="User" text="User"/>
+        <translation id="UserAgreement" text="User Agreement"/>
         <translation id="UserAlreadyLoggedIn" text="You are already logged in." />
+        <translation id="UserCards" text="Users"/>
+        <translation id="UserCommon" text="Common"/>
+        <translation id="UserEmail" text="E-Mail"/>
+        <translation id="UserEmailAlreadyExists" text="User with specified e-mail already exists"/>
+        <translation id="UserId" text="User ID"/>
+        <translation id="UserIsNotValidated" text="User is not validated. You cannot submit any data until you complete the validation. You should receive validation instructions by e-mail."/>
+        <translation id="UserName" text="User Name"/>
+        <translation id="UserNameAlreadyExists" text="User with specified name already exists"/>
+        <translation id="UserNameForNoReply" text="Username for no-reply messages"/>
+        <translation id="UserNotFound" text="User not found or wrong password"/>
+        <translation id="UserProfile" text="User Profile"/>
+        <translation id="UserProperties" text="User Properties"/>
+        <translation id="UserProperty" text="User Property"/>
+        <translation id="Users" text="Users"/>
+        <translation id="UseTestMail" text="Use Test E-Mail System"/>
+        <translation id="UseTestMailSystem" text="Use Test Mail System"/>
+        <translation id="ValidFileExtension" text="Valid File Extension"/>
+        <translation id="ValidFileType" text="Valid File Type"/>
+        <translation id="Value" text="Value"/>
+        <translation id="ViewHistory" text="View History"/>
+        <translation id="ViewsTree" text="Views Tree"/>
+        <translation id="ViewTestMessage" text="View Test Message"/>
+        <translation id="ViewTestMessages" text="View Test Messages"/>
+        <translation id="Visible" text="Visible"/>
+        <translation id="VisibleInPosts" text="Visible In Posts"/>
+        <translation id="WeekAgo" text="a week ago"/>
+        <translation id="WeeksAgo" text="weeks ago"/>
+        <translation id="WelcomeHello" text="Hello"/>
+        <translation id="WelcomeLogin" text="Log in"/>
+        <translation id="WelcomeLogoff" text="Log off"/>
+        <translation id="WrongPassword" text="Wrong password"/>
+        <translation id="WrongProviderData" text="Wrong Provider Data"/>
+        <translation id="WrongUserPassword" text="Wrong user password"/>
+        <translation id="YearAgo" text="a year ago"/>
+        <translation id="Yesterday" text="yesterday"/>
+        <translation id="YourEmail" text="Your E-mail Address"/>
+        <translation id="YourMessage" text="Your Message"/>
 
         <translation id="" text="" />
     </translations>

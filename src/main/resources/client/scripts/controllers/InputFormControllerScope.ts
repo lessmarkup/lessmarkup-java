@@ -9,19 +9,18 @@ interface InputFormControllerScope extends ng.IScope {
     submitError: string;
     isApplying: boolean;
     submitWithCaptcha: boolean;
-    isDisabled(): boolean;
+    okDisabled(form: ng.IFormController): boolean;
     codeMirrorDefaultOptions: CodeMirror.EditorConfiguration;
     isNewObject: boolean;
     object: any;
+    getFieldTemplate: (field: InputFieldDefinition) => string;
     fieldValueSelected: (field: InputFieldDefinition, select: SelectValueDefinition) => boolean;
     getValue: (field: InputFieldDefinition) => any;
     readOnly: (field: InputFieldDefinition) => string;
-    hasErrors: (field: InputFieldDefinition) => boolean;
-    getErrorText: (field: InputFieldDefinition) => string;
     getHelpText: (field: InputFieldDefinition) => string;
     fieldVisible: (field: InputFieldDefinition) => boolean;
     getTypeahead: (field: InputFieldDefinition, searchText: string) => string[];
-    submit: () => void;
+    submit: (form: ng.IFormController) => void;
     cancel: () => void;
     showDateTimeField: (event, field: InputFieldDefinition) => void;
 }

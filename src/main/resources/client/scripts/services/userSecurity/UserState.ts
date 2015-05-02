@@ -22,3 +22,5 @@ class UserState {
     progress: boolean;
     showConfiguration: boolean;
 }
+
+export = UserState;

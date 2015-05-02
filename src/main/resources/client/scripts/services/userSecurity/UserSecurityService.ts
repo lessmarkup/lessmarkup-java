@@ -1,5 +1,7 @@
 import ng = require('angular');
 import BroadcastEvents = require('../../interfaces/BroadcastEvents');
+import UserState = require('./UserState');
+import UserStateUpdate = require('./UserStateUpdate');
 
 class LoginStage1Request {
     user: string;

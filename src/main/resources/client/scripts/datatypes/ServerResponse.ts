@@ -1,3 +1,5 @@
+import UserStateUpdate = require('../services/userSecurity/UserStateUpdate');
+
 class ServerResponse<T> {
     success: boolean;
     message: string;
@@ -11,3 +13,5 @@ class ServerResponse<T> {
     navigationTree: MenuItem[];
     require: string[];
 }
+
+export = ServerResponse;

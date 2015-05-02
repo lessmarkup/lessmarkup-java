@@ -18,6 +18,9 @@ public class InputFieldDefinition {
     private final String textId;
     private final String visibleCondition;
     private final double width;
+    private final int minWidth;
+    private final int maxWidth;
+    private final int position;
     private final String defaultValue;
     private List<InputFieldEnum> enumValues;
     
@@ -35,6 +38,9 @@ public class InputFieldDefinition {
         this.type = definition.type();
         this.visibleCondition = definition.visibleCondition();
         this.width = definition.width();
+        this.minWidth = definition.minWidth();
+        this.maxWidth = definition.maxWidth();
+        this.position = definition.position();
         this.defaultValue = definition.defaultValue();
 
         if (property.getType().isEnum() &&
@@ -64,6 +70,9 @@ public class InputFieldDefinition {
     public String getReadOnlyCondition() { return readOnlyCondition; }
     public String getTextId() { return textId; }
     public double getWidth() { return width; }
+    public int getMinWidth() { return minWidth; }
+    public int getMaxWidth() { return maxWidth; }
+    public int getPosition() { return position; }
     public String getDefaultValue() { return defaultValue; }
     public List<InputFieldEnum> getEnumValues() { return enumValues; }
 }

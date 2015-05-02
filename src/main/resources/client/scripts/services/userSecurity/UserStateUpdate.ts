@@ -4,3 +4,5 @@ class UserStateUpdate {
     userNotVerified: boolean;
     showConfiguration: boolean;
 }
+
+export = UserStateUpdate;

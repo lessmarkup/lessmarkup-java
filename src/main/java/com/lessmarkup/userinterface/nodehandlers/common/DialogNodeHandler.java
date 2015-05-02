@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.common;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
@@ -78,14 +79,19 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
     protected abstract String saveObject(T changedObject);
 
     protected String getApplyCaption() {
-        return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.APPLY_BUTTON);
+        return LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.APPLY_BUTTON);
     }
 
     @Override
     public JsonObject getViewData() {
         JsonObject ret = new JsonObject();
         ret.add("definition", definitionModel.toJson());
-        ret.add("object", JsonSerializer.serializePojoToTree(loadObject()));
+        Object source = loadObject();
+        if (source == null) {
+            ret.add("object", JsonNull.INSTANCE);
+        } else {
+            ret.add("object", JsonSerializer.serializePojoToTree(source));
+        }
         ret.addProperty("applyCaption", getApplyCaption());
         return ret;
     }
@@ -105,6 +111,6 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
 
     @Override
     public String getViewType() {
-        return "Dialog";
+        return "dialog";
     }
 }

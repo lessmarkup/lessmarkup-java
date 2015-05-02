@@ -114,7 +114,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         
         long idCounter = 1;
         
-        ConfigurationGroupData normalGroup = new ConfigurationGroupData(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.SITE_CONFIGURATION));
+        ConfigurationGroupData normalGroup = new ConfigurationGroupData(LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.SITE_CONFIGURATION));
         
         for (ModuleConfiguration module : this.moduleProvider.getModules()) {
             for (Class<? extends NodeHandler> nodeHandlerType : module.getInitializer().getNodeHandlerTypes()) {
@@ -144,7 +144,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         }
         
         for (ConfigurationHandlerData handler : this.configurationHandlers.values()) {
-            handler.setTitle(LanguageHelper.getText(handler.getModuleType(), handler.getTitleTextId()));
+            handler.setTitle(LanguageHelper.getFullTextId(handler.getModuleType(), handler.getTitleTextId()));
         }
         
         for (ConfigurationGroupData group : this.configurationGroups) {
@@ -172,7 +172,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
             g.getHandlers().forEach(h -> {
                 JsonObject handler = new JsonObject();
                 handler.addProperty("path", path != null ? (path + "/" + h.getTypeName()) : h.getTypeName());
-                handler.addProperty("title", LanguageHelper.getText(h.getModuleType(), h.getTitleTextId()));
+                handler.addProperty("title", LanguageHelper.getFullTextId(h.getModuleType(), h.getTitleTextId()));
                 items.add(handler);
             });
             group.add("items", items);
@@ -208,7 +208,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         
         ret.setId(OptionalLong.of(handlerData.getId()));
         ret.setHandler(handler);
-        ret.setTitle(LanguageHelper.getText(handlerData.getModuleType(), handlerData.getTitleTextId()));
+        ret.setTitle(LanguageHelper.getFullTextId(handlerData.getModuleType(), handlerData.getTitleTextId()));
         ret.setPath(path);
         ret.setRest(StringHelper.join(",", parts));
         

@@ -6,24 +6,29 @@
 package com.lessmarkup.engine.language;
 
 import com.lessmarkup.interfaces.system.Language;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalLong;
 
 public class CachedLanguage implements Language {
-    private long languageId;
     private String name;
-    private OptionalLong iconId;
+    private OptionalLong iconId = OptionalLong.empty();
     private String shortName;
     private boolean isDefault;
 
-    @Override
-    public long getLanguageId() {
-        return languageId;
+    public static class Translation {
+        private String reference;
+        private String text;
+
+        public String getReference() { return reference; }
+        public void setReference(String reference) { this.reference = reference; }
+
+        public String getText() { return text; }
+        public void setText(String text) { this.text = text; }
     }
 
-    public void setLanguageId(long languageId) {
-        this.languageId = languageId;
-    }
+    private final Map<String, String> translationsMap = new HashMap<>();
 
     @Override
     public String getName() {
@@ -56,14 +61,6 @@ public class CachedLanguage implements Language {
         this.isDefault = isDefault;
     }
 
-    public Map<String, String> getTranslationsMap() {
-        return translationsMap;
-    }
-    
-    public void setTranslationsMap(Map<String, String> translationsMap) {
-        this.translationsMap = translationsMap;
-    }
-
     @Override
     public boolean getIsDefault() {
         return isDefault;
@@ -74,19 +71,7 @@ public class CachedLanguage implements Language {
         return this.translationsMap;
     }
 
-    public class Translation {
-        private String reference;
-        private String text;
 
-        public String getReference() { return reference; }
-        public void setReference(String reference) { this.reference = reference; }
-
-        public String getText() { return text; }
-        public void setText(String text) { this.text = text; }
-    }
-    
-    private Map<String, String> translationsMap;
-    
     public String getText(String id) {
         return getText(id, true);
     }

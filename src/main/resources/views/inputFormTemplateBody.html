@@ -1,5 +1,8 @@
 ﻿<md-content layout-padding layout="column">
-    <input-field ng-repeat="field in fields track by field.id" model="object" field="field"></input-field>
+    <div ng-repeat="field in fields | orderBy: 'position'">
+        <md-input-container ng-include="getFieldTemplate(field)">
+        </md-input-container>
+    </div>
 
     <div ng-if="submitWithCaptcha" captcha="recaptchaPublicKey"></div>
 

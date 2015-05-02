@@ -5,23 +5,8 @@
  */
 
 import InputFormController = require('./InputFormController');
-import InputFormControllerScope = require('./InputFormControllerScope');
 import CommandProcessorService = require('../services/CommandProcessorService');
-
-interface DialogControllerConfiguration {
-    object: any;
-    definition: InputFormDefinition;
-    applyCaption: string;
-}
-
-interface DialogControllerScope extends InputFormControllerScope {
-    submitSuccess: string;
-    applyCaption: string;
-    changesApplied: boolean;
-    configuration: DialogControllerConfiguration;
-    hasChanges: boolean;
-    openForm();
-}
+import DialogControllerScope = require('./DialogControllerScope');
 
 class DialogController extends InputFormController {
 
@@ -36,7 +21,8 @@ class DialogController extends InputFormController {
                 commandProcessor:CommandProcessorService,
                 qService:ng.IQService) {
 
-        super(scope, dialogService, sceService, serverConfiguration, scope.configuration.object, scope.configuration.definition, null, this.successFunction);
+        super(scope, dialogService, sceService, serverConfiguration, scope.configuration.object, scope.configuration.definition, null,
+            changedObject => this.successFunction(changedObject));
 
         this.commandProcessor = commandProcessor;
         this.qService = qService;
@@ -44,15 +30,14 @@ class DialogController extends InputFormController {
 
         var configuration = scope.configuration;
         scope.configuration = null;
-
-        scope.object = configuration.object;
         scope.submitError = "";
         scope.submitSuccess = "";
         scope.hasChanges = false;
         scope.applyCaption = configuration.applyCaption;
         scope.changesApplied = false;
 
-        scope.openForm = () => {
+        scope.openForm = (form: ng.IFormController) => {
+            form.$setPristine();
             scope.changesApplied = false;
             scope.submitError = "";
             scope.submitSuccess = "";
@@ -65,13 +50,17 @@ class DialogController extends InputFormController {
         }, true);
     }
 
+    protected okDisabled(form: ng.IFormController): boolean {
+        return super.okDisabled(form) || !this.dialogScope.hasChanges;
+    }
+
     private onDataChanged() {
         this.dialogScope.hasChanges = true;
         this.dialogScope.submitError = '';
         this.dialogScope.submitSuccess = '';
     }
 
-    private successFunction(changedObject):ng.IPromise<void> {
+    protected successFunction(changedObject):ng.IPromise<void> {
         var deferred:ng.IDeferred<void> = this.qService.defer<void>();
 
         this.commandProcessor.sendCommand("save", {changedObject: changedObject})
@@ -96,3 +85,5 @@ module.controller("dialog", [
     '$q',
     DialogController
 ]);
+
+export = DialogController;

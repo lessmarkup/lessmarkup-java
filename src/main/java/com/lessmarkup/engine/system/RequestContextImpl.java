@@ -13,7 +13,6 @@ import com.lessmarkup.interfaces.system.RequestContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.OptionalLong;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -35,15 +34,13 @@ public class RequestContextImpl implements RequestContext {
     }
     
     @Override
-    public OptionalLong getLanguageId() {
+    public String getLanguageId() {
         Cookie languageCookie = getCookie(COOKIE_LANGUAGE);
         if (languageCookie == null) {
-            return OptionalLong.empty();
+            return null;
         }
-        
-        long languageId = Long.getLong(languageCookie.getValue());
-        
-        return OptionalLong.of(languageId);
+
+        return languageCookie.getValue();
     }
 
     @Override

@@ -58,7 +58,7 @@ public abstract class PropertiesNodeHandler extends AbstractNodeHandler {
             }
 
             JsonObject model = new JsonObject();
-            model.addProperty("name", LanguageHelper.getText(moduleConfiguration.get().getModuleType(), propertyAttribute.textId()));
+            model.addProperty("name", LanguageHelper.getFullTextId(moduleConfiguration.get().getModuleType(), propertyAttribute.textId()));
             model.addProperty("type", propertyAttribute.type().toString());
             model.addProperty("value", value.toString());
             

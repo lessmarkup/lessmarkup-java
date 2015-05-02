@@ -29,12 +29,14 @@ public class LoginModel extends RecordModel<LoginModel> {
 
     private String email;
     private String password;
+    private boolean remember;
 
     private final CurrentUser currentUser;
     private final DataCache dataCache;
 
     @Autowired
     public LoginModel(CurrentUser currentUser, DataCache dataCache) {
+        super(TextIds.LOGIN);
         this.dataCache = dataCache;
         this.currentUser = currentUser;
     }
@@ -99,11 +101,15 @@ public class LoginModel extends RecordModel<LoginModel> {
         return new JsonObject();
     }
 
-    @InputField(type = InputFieldType.EMAIL, textId = TextIds.EMAIL, required = true)
+    @InputField(type = InputFieldType.EMAIL, textId = TextIds.EMAIL, required = true, position = 1)
     public void setEmail(String email) { this.email = email; }
     public String getEmail() { return email; }
 
-    @InputField(type = InputFieldType.PASSWORD, textId = TextIds.PASSWORD, required = true)
+    @InputField(type = InputFieldType.PASSWORD, textId = TextIds.PASSWORD, required = true, position = 2)
     public void setPassword(String password) { this.password = password; }
     public String getPassword() { return password; }
+
+    @InputField(type = InputFieldType.CHECK_BOX, textId = TextIds.REMEMBER_ME, position = 3)
+    public void setRemember(boolean remember) { this.remember = remember; }
+    public boolean isRemember() { return this.remember; }
 }
