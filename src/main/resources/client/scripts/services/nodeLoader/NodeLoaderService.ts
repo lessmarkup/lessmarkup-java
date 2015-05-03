@@ -50,7 +50,7 @@ class NodeLoaderService {
         // dirty hack to prevent AngularJS from reloading the page on pushState and fix $location.$$parse bug
         browser["url"] = () => { return browserUrl; };
 
-        $(window).on('popstate', function () {
+        $(window).on('popstate', () => {
             this.loadNode(location.pathname+location.search);
         });
     }

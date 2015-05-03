@@ -4,34 +4,52 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import BroadcastEvents = require('../interfaces/BroadcastEvents');
+import NodeLoaderService = require('../services/nodeLoader/NodeLoaderService');
+import UserSecurityService = require('../services/userSecurity/UserSecurityService');
+
 interface UserPanelDirectiveScope extends ng.IScope {
-    getTemplateUrl(): string;
-    platform: PlatformType;
+    hasConfiguration: boolean;
+    hasLogin: boolean;
+    loggedIn: boolean;
+    openConfiguration: () => void;
 }
 
 class UserPanelDirectiveController {
 
-    private static VIEW_PATH_MOBILE = "/views/userPanelMobile.html";
-    private static VIEW_PATH_NORMAL = "/views/userPanel.html";
+    private scope: UserPanelDirectiveScope;
+    private userSecurity: UserSecurityService;
 
-    constructor($scope: UserPanelDirectiveScope, serverConfiguration: ServerConfiguration) {
-        $scope.getTemplateUrl = () => {
-            return serverConfiguration.rootPath + ($scope.platform === PlatformType.DESKTOP ?
-                UserPanelDirectiveController.VIEW_PATH_NORMAL : UserPanelDirectiveController.VIEW_PATH_MOBILE);
+    constructor(scope: UserPanelDirectiveScope, userSecurity: UserSecurityService, serverConfiguration: ServerConfiguration, nodeLoader: NodeLoaderService) {
+
+        this.scope = scope;
+        this.userSecurity = userSecurity;
+        this.scope.openConfiguration = () => {
+            nodeLoader.loadNode(serverConfiguration.configurationPath);
         };
+
+        scope.$on(BroadcastEvents.USER_STATE_CHANGED, () => {
+            this.onUserStateChanged();
+        });
+
+        this.onUserStateChanged();
+        this.scope.hasLogin = serverConfiguration.hasLogin;
+    }
+
+    private onUserStateChanged() {
+        this.scope.hasConfiguration = this.userSecurity.showConfiguration();
+        this.scope.loggedIn = this.userSecurity.isLoggedIn();
     }
 }
 
 import module = require('./module');
 
-module.directive('userPanel', [() => {
+module.directive('userPanel', ['serverConfiguration', (serverConfiguration: ServerConfiguration) => {
     return <ng.IDirective> {
-        template: '<ng-include src="getTemplateUrl()"/>',
+        templateUrl: serverConfiguration.rootPath + '/views/userPanel.html',
         restrict: 'E',
         replace: true,
-        scope: {
-            platform: '='
-        },
-        controller: ['$scope', 'serverConfiguration', UserPanelDirectiveController]
+        scope: true,
+        controller: ['$scope', 'userSecurity', 'serverConfiguration', 'nodeLoader', UserPanelDirectiveController]
     };
 }]);

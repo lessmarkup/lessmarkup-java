@@ -19,6 +19,7 @@ public interface CurrentUser {
     String getEmail();
     String getUserName();
     void logout();
+    void refresh();
     boolean loginWithPassword(String email, String password, boolean savePassword, boolean allowAdmin, boolean allowRegular, String encodedPassword);
     boolean loginWithOAuth(String provider, String providerUserId, boolean savePassword, boolean allowAdmin, boolean allowRegular);
     void deleteSelf(String password) throws Exception;

@@ -17,7 +17,8 @@ var require = {
         'tinymce': '../lib/tinymce/tinymce',
         'domready': '../lib/requirejs-domready/domReady',
         'Recaptcha': 'http://www.google.com/recaptcha/api/js/recaptcha_ajax',
-        'requirejs.text': '../lib/requirejs-text/text'
+        'requirejs.text': '../lib/requirejs-text/text',
+        'sha512': '../lib/cryptojslib/rollups/sha512'
     },
     shim: {
         'angular':{

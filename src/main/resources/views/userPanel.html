@@ -1,26 +1,4 @@
-<li class="dropdown scriptonly" ng-show="!loggedIn && hasLogin">
-    <a role="button" class="dropdown-toggle"><span class="glyphicon glyphicon-user" style="font-size: small"></span> [[#text]]User[[/text]] <b class="caret"></b></a>
-    <div class="dropdown-menu">
-        <form role="form" class="login-form">
-            <login-dialog />
-        </form>
-    </div>
-</li>
-
-<li class="dropdown scriptonly" ng-show="loggedIn">
-    <a role="button" class="dropdown-toggle">
-                                    <span ng-if="userNotVerified">
-                                        <span class="badge" style="background-color: #a94442" data-toggle="tooltip" data-placement="bottom" title="[[#text]]EmailNotVerified[[/text]]">!</span>
-                                        <span>&nbsp;</span>
-                                    </span>
-        <span class="glyphicon glyphicon-user" style="font-size: small"></span> {{userName}} <b class="caret"></b>
-    </a>
-    <ul class="dropdown-menu">
-        <li><a href="{{rootPath+profilePath}}" ng-click="navigateToView(rootPath+profilePath)">[[#text]]Profile[[/text]]</a></li>
-        <li><a href="#" ng-click="doLogout()">[[#text]]Logout[[/text]]</a></li>
-    </ul>
-</li>
-
-<li ng-if="showConfiguration" class="scriptonly">
-    <a href="{{rootPath+configurationPath}}" ng-click="navigateToView(rootPath+configurationPath)"><span class="glyphicon glyphicon-cog"></span></a>
-</li>
+<md-button ng-if="hasConfiguration" class="scriptonly" ng-click="openConfiguration()">
+    <!--<md-icon md-svg-icon="[[#map]]icons/setup.svg[[/map]]"></md-icon>-->
+    <i class="fa fa-cog"></i>
+</md-button>

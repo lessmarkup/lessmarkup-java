@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Random;
 
 @Component
@@ -72,16 +73,19 @@ public class LoginModel extends RecordModel<LoginModel> {
 
         JsonElement temp = data.get("administratorKey");
 
-        if (temp != null) {
+        if (temp != null && !temp.isJsonNull()) {
             administratorKey = temp.getAsString();
         }
 
         SiteConfiguration siteConfiguration = dataCache.get(SiteConfiguration.class);
         String adminLoginPage = siteConfiguration.getAdminLoginPage();
+        if (StringHelper.isNullOrEmpty(adminLoginPage)) {
+            adminLoginPage = Constants.NodePath.ADMIN_LOGIN_DEFAULT_PAGE;
+        }
 
-        boolean allowAdministrator = StringHelper.isNullOrWhitespace(adminLoginPage) || administratorKey == adminLoginPage;
+        boolean allowAdministrator = Objects.equals(administratorKey, adminLoginPage);
 
-        boolean allowUser = StringHelper.isNullOrWhitespace(adminLoginPage);
+        boolean allowUser = StringHelper.isNullOrWhitespace(administratorKey);
 
         if (!currentUser.loginWithPassword(email, "", savePassword, allowAdministrator, allowUser, passwordHash)) {
             throw new UnauthorizedAccessException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_NOT_FOUND));
@@ -89,8 +93,6 @@ public class LoginModel extends RecordModel<LoginModel> {
 
         JsonObject ret = new JsonObject();
 
-        ret.addProperty("userName", currentUser.getEmail());
-        ret.addProperty("showConfiguration", currentUser.isAdministrator());
         ret.addProperty("path", StringHelper.isNullOrWhitespace(adminLoginPage) ? "" : "/");
 
         return ret;

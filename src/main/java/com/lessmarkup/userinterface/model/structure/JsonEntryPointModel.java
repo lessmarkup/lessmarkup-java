@@ -179,6 +179,8 @@ public class JsonEntryPointModel {
         JsonObject userState = new JsonObject();
         response.add("user", userState);
 
+        this.currentUser.refresh();
+
         userId = this.currentUser.getUserId();
         userState.addProperty("loggedIn", userId.isPresent());
 

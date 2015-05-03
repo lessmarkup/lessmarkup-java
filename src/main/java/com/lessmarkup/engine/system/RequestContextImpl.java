@@ -13,6 +13,8 @@ import com.lessmarkup.interfaces.system.RequestContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -24,6 +26,7 @@ public class RequestContextImpl implements RequestContext {
     private final HttpServletResponse response;
     private final ServletConfig servletConfig;
     private final static String COOKIE_LANGUAGE = "lang";
+    private final Map<String, Cookie> responseCookies = new HashMap<>();
     
     private CurrentUser currentUser;
     
@@ -94,6 +97,12 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public Cookie getCookie(String name) {
+
+        Cookie responseCookie = responseCookies.get(name);
+        if (responseCookie != null) {
+            return responseCookie;
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return null;
@@ -110,6 +119,7 @@ public class RequestContextImpl implements RequestContext {
     @Override
     public void setCookie(Cookie cookie) {
         response.addCookie(cookie);
+        responseCookies.put(cookie.getName(), cookie);
     }
 
     @Override

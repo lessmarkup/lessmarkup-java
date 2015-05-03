@@ -34,6 +34,7 @@ class CommandProcessorService {
         this.collectionUpdates = collectionUpdates;
         this.navigationTree = navigationTree;
         this.qService = qService;
+        this.path = initialData.path;
     }
 
     public onPathChanged(path: string) {
@@ -43,7 +44,7 @@ class CommandProcessorService {
     private onSuccess<T>(response: ng.IHttpPromiseCallbackArg<ServerResponse<T>>, defer: ng.IDeferred<T>): void {
         this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
 
-        this.rootScope.$broadcast(BroadcastEvents.USER_STATE_UPDATED, response.data.user);
+        this.rootScope.$broadcast(BroadcastEvents.USER_STATE_UPDATE_RECEIVED, response.data.user);
 
         if (!response.data.success) {
             var message:string = response.data.message || "Error";

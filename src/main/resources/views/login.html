@@ -1,6 +1,8 @@
 ﻿<div ng-controller="loginDialog" ng-if="!loggedIn">
-    [[>views/dialogForm.html]]
-</div>
-<div class="alert alert-success" ng-if="loggedIn">
-    {{ Main.UserAlreadyLoggedIn | translate }}
+    <div ng-if="!loggedIn">
+        [[>views/dialogForm.html]]
+    </div>
+    <div class="alert alert-success" ng-if="loggedIn">
+        {{ 'Main.UserAlreadyLoggedIn' | translate }}
+    </div>
 </div>

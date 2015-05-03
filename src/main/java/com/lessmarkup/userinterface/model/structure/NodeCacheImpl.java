@@ -148,13 +148,13 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         
         addVirtualNode(LoginNodeHandler.class,
                 adminLoginPage,
-                LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.ADMINISTRATOR_LOGIN),
+                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.ADMINISTRATOR_LOGIN),
                 Constants.ModuleType.MAIN,
                 NodeAccessType.READ);
         
         CachedNodeInformationImpl node = addVirtualNode(UserProfileNodeHandler.class,
                 Constants.NodePath.PROFILE,
-                LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.USER_PROFILE),
+                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_PROFILE),
                 Constants.ModuleType.MAIN,
                 NodeAccessType.READ);
         
@@ -163,12 +163,12 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         if (siteConfiguration.getHasUsers()) {
             addVirtualNode(UserCardRecordsNodeHandler.class,
                     Constants.NodePath.USER_CARDS,
-                    LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.USER_CARDS),
+                    LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_CARDS),
                     Constants.ModuleType.MAIN,
                     NodeAccessType.READ);
             addVirtualNode(ForgotPasswordNodeHandler.class,
                     Constants.NodePath.FORGOT_PASSWORD,
-                    LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.FORGOT_PASSWORD),
+                    LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.FORGOT_PASSWORD),
                     Constants.ModuleType.MAIN,
                     NodeAccessType.READ);
         }

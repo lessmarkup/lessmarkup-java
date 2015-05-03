@@ -15,7 +15,9 @@ class BroadcastEvents {
 
     public static INITIATE_USER_LOGIN: string = "INITIATE_USER_LOGIN";
 
-    public static USER_STATE_UPDATED: string = "USER_STATE_UPDATED";
+    public static USER_STATE_UPDATE_RECEIVED: string = "USER_STATE_UPDATE_RECEIVED";
+
+    public static USER_STATE_CHANGED: string = "USER_STATE_CHANGED";
 }
 
 export = BroadcastEvents;

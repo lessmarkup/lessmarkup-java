@@ -314,7 +314,12 @@ public class CurrentUserImpl implements CurrentUser {
         context.setCookie(cookie);
         userData = null;
     }
-    
+
+    @Override
+    public void refresh() {
+        userData = loadCurrentUser();
+    }
+
     private boolean loginUser(String email, String name, long userId, boolean savePassword)
     {
         LoggingHelper.getLogger(getClass()).info("Logging in user " + email);
@@ -545,9 +550,16 @@ public class CurrentUserImpl implements CurrentUser {
     private static String generateFakeSalt(MessageDigest hashAlgorithm, String email) {
         hashAlgorithm.update(email.getBytes());
         Cipher cipher = UserSecurityImpl.initializeCipher(DependencyResolver.resolve(DataCache.class), Cipher.ENCRYPT_MODE);
+        if (cipher == null) {
+            return null;
+        }
         byte[] encryptedBytes;
         try {
-            encryptedBytes = cipher.doFinal(hashAlgorithm.digest());
+            byte[] hash = hashAlgorithm.digest();
+            if (hash == null) {
+                return null;
+            }
+            encryptedBytes = cipher.doFinal(hash);
         } catch (IllegalBlockSizeException | BadPaddingException ex) {
             LoggingHelper.getLogger(CurrentUserImpl.class).log(Level.SEVERE, null, ex);
             return null;

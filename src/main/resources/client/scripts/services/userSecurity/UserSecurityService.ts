@@ -21,10 +21,6 @@ class LoginStage2Request {
 }
 
 class LoginStage2Response {
-    loggedIn: boolean;
-    userName: string;
-    userNotVerified: boolean;
-    showConfiguration: boolean;
     path: string;
 }
 
@@ -45,14 +41,29 @@ class UserSecurityService {
 
     private static STAGE1_COMMAND_NAME = "loginStage1";
 
-    constructor(rootScope: ng.IRootScopeService, commandProcessor: CommandProcessorService, messaging: MessagingService, nodeLoader: NodeLoaderService, qService: ng.IQService) {
+    constructor(
+            rootScope: ng.IRootScopeService,
+            commandProcessor: CommandProcessorService,
+            messaging: MessagingService,
+            nodeLoader: NodeLoaderService,
+            qService: ng.IQService,
+            initialData: InitialData) {
+
         this.userState = new UserState();
+
+        if (initialData.loggedIn) {
+            this.userState.loggedIn = true;
+            this.userState.email = initialData.userName;
+            this.userState.notVerified = initialData.userNotVerified;
+        }
+
         this.commandProcessor = commandProcessor;
         this.messaging = messaging;
         this.nodeLoader = nodeLoader;
         this.qService = qService;
+        this.rootScope = rootScope;
 
-        rootScope.$on(BroadcastEvents.USER_STATE_UPDATED, (event: ng.IAngularEvent, state: UserStateUpdate) => {
+        rootScope.$on(BroadcastEvents.USER_STATE_UPDATE_RECEIVED, (event: ng.IAngularEvent, state: UserStateUpdate) => {
             this.onUserStateUpdated(state);
         });
     }
@@ -66,9 +77,11 @@ class UserSecurityService {
         }
 
         var hasChanges = false;
+        var loggedIn = false;
 
         if (!this.userState.loggedIn) {
             this.userState.loggedIn = true;
+            loggedIn = true;
             hasChanges = true;
         }
 
@@ -89,6 +102,11 @@ class UserSecurityService {
 
         if (hasChanges) {
             this.version++;
+
+            if (loggedIn) {
+                this.rootScope.$broadcast(BroadcastEvents.USER_LOGGED_IN);
+                this.rootScope.$broadcast(BroadcastEvents.USER_STATE_CHANGED);
+            }
         }
     }
 
@@ -122,6 +140,8 @@ class UserSecurityService {
         }
         this.userState = new UserState();
         this.version++;
+
+        this.rootScope.$broadcast(BroadcastEvents.USER_STATE_CHANGED);
         this.rootScope.$broadcast(BroadcastEvents.USER_LOGGED_OUT);
     }
 
@@ -138,9 +158,9 @@ class UserSecurityService {
     }
 
     private onStage1CommandReceived(email: string, password: string, administratorKey: string, remember: boolean, data: LoginStage1Response, defer: ng.IDeferred<void>): void {
-        require(['lib/sha512'], function () {
-            var pass1 = CryptoJS.SHA512(data.pass1 + password);
-            var pass2 = CryptoJS.SHA512(data.pass2 + pass1);
+        require(['sha512'], () => {
+            var pass1 = CryptoJS.SHA512(data.pass1 + password).toString();
+            var pass2 = CryptoJS.SHA512(data.pass2 + pass1).toString();
 
             var stage2Data: LoginStage2Request = {
                 user: email,
@@ -149,9 +169,9 @@ class UserSecurityService {
                 administratorKey: administratorKey
             };
 
-            this.commandProcessor.sendCommand("loginStage2", stage2Data, function (data) {
+            this.commandProcessor.sendCommand("loginStage2", stage2Data).then((data: LoginStage2Response) => {
                 this.onStage2CommandReceived(data, defer);
-            }, function (message) {
+            }, (message: string) => {
                 this.addLoginError(message, defer);
             });
         });
@@ -159,17 +179,8 @@ class UserSecurityService {
 
     private onStage2CommandReceived(data: LoginStage2Response, defer: ng.IDeferred<void>) {
         this.loginProgress = false;
-        this.userState = new UserState();
-        this.userState.loggedIn = data.loggedIn;
-        this.userState.name = data.userName;
-        this.userState.notVerified = data.userNotVerified;
-        this.userState.showConfiguration = data.showConfiguration;
-
-        this.version++;
 
         defer.resolve();
-
-        this.rootScope.$broadcast(BroadcastEvents.USER_LOGGED_IN);
 
         if (data.path && data.path.length > 0) {
             this.nodeLoader.loadNode(data.path);
@@ -210,11 +221,19 @@ class UserSecurityService {
             (message: string) => { this.addLoginError(message, defer); }
         );
 
+        return defer.promise;
     }
 }
 
 import module = require('../module');
 
-module.service('userSecurity', ['$rootScope', 'commandProcessor', 'messaging', 'nodeLoader', '$q', UserSecurityService]);
+module.service('userSecurity', [
+    '$rootScope',
+    'commandProcessor',
+    'messaging',
+    'nodeLoader',
+    '$q',
+    'initialData',
+    UserSecurityService]);
 
 export = UserSecurityService;

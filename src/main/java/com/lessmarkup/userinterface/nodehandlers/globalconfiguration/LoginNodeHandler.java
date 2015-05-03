@@ -1,8 +1,9 @@
 package com.lessmarkup.userinterface.nodehandlers.globalconfiguration;
 
 import com.google.gson.JsonObject;
+import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
-import com.lessmarkup.framework.nodehandlers.AbstractNodeHandler;
+import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import com.lessmarkup.userinterface.model.user.LoginModel;
@@ -39,7 +40,7 @@ public class LoginNodeHandler extends DialogNodeHandler<LoginModel> {
         String adminLoginPage = siteConfiguration.getAdminLoginPage();
 
         JsonObject ret = super.getViewData();
-        ret.addProperty("administratorKey", adminLoginPage);
+        ret.addProperty("administratorKey", StringHelper.isNullOrEmpty(adminLoginPage) ? Constants.NodePath.ADMIN_LOGIN_DEFAULT_PAGE : adminLoginPage);
         return ret;
     }
 
