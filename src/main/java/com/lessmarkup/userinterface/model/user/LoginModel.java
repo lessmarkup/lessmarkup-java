@@ -6,13 +6,13 @@ import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.exceptions.CommonException;
 import com.lessmarkup.interfaces.exceptions.UnauthorizedAccessException;
 import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +32,12 @@ public class LoginModel extends RecordModel<LoginModel> {
     private String password;
     private boolean remember;
 
-    private final CurrentUser currentUser;
     private final DataCache dataCache;
 
     @Autowired
-    public LoginModel(CurrentUser currentUser, DataCache dataCache) {
+    public LoginModel(DataCache dataCache) {
         super(TextIds.LOGIN);
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
     }
 
     public JsonObject handleStage1Request(JsonObject data) {
@@ -52,7 +50,7 @@ public class LoginModel extends RecordModel<LoginModel> {
         Tuple<String, String> loginHash = null;
 
         try {
-            loginHash = currentUser.getLoginHash(data.get("user").getAsString());
+            loginHash = RequestContextHolder.getContext().getCurrentUser().getLoginHash(data.get("user").getAsString());
         } catch (NoSuchAlgorithmException | SQLException e) {
             throw new CommonException(e);
         }
@@ -87,7 +85,7 @@ public class LoginModel extends RecordModel<LoginModel> {
 
         boolean allowUser = StringHelper.isNullOrWhitespace(administratorKey);
 
-        if (!currentUser.loginWithPassword(email, "", savePassword, allowAdministrator, allowUser, passwordHash)) {
+        if (!RequestContextHolder.getContext().getCurrentUser().loginWithPassword(email, "", savePassword, allowAdministrator, allowUser, passwordHash)) {
             throw new UnauthorizedAccessException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_NOT_FOUND));
         }
 
@@ -99,7 +97,7 @@ public class LoginModel extends RecordModel<LoginModel> {
     }
     
     public JsonObject handleLogout() {
-        currentUser.logout();
+        RequestContextHolder.getContext().getCurrentUser().logout();
         return new JsonObject();
     }
 

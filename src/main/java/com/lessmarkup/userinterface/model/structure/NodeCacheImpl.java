@@ -54,18 +54,16 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
     private final DomainModelProvider domainModelProvider;
     private final ModuleProvider moduleProvider;
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
     private CachedNodeInformation rootNode;
     private final List<CachedNodeInformation> cachedNodes = new ArrayList<>();
     private final HashMap<Long, CachedNodeInformation> idToNode = new HashMap<>();
 
     @Autowired
-    public NodeCacheImpl(DomainModelProvider domainModelProvider, ModuleProvider moduleProvider, DataCache dataCache, CurrentUser currentUser) {
+    public NodeCacheImpl(DomainModelProvider domainModelProvider, ModuleProvider moduleProvider, DataCache dataCache) {
         super(new Class<?>[] {Node.class });
         this.domainModelProvider = domainModelProvider;
         this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
     }
     
     @Override
@@ -327,15 +325,17 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         }
         
         CachedNodeInformation node = foundNode.getValue1();
-        
-        if (node.isLoggedIn() && !this.currentUser.getUserId().isPresent()) {
+
+        CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
+
+        if (node.isLoggedIn() && !currentUser.getUserId().isPresent()) {
             logger.log(Level.INFO, "This node requires user to be logged in");
             return null;
         }
         
         logger.log(Level.INFO, "Checking node access rights");
         
-        NodeAccessType accessType = node.checkRights(this.currentUser);
+        NodeAccessType accessType = node.checkRights(currentUser);
         
         if (accessType == NodeAccessType.NO_ACCESS) {
             logger.log(Level.INFO, "Current user has no access to specified node");

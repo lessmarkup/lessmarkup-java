@@ -4,7 +4,6 @@ import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.UserCardHandler;
 import com.lessmarkup.interfaces.structure.UserCardNodeHandler;
@@ -23,8 +22,8 @@ public class UserCardTabsNodeHandler extends TabPageNodeHandler {
     private long userId;
 
     @Autowired
-    public UserCardTabsNodeHandler(DataCache dataCache, CurrentUser currentUser, ModuleProvider moduleProvider) {
-        super(dataCache, currentUser);
+    public UserCardTabsNodeHandler(DataCache dataCache, ModuleProvider moduleProvider) {
+        super(dataCache);
         this.moduleProvider = moduleProvider;
     }
 

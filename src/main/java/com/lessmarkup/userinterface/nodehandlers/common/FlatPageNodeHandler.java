@@ -8,8 +8,8 @@ import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.nodehandlers.AbstractNodeHandler;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.*;
 import com.lessmarkup.userinterface.model.common.FlatPagePosition;
 import com.lessmarkup.userinterface.model.common.FlatPageSettingsModel;
@@ -155,11 +155,9 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
     private final List<String> scripts = new ArrayList<>();
 
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
 
-    protected FlatPageNodeHandler(DataCache dataCache, CurrentUser currentUser) {
+    protected FlatPageNodeHandler(DataCache dataCache) {
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
     }
 
     private void fillFlatAndTreeList(CachedNodeInformation parent, List<FlatNodeEntry> nodes, TreeNodeEntry parentTreeNode, String anchor, int level, int maxLevel) {
@@ -172,7 +170,7 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
                 continue;
             }
 
-            NodeAccessType accessType = child.checkRights(currentUser);
+            NodeAccessType accessType = child.checkRights(RequestContextHolder.getContext().getCurrentUser());
 
             if (accessType == NodeAccessType.NO_ACCESS) {
                 continue;
@@ -308,7 +306,7 @@ public abstract class FlatPageNodeHandler extends AbstractNodeHandler {
     }
 
     private NodeHandler constructHandler(FlatNodeEntry node) {
-        NodeAccessType accessType = node.getSource().checkRights(currentUser);
+        NodeAccessType accessType = node.getSource().checkRights(RequestContextHolder.getContext().getCurrentUser());
 
         if (accessType == NodeAccessType.NO_ACCESS) {
             return null;

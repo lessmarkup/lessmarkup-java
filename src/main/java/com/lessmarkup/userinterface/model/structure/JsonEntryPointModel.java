@@ -33,14 +33,12 @@ import java.util.OptionalLong;
 public class JsonEntryPointModel {
     
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
     private final ChangeTracker changeTracker;
     private OptionalLong nodeId = OptionalLong.empty();
 
     @Autowired
-    public JsonEntryPointModel(DataCache dataCache, CurrentUser currentUser, ChangeTracker changeTracker) {
+    public JsonEntryPointModel(DataCache dataCache, ChangeTracker changeTracker) {
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
         this.changeTracker = changeTracker;
     }
     
@@ -60,7 +58,10 @@ public class JsonEntryPointModel {
     }
     
     private boolean isUserVerified() {
-        return this.currentUser.isAdministrator() || (this.currentUser.emailConfirmed() && this.currentUser.isApproved());
+
+        CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
+
+        return currentUser.isAdministrator() || (currentUser.emailConfirmed() && currentUser.isApproved());
     }
     
     private JsonElement handleDataRequest(JsonObject data, String command, String path) {
@@ -155,9 +156,12 @@ public class JsonEntryPointModel {
             return;
         }
         JsonObject response = new JsonObject();
-        OptionalLong userId = this.currentUser.getUserId();
+
+        CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
+
+        OptionalLong userId = currentUser.getUserId();
         boolean userVerified = isUserVerified();
-        boolean administrator = this.currentUser.isAdministrator();
+        boolean administrator = currentUser.isAdministrator();
         
         try {
             JsonElement resultData = handleDataRequest(requestData, command.getAsString(), path.getAsString());
@@ -179,20 +183,18 @@ public class JsonEntryPointModel {
         JsonObject userState = new JsonObject();
         response.add("user", userState);
 
-        this.currentUser.refresh();
-
-        userId = this.currentUser.getUserId();
+        userId = currentUser.getUserId();
         userState.addProperty("loggedIn", userId.isPresent());
 
         if (userId.isPresent()) {
-            userState.addProperty("userName", this.currentUser.getUserName());
+            userState.addProperty("userName", currentUser.getUserName());
         }
 
         if (userVerified != isUserVerified()) {
             userState.addProperty("userNotVerified", userVerified);
         }
-        if (administrator != this.currentUser.isAdministrator()) {
-            userState.addProperty("showConfiguration", this.currentUser.isAdministrator());
+        if (administrator != currentUser.isAdministrator()) {
+            userState.addProperty("showConfiguration", currentUser.isAdministrator());
         }
         
         try (OutputStream output = requestContext.getOutputStream()) {

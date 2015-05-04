@@ -42,7 +42,7 @@ class CommandProcessorService {
     }
 
     private onSuccess<T>(response: ng.IHttpPromiseCallbackArg<ServerResponse<T>>, defer: ng.IDeferred<T>): void {
-        this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
+        this.backgroundRefresh.subscribeForUpdates(() => this.sendIdle());
 
         this.rootScope.$broadcast(BroadcastEvents.USER_STATE_UPDATE_RECEIVED, response.data.user);
 

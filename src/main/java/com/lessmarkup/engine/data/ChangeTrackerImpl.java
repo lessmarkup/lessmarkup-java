@@ -2,14 +2,13 @@ package com.lessmarkup.engine.data;
 
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.EntityChangeHistory;
-import com.lessmarkup.framework.helpers.DependencyResolver;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
 import com.lessmarkup.interfaces.data.ChangeListener;
 import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -99,7 +98,7 @@ class ChangeTrackerImpl implements ChangeTracker {
         EntityChangeHistory record = new EntityChangeHistory();
         record.setEntityId(objectId);
         record.setChangeType(changeType.ordinal());
-        record.setUserId(DependencyResolver.resolve(CurrentUser.class).getUserId());
+        record.setUserId(RequestContextHolder.getContext().getCurrentUser().getUserId());
         record.setCollectionId(DomainModelImpl.getCollectionId(type));
         record.setCreated(OffsetDateTime.now());
         domainModel.create(record);
@@ -111,7 +110,7 @@ class ChangeTrackerImpl implements ChangeTracker {
         EntityChangeHistory record = new EntityChangeHistory();
         record.setEntityId(dataObject.getId());
         record.setChangeType(changeType.ordinal());
-        record.setUserId(DependencyResolver.resolve(CurrentUser.class).getUserId());
+        record.setUserId(RequestContextHolder.getContext().getCurrentUser().getUserId());
         record.setCollectionId(DomainModelImpl.getCollectionId(type));
         record.setCreated(OffsetDateTime.now());
         domainModel.create(record);

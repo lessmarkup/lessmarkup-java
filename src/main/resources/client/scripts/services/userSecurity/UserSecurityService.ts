@@ -55,6 +55,7 @@ class UserSecurityService {
             this.userState.loggedIn = true;
             this.userState.email = initialData.userName;
             this.userState.notVerified = initialData.userNotVerified;
+            this.userState.showConfiguration = initialData.showConfiguration;
         }
 
         this.commandProcessor = commandProcessor;

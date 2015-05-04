@@ -5,10 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.CachedNodeInformation;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.interfaces.structure.NodeCache;
@@ -29,13 +29,11 @@ import java.util.logging.Logger;
 public class UserInterfaceElementsModel {
     private final DomainModelProvider domainModelProvider;
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
-    
+
     @Autowired
-    public UserInterfaceElementsModel(DomainModelProvider domainModelProvider, DataCache dataCache, CurrentUser currentUser) {
+    public UserInterfaceElementsModel(DomainModelProvider domainModelProvider, DataCache dataCache) {
         this.domainModelProvider = domainModelProvider;
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
     }
     
     public void handle(JsonObject serverConfiguration, OptionalLong lastChangeId) {
@@ -50,7 +48,7 @@ public class UserInterfaceElementsModel {
                     continue;
                 }
                 
-                NodeAccessType accessType = nodeInfo.checkRights(this.currentUser);
+                NodeAccessType accessType = nodeInfo.checkRights(RequestContextHolder.getContext().getCurrentUser());
                 
                 if (accessType == NodeAccessType.NO_ACCESS) {
                     return;
@@ -109,7 +107,7 @@ public class UserInterfaceElementsModel {
                 return;
             }
             
-            NodeAccessType accessType = node.checkRights(this.currentUser);
+            NodeAccessType accessType = node.checkRights(RequestContextHolder.getContext().getCurrentUser());
             
             if (accessType == NodeAccessType.NO_ACCESS) {
                 return;

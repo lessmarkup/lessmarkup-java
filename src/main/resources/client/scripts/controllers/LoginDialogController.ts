@@ -44,13 +44,9 @@ class LoginDialogController extends DialogController {
         this.loginScope = scope;
         this.loginScope.loggedIn = this.userSecurity.isLoggedIn();
 
-        this.loginScope.$on(BroadcastEvents.USER_LOGGED_IN, () => {
+        this.loginScope.$on(BroadcastEvents.USER_STATE_CHANGED, () => {
             this.loginScope.loggedIn = true;
         });
-
-        this.loginScope.$on(BroadcastEvents.USER_LOGGED_OUT, () => {
-            this.loginScope.loggedIn = false;
-        })
     }
 
     protected successFunction(model: LoginModel):ng.IPromise<void> {

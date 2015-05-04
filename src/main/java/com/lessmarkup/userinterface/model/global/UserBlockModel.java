@@ -3,12 +3,12 @@ package com.lessmarkup.userinterface.model.global;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.dataobjects.UserBlockHistory;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
 import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -26,18 +26,16 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
 
     private final DomainModelProvider domainModelProvider;
     private final ChangeTracker changeTracker;
-    private final CurrentUser currentUser;
 
     @Autowired
-    public UserBlockModel(DomainModelProvider domainModelProvider, ChangeTracker changeTracker, CurrentUser currentUser) {
+    public UserBlockModel(DomainModelProvider domainModelProvider, ChangeTracker changeTracker) {
         super(TextIds.BLOCK_USER);
         this.domainModelProvider = domainModelProvider;
         this.changeTracker = changeTracker;
-        this.currentUser = currentUser;
     }
 
     public void blockUser(long userId) {
-        OptionalLong currentUserId = currentUser.getUserId();
+        OptionalLong currentUserId = RequestContextHolder.getContext().getCurrentUser().getUserId();
         if (!currentUserId.isPresent()) {
             throw new IllegalArgumentException();
         }

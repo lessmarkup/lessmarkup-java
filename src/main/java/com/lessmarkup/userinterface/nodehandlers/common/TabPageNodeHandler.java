@@ -7,8 +7,8 @@ import com.google.gson.JsonPrimitive;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.nodehandlers.AbstractNodeHandler;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.*;
 import com.lessmarkup.userinterface.model.structure.LoadNodeViewModel;
 
@@ -113,11 +113,9 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
 
     private final List<TabPage> pages = new ArrayList<>();
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
     private final List<String> scripts = new ArrayList<>();
 
-    protected TabPageNodeHandler(DataCache dataCache, CurrentUser currentUser) {
-        this.currentUser = currentUser;
+    protected TabPageNodeHandler(DataCache dataCache) {
         this.dataCache = dataCache;
     }
 
@@ -149,7 +147,7 @@ public abstract class TabPageNodeHandler extends AbstractNodeHandler {
             parentPath = currentNode.getFullPath();
 
             for (CachedNodeInformation child : currentNode.getChildren()) {
-                NodeAccessType accessType = child.checkRights(currentUser);
+                NodeAccessType accessType = child.checkRights(RequestContextHolder.getContext().getCurrentUser());
 
                 if (accessType == NodeAccessType.NO_ACCESS) {
                     continue;

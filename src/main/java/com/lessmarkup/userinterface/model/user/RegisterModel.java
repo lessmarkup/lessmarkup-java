@@ -7,6 +7,7 @@ import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.exceptions.CommonException;
 import com.lessmarkup.interfaces.recordmodel.InputField;
@@ -14,7 +15,6 @@ import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.recordmodel.RecordModelCache;
 import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.security.UserSecurity;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ public class RegisterModel extends RecordModel<RegisterModel> {
 
     private final DataCache dataCache;
     private final UserSecurity userSecurity;
-    private final CurrentUser currentUser;
 
     private String email;
     private String name;
@@ -38,9 +37,8 @@ public class RegisterModel extends RecordModel<RegisterModel> {
     private boolean agree;
 
     @Autowired
-    public RegisterModel(DataCache dataCache, UserSecurity userSecurity, CurrentUser currentUser) {
+    public RegisterModel(DataCache dataCache, UserSecurity userSecurity) {
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
         this.userSecurity = userSecurity;
     }
 
@@ -76,7 +74,7 @@ public class RegisterModel extends RecordModel<RegisterModel> {
 
         userSecurity.createUser(name, password, email, false, false);
 
-        boolean loggedIn = currentUser.loginWithPassword(email, password, false, false, true, null);
+        boolean loggedIn = RequestContextHolder.getContext().getCurrentUser().loginWithPassword(email, password, false, false, true, null);
 
         JsonObject ret = new JsonObject();
 

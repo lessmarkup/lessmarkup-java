@@ -92,16 +92,14 @@ public class NodeEntryPointModel {
     private final Context context;
     private LoadNodeViewModel viewData;
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
     private final DomainModelProvider domainModelProvider;
 
     private String nodeLoadError;
     private OptionalLong versionId;
     
     @Autowired
-    public NodeEntryPointModel(DataCache dataCache, CurrentUser currentUser, DomainModelProvider domainModelProvider) {
+    public NodeEntryPointModel(DataCache dataCache, DomainModelProvider domainModelProvider) {
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
         this.context = new Context(dataCache);
         this.domainModelProvider = domainModelProvider;
     }
@@ -115,14 +113,16 @@ public class NodeEntryPointModel {
         ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
         this.versionId = changesCache.getLastChangeId();
 
-        initialData.addProperty("loggedIn", this.currentUser.getUserId().isPresent());
-        initialData.addProperty("userNotVerified", !this.currentUser.isApproved() || !this.currentUser.emailConfirmed());
-        if (this.currentUser.getUserName() != null) {
-            initialData.addProperty("userName", this.currentUser.getUserName());
+        CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
+
+        initialData.addProperty("loggedIn", currentUser.getUserId().isPresent());
+        initialData.addProperty("userNotVerified", !currentUser.isApproved() || !currentUser.emailConfirmed());
+        if (currentUser.getUserName() != null) {
+            initialData.addProperty("userName", currentUser.getUserName());
         } else {
             initialData.add("userName", JsonNull.INSTANCE);
         }
-        initialData.addProperty("showConfiguration", this.currentUser.isAdministrator());
+        initialData.addProperty("showConfiguration", currentUser.isAdministrator());
 
         if (versionId.isPresent()) {
             initialData.addProperty("versionId", versionId.getAsLong());

@@ -51,7 +51,12 @@ class NodeLoaderService {
         browser["url"] = () => { return browserUrl; };
 
         $(window).on('popstate', () => {
-            this.loadNode(location.pathname+location.search);
+            var localPath = location.href;
+            if (localPath.substr(0, this.rootPath.length) == this.rootPath) {
+                localPath = localPath.substr(this.rootPath.length);
+            }
+            this.loadNode(localPath+location.search);
+            this.rootScope.$apply();
         });
     }
 
@@ -168,13 +173,15 @@ class NodeLoaderService {
             config.viewData = data.viewData;
             config.breadcrumbs = data.breadcrumbs;
             config.title = data.title;
-            config.template = data.template;
+            config.template = template;
 
             if (deferred != null) {
                 deferred.resolve(config);
             }
 
             this.rootScope.$broadcast(BroadcastEvents.NODE_LOADED, config);
+
+            this.rootScope.$apply();
         };
 
         if (data.require && data.require.length > 0) {
@@ -190,6 +197,10 @@ class NodeLoaderService {
 
         if (this.loadingNewPage) {
             return this.qService.reject("Already loading new page");
+        }
+
+        if (path.substring(0, 1) != '/') {
+            path = "/" + path;
         }
 
         var deferred:ng.IDeferred<NodeConfiguration> = this.qService.defer<NodeConfiguration>();

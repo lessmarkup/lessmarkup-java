@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.common;
 
+import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
 import com.lessmarkup.interfaces.data.ChangesCache;
@@ -8,7 +9,6 @@ import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.structure.NotificationProvider;
 
 import java.util.HashSet;
@@ -19,12 +19,10 @@ import java.util.Set;
 public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> extends RecordListNodeHandler<T> implements NotificationProvider {
 
     private final DataCache dataCache;
-    private final CurrentUser currentUser;
 
-    protected RecordListWithNotifyNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache, CurrentUser currentUser, Class<T> modelType) {
+    protected RecordListWithNotifyNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache, Class<T> modelType) {
         super(domainModelProvider, dataCache, modelType);
         this.dataCache = dataCache;
-        this.currentUser = currentUser;
     }
 
     @Override
@@ -39,7 +37,7 @@ public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> ext
     @Override
     public int getValueChange(OptionalLong fromVersion, OptionalLong toVersion, DomainModel domainModel) {
         ChangesCache changesCache = dataCache.get(ChangesCache.class);
-        OptionalLong userId = currentUser.getUserId();
+        OptionalLong userId = RequestContextHolder.getContext().getCurrentUser().getUserId();
 
         ModelCollection<T> collection = getCollection();
 
