@@ -31,44 +31,10 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
         for (InputFieldModel field : definitionModel.getFields()) {
             switch (field.getType()) {
                 case CODE_TEXT:
-                    addScript("lib/codemirror/codemirror");
-                    addScript("lib/codemirror/plugins/css");
-                    addScript("lib/codemirror/plugins/css-hint");
-                    addScript("lib/codemirror/plugins/dialog");
-                    addScript("lib/codemirror/plugins/anyword-hint");
-                    addScript("lib/codemirror/plugins/brace-fold");
-                    addScript("lib/codemirror/plugins/closebrackets");
-                    addScript("lib/codemirror/plugins/closetag");
-                    addScript("lib/codemirror/plugins/colorize");
-                    addScript("lib/codemirror/plugins/comment");
-                    addScript("lib/codemirror/plugins/comment-fold");
-                    addScript("lib/codemirror/plugins/continuecomment");
-                    addScript("lib/codemirror/plugins/foldcode");
-                    addScript("lib/codemirror/plugins/fullscreen");
-                    addScript("lib/codemirror/plugins/html-hint");
-                    addScript("lib/codemirror/plugins/htmlembedded");
-                    addScript("lib/codemirror/plugins/htmlmixed");
-                    addScript("lib/codemirror/plugins/indent-fold");
-                    addScript("lib/codemirror/plugins/javascript");
-                    addScript("lib/codemirror/plugins/javascript-hint");
-                    addScript("lib/codemirror/plugins/mark-selection");
-                    addScript("lib/codemirror/plugins/markdown-fold");
-                    addScript("lib/codemirror/plugins/match-highlighter");
-                    addScript("lib/codemirror/plugins/matchbrackets");
-                    addScript("lib/codemirror/plugins/matchtags");
-                    addScript("lib/codemirror/plugins/placeholder");
-                    addScript("lib/codemirror/plugins/rulers");
-                    addScript("lib/codemirror/plugins/scrollpastend");
-                    addScript("lib/codemirror/plugins/search");
-                    addScript("lib/codemirror/plugins/searchcursor");
-                    addScript("lib/codemirror/plugins/xml");
-                    addScript("lib/codemirror/plugins/xml-fold");
-                    addScript("lib/codemirror/plugins/xml-hint");
-                    addScript("lib/codemirror/ui-codemirror");
+                    addScript("scripts/directives/CodeMirrorDirective");
                     break;
                 case RICH_TEXT:
-                    addScript("lib/ckeditor/ckeditor");
-                    addScript("directives/angular-ckeditor");
+                    addScript("scripts/directives/CkEditorDirective");
                     break;
             }
         }

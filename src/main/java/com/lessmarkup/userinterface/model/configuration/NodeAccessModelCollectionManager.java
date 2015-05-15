@@ -46,7 +46,7 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
 
     @Override
     public int getCollectionId() {
-        return domainModelProvider.getCollectionId(NodeAccess.class);
+        return domainModelProvider.getCollectionId(NodeAccess.class).getAsInt();
     }
 
     @Override

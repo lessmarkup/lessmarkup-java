@@ -110,7 +110,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;
         
-        addScript("controllers/ConfigurationController");
+        addScript("scripts/controllers/ConfigurationController");
         
         long idCounter = 1;
         

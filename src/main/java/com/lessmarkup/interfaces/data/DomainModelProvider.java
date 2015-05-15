@@ -1,9 +1,11 @@
 package com.lessmarkup.interfaces.data;
 
+import java.util.OptionalInt;
+
 public interface DomainModelProvider {
     DomainModel create();
     DomainModel create(String connectionString);
     DomainModel createWithTransaction();
-    int getCollectionId(Class<?> collectionType);
+    OptionalInt getCollectionId(Class<?> collectionType);
     void initialize();
 }

@@ -11,3 +11,5 @@ class RecordListAction {
     parameter: string;
     text: string;
 }
+
+export = RecordListAction;

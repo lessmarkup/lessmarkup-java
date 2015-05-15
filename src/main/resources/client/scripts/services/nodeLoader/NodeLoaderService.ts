@@ -29,11 +29,14 @@ class NodeLoaderService {
         this.path = '';
         this.initializeBrowser(browserService);
         this.rootPath = window.location['origin'] + this.serverConfiguration.rootPath;
-        commandProcessor.onPathChanged(this.path);
         this.resetPageProperties();
 
-        rootScope.$on(BroadcastEvents.USER_LOGGED_OUT, this.onUserLoggedOut);
-        rootScope.$on(BroadcastEvents.USER_LOGGED_IN, this.onUserLoggedIn);
+        rootScope.$on(BroadcastEvents.USER_LOGGED_OUT, () => {
+            rootScope.$evalAsync(() => {
+                this.onUserLoggedOut();
+            });
+        });
+        rootScope.$on(BroadcastEvents.USER_LOGGED_IN, () => this.onUserLoggedIn());
     }
 
     private onUserLoggedIn() {
@@ -55,7 +58,7 @@ class NodeLoaderService {
             if (localPath.substr(0, this.rootPath.length) == this.rootPath) {
                 localPath = localPath.substr(this.rootPath.length);
             }
-            this.loadNode(localPath+location.search);
+            this.loadNode(localPath+location.search, false);
             this.rootScope.$apply();
         });
     }
@@ -174,6 +177,7 @@ class NodeLoaderService {
             config.breadcrumbs = data.breadcrumbs;
             config.title = data.title;
             config.template = template;
+            config.path = url;
 
             if (deferred != null) {
                 deferred.resolve(config);
@@ -181,7 +185,9 @@ class NodeLoaderService {
 
             this.rootScope.$broadcast(BroadcastEvents.NODE_LOADED, config);
 
-            this.rootScope.$apply();
+            if (!this.rootScope.$$phase) {
+                this.rootScope.$apply();
+            }
         };
 
         if (data.require && data.require.length > 0) {

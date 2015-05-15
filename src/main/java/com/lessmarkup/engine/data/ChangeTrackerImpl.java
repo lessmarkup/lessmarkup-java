@@ -99,7 +99,7 @@ class ChangeTrackerImpl implements ChangeTracker {
         record.setEntityId(objectId);
         record.setChangeType(changeType.ordinal());
         record.setUserId(RequestContextHolder.getContext().getCurrentUser().getUserId());
-        record.setCollectionId(DomainModelImpl.getCollectionId(type));
+        record.setCollectionId(DomainModelImpl.getCollectionId(type).getAsInt());
         record.setCreated(OffsetDateTime.now());
         domainModel.create(record);
     }
@@ -111,7 +111,7 @@ class ChangeTrackerImpl implements ChangeTracker {
         record.setEntityId(dataObject.getId());
         record.setChangeType(changeType.ordinal());
         record.setUserId(RequestContextHolder.getContext().getCurrentUser().getUserId());
-        record.setCollectionId(DomainModelImpl.getCollectionId(type));
+        record.setCollectionId(DomainModelImpl.getCollectionId(type).getAsInt());
         record.setCreated(OffsetDateTime.now());
         domainModel.create(record);
     }

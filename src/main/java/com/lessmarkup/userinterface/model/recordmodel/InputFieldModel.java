@@ -35,6 +35,7 @@ public class InputFieldModel {
     private final String property;
     private final String helpText;
     private final String defaultValue;
+    private final Class propertyType;
     
     public InputFieldModel(InputFieldDefinition source, RecordModelDefinition definition) {
         this.id = source.getId();
@@ -49,6 +50,7 @@ public class InputFieldModel {
         this.maxWidth = source.getMaxWidth();
         this.position = source.getPosition();
         this.property = StringHelper.toJsonCase(source.getProperty().getName());
+        this.propertyType = source.getProperty().getType();
         this.defaultValue = source.getDefaultValue();
         this.helpText = null;
     }
@@ -75,7 +77,18 @@ public class InputFieldModel {
         ret.addProperty("visibleCondition", this.visibleCondition);
         ret.addProperty("property", this.property);
         ret.addProperty("helpText", this.helpText);
-        ret.addProperty("defaultValue", this.defaultValue);
+
+        if (this.defaultValue != null && this.defaultValue.length() > 0) {
+            if (this.propertyType.equals(Boolean.class) || this.propertyType.equals(boolean.class)) {
+                ret.addProperty("defaultValue", Boolean.valueOf(this.defaultValue));
+            } else if (this.propertyType.equals(Integer.class) || this.propertyType.equals(int.class)) {
+                ret.addProperty("defaultValue", Integer.valueOf(this.defaultValue));
+            } else {
+                ret.addProperty("defaultValue", this.defaultValue);
+            }
+        } else {
+            ret.addProperty("defaultValue", this.defaultValue);
+        }
 
         JsonArray array = new JsonArray();
         

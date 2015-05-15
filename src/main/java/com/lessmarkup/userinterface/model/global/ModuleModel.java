@@ -38,7 +38,7 @@ public class ModuleModel extends RecordModel<ModuleModel> {
 
         @Override
         public int getCollectionId() {
-            return domainModelProvider.getCollectionId(Module.class);
+            return domainModelProvider.getCollectionId(Module.class).getAsInt();
         }
 
         @Override

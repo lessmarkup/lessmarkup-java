@@ -1,9 +1,9 @@
 ///<amd-dependency path="angular.material" />
-///<amd-dependency path="controllers/index" />
-///<amd-dependency path="directives/index" />
-///<amd-dependency path="services/index" />
 ///<amd-dependency path="angular.touch" />
 ///<amd-dependency path="angular.translate" />
+///<amd-dependency path="./controllers/index" />
+///<amd-dependency path="./directives/index" />
+///<amd-dependency path="./services/index" />
 ///<amd-dependency path="./services/ModuleLoaderServiceProvider" />
 
 import ng = require('angular');
@@ -16,6 +16,7 @@ var appModule = <IApplication> ng.module('app', [
     'ngMaterial',
     'ngTouch',
     'ngMessages',
+    'ngAnimate',
     'pascalprecht.translate',
     'app.controllers',
     'app.directives',

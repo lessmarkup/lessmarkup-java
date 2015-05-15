@@ -1,6 +1,7 @@
 package com.lessmarkup.engine.cache;
 
 import com.lessmarkup.framework.helpers.DependencyResolver;
+import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.interfaces.cache.CacheHandler;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
@@ -8,12 +9,8 @@ import com.lessmarkup.interfaces.data.ChangeListener;
 import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.structure.Tuple;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.OptionalLong;
-import java.util.Random;
+
+import java.util.*;
 import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -91,13 +88,15 @@ public class DataCacheImpl implements DataCache, ChangeListener {
             DomainModelProvider domainModelProvider = DependencyResolver.resolve(DomainModelProvider.class);
             
             for (Class<?> collectionType : collectionTypes) {
-                int collectionId = domainModelProvider.getCollectionId(collectionType);
-                List<CacheItem> collectionHandlers = this.hashedCollectionIds.get(collectionId);
-                if (collectionHandlers == null) {
-                    collectionHandlers = new ArrayList<>();
-                    this.hashedCollectionIds.put(collectionId, collectionHandlers);
+                OptionalInt collectionId = domainModelProvider.getCollectionId(collectionType);
+                if (collectionId.isPresent()) {
+                    List<CacheItem> collectionHandlers = this.hashedCollectionIds.get(collectionId.getAsInt());
+                    if (collectionHandlers == null) {
+                        collectionHandlers = new ArrayList<>();
+                        this.hashedCollectionIds.put(collectionId.getAsInt(), collectionHandlers);
+                    }
+                    collectionHandlers.add(cacheItem);
                 }
-                collectionHandlers.add(cacheItem);
             }
         }
     }
@@ -131,6 +130,7 @@ public class DataCacheImpl implements DataCache, ChangeListener {
         try {
             newObject.initialize(objectId);
         } catch (Exception e) {
+            LoggingHelper.logException(getClass(), e);
             remove(key);
             throw e;
         }
@@ -187,10 +187,12 @@ public class DataCacheImpl implements DataCache, ChangeListener {
         DomainModelProvider domainModelProvider = DependencyResolver.resolve(DomainModelProvider.class);
         
         for (Class<?> type : cacheItem.getCachedObject().getHandledCollectionTypes()) {
-            int collectionId = domainModelProvider.getCollectionId(type);
-            List<CacheItem> collectionHandlers = this.hashedCollectionIds.get(collectionId);
-            if (collectionHandlers != null) {
-                collectionHandlers.remove(cacheItem);
+            OptionalInt collectionId = domainModelProvider.getCollectionId(type);
+            if (collectionId.isPresent()) {
+                List<CacheItem> collectionHandlers = this.hashedCollectionIds.get(collectionId.getAsInt());
+                if (collectionHandlers != null) {
+                    collectionHandlers.remove(cacheItem);
+                }
             }
         }
         

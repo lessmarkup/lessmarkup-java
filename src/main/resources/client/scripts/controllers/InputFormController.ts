@@ -80,14 +80,16 @@ class InputFormController {
         this.sceService = sceService;
         this.serverConfiguration = serverConfiguration;
         this.resolver = resolver;
+        this.scope.title = definition.title;
 
+        scope.useCodemirror = _.some(definition.fields, (field: InputFieldDefinition): boolean => field.type == InputFieldTypes.CODE_TEXT);
         scope.submitError = '';
         scope.isApplying = false;
         scope.submitWithCaptcha = definition.submitWithCaptcha;
 
         scope.okDisabled = (form) => this.okDisabled(form);
 
-        scope.codeMirrorDefaultOptions = this.getCodeMirrorDefaultOptions();
+        scope.codeMirrorDefaultOptions = InputFormController.getCodeMirrorDefaultOptions();
 
         scope.isNewObject = object === null;
         scope.object = object != null ? _.cloneDeep(object) : {};
@@ -101,7 +103,7 @@ class InputFormController {
             return object[field.property];
         };
 
-        scope.getHelpText = (field) => this.onGetHelpText(field);
+        scope.getHelpText = (field) => InputFormController.onGetHelpText(field);
 
         scope.fieldVisible = (field) => {
             if (!field.visibleFunction) {
@@ -141,10 +143,10 @@ class InputFormController {
     }
 
     protected okDisabled(form: ng.IFormController): boolean {
-        return this.scope.isApplying || form.$invalid;
+        return this.scope.isApplying || (!_.isUndefined(form) && form.$invalid);
     }
 
-    private onGetHelpText(field: InputFieldDefinition): string {
+    private static onGetHelpText(field: InputFieldDefinition): string {
         var ret = field.helpText;
         if (ret == null) {
             ret = "";
@@ -152,7 +154,7 @@ class InputFormController {
         return ret;
     }
 
-    private getCodeMirrorDefaultOptions(): any {
+    private static getCodeMirrorDefaultOptions(): any {
         return {
             mode: 'text/html',
             lineNumbers: true,
@@ -288,7 +290,7 @@ class InputFormController {
     }
 
     private onCancel() {
-        this.dialogService.cancel('cancel');
+        this.dialogService.hide('cancel');
     }
 
     private onSubmit(form: ng.IFormController) {

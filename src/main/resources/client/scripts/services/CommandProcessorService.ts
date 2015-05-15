@@ -7,6 +7,7 @@ import CollectionUpdatesService = require('./collectionUpdates/CollectionUpdates
 import NavigationTreeService = require('./NavigationTreeService');
 import BroadcastEvents = require('../interfaces/BroadcastEvents');
 import ServerResponse = require('../datatypes/ServerResponse');
+import NodeConfiguration = require('../datatypes/NodeConfiguration');
 
 class CommandProcessorService {
 
@@ -35,10 +36,11 @@ class CommandProcessorService {
         this.navigationTree = navigationTree;
         this.qService = qService;
         this.path = initialData.path;
+        this.rootScope.$on(BroadcastEvents.NODE_LOADED, (event: ng.IAngularEvent, nodeConfiguration: NodeConfiguration) => this.onNodeLoaded(nodeConfiguration));
     }
 
-    public onPathChanged(path: string) {
-        this.path = path;
+    private onNodeLoaded(nodeConfiguration: NodeConfiguration) {
+        this.path = nodeConfiguration.path;
     }
 
     private onSuccess<T>(response: ng.IHttpPromiseCallbackArg<ServerResponse<T>>, defer: ng.IDeferred<T>): void {

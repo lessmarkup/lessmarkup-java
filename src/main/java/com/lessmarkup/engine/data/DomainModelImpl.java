@@ -30,14 +30,14 @@ class DomainModelImpl implements DomainModel {
     public DomainModelImpl() {
     }
     
-    static int getCollectionId(Class<?> collectionType) {
+    static OptionalInt getCollectionId(Class<?> collectionType) {
         Integer collectionId = collectionTypeToId.get(collectionType);
         
         if (collectionId == null) {
-            throw new ArrayIndexOutOfBoundsException();
+            return OptionalInt.empty();
         }
         
-        return (int) collectionId;
+        return OptionalInt.of(collectionId);
     }
     
     public static Class<?> getCollectionType(int collectionId) {

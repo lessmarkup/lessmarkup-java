@@ -1,4 +1,4 @@
-///<amd-dependency path="autolinker" />
+import Autolinker = require('autolinker');
 
 class FriendlyFormattingService {
 

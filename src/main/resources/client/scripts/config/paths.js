@@ -1,24 +1,44 @@
 var require = {
     paths: {
-        'jquery': '../lib/jquery/jquery',
-        'lodash': '../lib/lodash/lodash',
-        'angular': '../lib/angular/angular',
-        'angular.animate': '../lib/angular-animate/angular-animate',
-        'angular.aria': '../lib/angular-aria/angular-aria',
-        'angular.material': '../lib/angular-material/angular-material',
-        'angular.messages': '../lib/angular-messages/angular-messages',
-        'angular.spinner': '../lib/angular-spinner/angular-spinner',
-        'angular.translate': '../lib/angular-translate/angular-translate',
-        'angular.touch': '../lib/angular-touch/angular-touch',
-        'autolinker': '../lib/Autolinker.js/dist/Autolinker',
-        'bootstrap': '../lib/bootstrap/dist/js/bootstrap',
-        'ckeditor': '../lib/ckeditor/ckeditor',
-        'Codemirror': '../lib/codemirror/lib/codemirror',
-        'tinymce': '../lib/tinymce/tinymce',
-        'domready': '../lib/requirejs-domready/domReady',
+        'jquery': 'lib/jquery/jquery',
+        'lodash': 'lib/lodash/lodash',
+        'angular': 'lib/angular/angular',
+        'angular.animate': 'lib/angular-animate/angular-animate',
+        'angular.aria': 'lib/angular-aria/angular-aria',
+        'angular.material': 'lib/angular-material/angular-material',
+        'angular.messages': 'lib/angular-messages/angular-messages',
+        'angular.spinner': 'lib/angular-spinner/angular-spinner',
+        'angular.translate': 'lib/angular-translate/angular-translate',
+        'angular.touch': 'lib/angular-touch/angular-touch',
+        'autolinker': 'lib/Autolinker.js/dist/Autolinker',
+        'bootstrap': 'lib/bootstrap/dist/js/bootstrap',
+        'ckeditor': 'lib/ckeditor/ckeditor',
+        'tinymce': 'lib/tinymce/tinymce',
+        'domready': 'lib/requirejs-domready/domReady',
         'Recaptcha': 'http://www.google.com/recaptcha/api/js/recaptcha_ajax',
-        'requirejs.text': '../lib/requirejs-text/text',
-        'sha512': '../lib/cryptojslib/rollups/sha512'
+        'requirejs.text': 'lib/requirejs-text/text',
+        'sha512': 'lib/cryptojslib/rollups/sha512',
+        'codemirror': 'lib/codemirror/lib/codemirror',
+        'codemirror.htmlmixed': 'lib/codemirror/mode/htmlmixed/htmlmixed',
+        'codemirror.htmlembedded': 'lib/codemirror/mode/htmlembedded/htmlembedded',
+        'codemirror.htmlhint': 'lib/codemirror/addon/hint/html-hint',
+        'codemirror.xml': 'lib/codemirror/mode/xml/xml',
+        'codemirror.javascript': 'lib/codemirror/mode/javascript/javascript',
+        'codemirror.css': 'lib/codemirror/mode/css/css',
+        'codemirror.multiplex': 'lib/codemirror/addon/mode/multiplex',
+        'codemirror.xmlhint': 'lib/codemirror/addon/hint/xml-hint'
+    },
+    map: {
+        '*': {
+            '../lib/codemirror': 'codemirror',
+            '../../lib/codemirror': 'codemirror',
+            '../xml/xml': 'codemirror.xml',
+            '../javascript/javascript': 'codemirror.javascript',
+            '../css/css': 'codemirror.css',
+            '../htmlmixed/htmlmixed': 'codemirror.htmlmixed',
+            '../../addon/mode/multiplex': 'codemirror.multiplex',
+            'xml-hint': 'codemirror.xmlhint'
+        }
     },
     shim: {
         'angular':{
@@ -59,14 +79,14 @@ var require = {
             deps: ['jquery']
         },
         'ckeditor': {
-            deps: ['jquery']
+            deps: ['jquery'],
+            exports: 'CKEDITOR'
         },
-        'Codemirror': {
+        'codemirror': {
             deps: ['jquery']
         },
         'tinymce': {
             deps: ['jquery']
         }
-    },
-    deps: ['./bootstrap']
+    }
 };

@@ -1,0 +1,31 @@
+.configuration {
+  margin: 0;
+  padding: 0;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    padding: 0;
+    list-style-type: none;
+  }
+
+  > li > h2 {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    font-size: 16pt
+  }
+
+  ul > li {
+    display: inline-block;
+    border: solid 1px #aaa;
+    width:200px;
+    border-radius: 3px;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    padding: 5px;
+    text-align: center;
+  }
+}

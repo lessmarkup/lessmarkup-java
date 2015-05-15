@@ -1,3 +1,21 @@
-<label>{{label}}</label>
-<textarea ui-codemirror="codeMirrorDefaultOptions" ng-model="model[field.property]" ng-readonly="readOnly()" cols="10"></textarea>
+<style>
+    .CodeMirror {
+        line-height: normal;
+        height: 200px;
+    }
+    .CodeMirrorInput {
+        border-width: 1px !important;
+        border-style: solid;
+        border-radius: 3px;
+    }
+    .md-input-focused .CodeMirrorInput {
+        border-width: 2px !important;
+    }
+    md-input-container:not(.md-input-focused):not(.md-input-has-value) .CodeMirrorLabel {
+        padding-left: 40px;
+    }
+</style>
+<label class="CodeMirrorLabel">{{field.text | translate}}</label>
+<link href="[[#map]]lib/codemirror/lib/codemirror.css[[/map]]" rel="stylesheet" type="text/css">
+<ui-codemirror ng-model="object[field.property]" name="{{field.property}}" ng-required="field.required" readonly="readOnly(field)" options="{}"></ui-codemirror>
 <input-field-error></input-field-error>

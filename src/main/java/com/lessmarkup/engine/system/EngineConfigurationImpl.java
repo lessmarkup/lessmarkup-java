@@ -74,7 +74,12 @@ class EngineConfigurationImpl implements EngineConfiguration {
         if (!overridesInitialized) {
             overridesInitialized = true;
 
-            String configurationPath = servletConfig.getServletContext().getRealPath("/") + CONFIGURATION_FILE;
+            String rootPath = servletConfig.getServletContext().getRealPath("/");
+            if (rootPath.endsWith("/") || rootPath.endsWith("\\")) {
+                rootPath = rootPath.substring(0, rootPath.length()-1);
+            }
+
+            String configurationPath = rootPath + CONFIGURATION_FILE;
 
             File file = new File(configurationPath);
             if (file.exists()) {

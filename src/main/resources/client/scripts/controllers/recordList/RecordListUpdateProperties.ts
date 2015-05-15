@@ -7,3 +7,5 @@
 class RecordListUpdateProperties {
     filter: string;
 }
+
+export = RecordListUpdateProperties;

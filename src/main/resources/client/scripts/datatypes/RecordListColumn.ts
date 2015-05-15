@@ -4,10 +4,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import RecordListRecord = require('./RecordListRecord');
+
 class RecordListColumn {
     name: string;
     colSpan: number;
-    scope: any;
+    scope: string;
+    context: (obj: RecordListRecord) => any;
     ignoreOptions: boolean;
     sortable: boolean;
     sort: string;
@@ -18,3 +21,5 @@ class RecordListColumn {
     allowUnsafe: boolean;
     url: string;
 }
+
+export = RecordListColumn;

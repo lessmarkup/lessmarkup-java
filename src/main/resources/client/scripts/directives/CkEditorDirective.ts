@@ -4,13 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-///<amd-dependency path="ckeditor" />
-
 import _ = require('lodash');
-//import CKEDITOR = require('ckeditor');
+import ckeditor = require('ckeditor');
 
 interface CkEditorDirectiveScope extends ng.IScope {
-
 }
 
 class CkEditorOptions {
@@ -31,7 +28,7 @@ class CkEditorDirectiveLink {
     private options: CkEditorOptions;
     private scope: CkEditorDirectiveScope;
     private friendlyFormatting: FriendlyFormattingService;
-    private ck: any;
+    private editor: ckeditor.Editor;
     private ngModel: ng.INgModelController;
 
     constructor(scope: CkEditorDirectiveScope, element: JQuery, attrs, ngModel: ng.INgModelController, serverConfiguration: ServerConfiguration, friendlyFormatting: FriendlyFormattingService) {
@@ -42,10 +39,10 @@ class CkEditorDirectiveLink {
         this.ngModel = ngModel;
         this.initializeSmiles();
 
-        this.ck = CKEDITOR.replace(<any>element[0], this.options);
+        this.editor = ckeditor.replace(<any>element[0], this.options);
 
-        this.ck.on('change', () => this.applyChanges);
-        this.ck.on('key', () => this.applyChanges);
+        this.editor.on('change', () => this.applyChanges);
+        this.editor.on('key', () => this.applyChanges);
 
         ngModel.$render = () => this.render();
     }
@@ -57,7 +54,7 @@ class CkEditorDirectiveLink {
             text = this.friendlyFormatting.smilesToImg(text);
         }
 
-        this.ck.setData(text);
+        this.editor.setData(text);
     }
 
     private applyChanges() {
@@ -65,7 +62,7 @@ class CkEditorDirectiveLink {
     }
 
     private setViewValue() {
-        var text = this.ck.getData();
+        var text = this.editor.getData();
 
         if (this.friendlyFormatting.getSmilesExpression() != null) {
             text = text.replace(/<img\s+alt="([^"]*)"\s+src="[^"]*"\s+(?:style="[^"]*"\s+)?title="([^"]*)"\s+\/?>/gi, (match, alt, title) => {

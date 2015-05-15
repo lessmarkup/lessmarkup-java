@@ -8,6 +8,13 @@ import CommandProcessorService = require('../../services/CommandProcessorService
 import InputFormService = require('../../services/InputFormService');
 import NodeLoaderService = require('../../services/nodeLoader/NodeLoaderService');
 import BroadcastEvents = require('../../interfaces/BroadcastEvents');
+import RecordListUpdateProperties = require('./RecordListUpdateProperties');
+import RecordActionType = require('./RecordActionType');
+import RecordListAction = require('./RecordListAction');
+import RecordListControllerScope = require('./RecordListControllerScope');
+import RecordListRecord = require('../../datatypes/RecordListRecord');
+import RecordListColumn = require('../../datatypes/RecordListColumn');
+import RecordListControllerConfiguration = require('./RecordListControllerConfiguration');
 
 class RecordListController {
 
@@ -100,17 +107,19 @@ class RecordListController {
         scope.sortColumn = (column: RecordListColumn) => this.sortColumn(column);
 
         scope.navigateToLink = (link) => {
-            this.nodeLoader.loadNode(this.nodeLoader.getPath() + "/" + this.extractLink(link.url, this.currentRecord));
+            this.nodeLoader.loadNode(this.nodeLoader.getPath() + "/" + RecordListController.extractLink(link.url, this.currentRecord));
         };
 
         scope.linkUrl = (link) => {
             if (this.currentRecord === null) {
                 return "";
             }
-            return this.nodeLoader.getPath() + "/" + this.extractLink(link.url, this.currentRecord);
+            return this.nodeLoader.getPath() + "/" + RecordListController.extractLink(link.url, this.currentRecord);
         };
 
-        scope.getColumnLink = (column, row) => this.nodeLoader.getPath() + "/" + this.extractLink(column.url, row);
+        scope.getColumnLink = (column, row) => this.nodeLoader.getPath() + "/" + RecordListController.extractLink(column.url, row);
+
+        scope.executeAction = (action: RecordListAction) => this.executeAction(action);
 
         this.initializeColumns();
 
@@ -140,7 +149,10 @@ class RecordListController {
 
                 this.commandProcessor.sendCommand(action.name, { newObject: record })
                     .then(
-                    (data) => this.handleActionResult(data, null, deferred),
+                    (data) => {
+                        this.handleActionResult(data, null);
+                        deferred.resolve();
+                    },
                     (message: string) => deferred.reject(message) );
 
                 return deferred.promise;
@@ -164,9 +176,9 @@ class RecordListController {
        _.forEach(this.scope.columns, (column: RecordListColumn) => {
             column.colSpan = 1;
             if (!column.scope || !column.scope.length) {
-                column.scope = (obj) => { return obj.row; };
+                column.context = (obj: RecordListRecord) => { return obj; };
             } else {
-                column.scope = new Function("obj", "with(obj) { return " + column.scope + "; }");
+                column.context = <(obj: RecordListRecord) => any>(new Function("obj", "with(obj) { return " + column.scope + "; }"));
             }
         });
     }
@@ -206,50 +218,53 @@ class RecordListController {
         });
     }
 
+    private onRecordIdsReceived(recordIds: number[]) {
+        this.scope.hasNewRecords = false;
+
+        var savedRecords: {[key: number]: RecordListRecord} = {};
+
+        _.forEach(this.records, (record: RecordListRecord) => {
+            if (record.loaded) {
+                savedRecords[record.id] = record;
+            }
+        });
+
+        this.records = [];
+
+        _.forEach(recordIds, (recordId: number) => {
+            var record: RecordListRecord;
+
+            if (savedRecords.hasOwnProperty(recordId.toString())) {
+                record = savedRecords[recordId];
+            } else {
+                record = this.createNewRecord(recordId);
+            }
+            this.records.push(record);
+        });
+
+        this.loadVisibleRecords();
+    }
+
     private refreshNewRecords() {
-        this.commandProcessor.sendCommand<GetRecordIdsData>("getRecordIds")
-            .then((data2: GetRecordIdsData) => {
-                this.scope.hasNewRecords = false;
-
-                var savedRecords: {[key: number]: RecordListRecord} = {};
-
-                for (var i = 0; i < this.records.length; i++) {
-                    var record = this.records[i];
-                    if (record.loaded) {
-                        savedRecords[record.id] = record;
-                    }
-                }
-
-                this.records = [];
-
-                for (var i = 0; i < data2.recordIds.length; i++) {
-                    var recordId = data2.recordIds[i];
-
-                    var record: RecordListRecord;
-
-                    if (savedRecords.hasOwnProperty(recordId.toString())) {
-                        record = savedRecords[recordId];
-                    } else {
-                        record = this.createNewRecord(recordId);
-                    }
-                    this.records.push(record);
-                }
-
-                this.loadVisibleRecords();
+        this.commandProcessor.sendCommand<any>("getRecordIds")
+            .then((response: any) => {
+                this.onRecordIdsReceived(response.recordIds);
             });
     }
 
     private createNewRecord(recordId: number): RecordListRecord {
         var record: RecordListRecord = new RecordListRecord();
         record.loaded = false;
-        for (var i = 0; i < this.scope.columns.length; i++) {
-            record[this.scope.columns[i].name] = "";
-        }
+
+        _.forEach(this.scope.columns, (column: RecordListColumn) => {
+            record[column.name] = "";
+        });
+
         record.id = recordId;
         return record;
     }
 
-    private createRecordCopy(record: RecordListRecord): RecordListRecord {
+    private static createRecordCopy(record: RecordListRecord): RecordListRecord {
         record.loaded = true;
         return record;
     }
@@ -327,7 +342,7 @@ class RecordListController {
         this.scope.refreshNewRecords();
     }
 
-    private onDataReceived(data) {
+    private onDataReceived(data: any) {
     }
 
 
@@ -448,7 +463,8 @@ class RecordListController {
 
             this.commandProcessor.sendCommand("modifyRecord", { modifiedObject: record })
                 .then((data) => {
-                    this.handleActionResult(data, index, deferred);
+                    this.handleActionResult(data, index);
+                    deferred.resolve();
                 }, (message: string) => {
                     deferred.reject(message);
             });
@@ -457,83 +473,85 @@ class RecordListController {
         });
     }
 
-    private handleActionResult(data: any, index: number, deferred: ng.IDeferred<void>) {
+    private handleActionResult(data: any, index: number) {
+
+        if (data === null) {
+            return;
+        }
 
         this.onDataReceived(data);
 
-        if (data !== null && data.redirect && data.redirect.length) {
-            if (deferred != null) {
-                deferred.resolve();
-            }
+        var redirect = _.get(data, 'redirect', '');
 
-            this.nodeLoader.loadNode(data.redirect);
+        if (redirect.length > 0) {
+            this.nodeLoader.loadNode(redirect);
             return;
         }
 
-        if (data !== null && data.message && data.message.length) {
-            if (deferred != null) {
-                deferred.resolve();
-            }
-            this.inputForm.message(data.message, "Information");
+        var message = _.get(data, 'message', '');
+
+        if (message.length) {
+            this.inputForm.message(message, "Information");
             return;
         }
 
-        if (data !== null && data.hasOwnProperty("removed")) {
+        if (_.get(data, 'removed', false)) {
             this.hideOptions();
             this.records.splice(index, 1);
             this.loadVisibleRecords();
             return;
         }
 
-        if (data !== null && data.hasOwnProperty("reset")) {
+        if (_.get(data, 'reset', false)) {
             this.records = [];
             this.refreshNewRecords();
             return;
         }
 
-        if (data === null || !data.hasOwnProperty("record")) {
-            if (deferred != null) {
-                deferred.resolve();
-            }
+        var record: RecordListRecord = _.get(data, 'record', null);
+
+        if (record == null) {
             return;
         }
 
-        var isNew = data.hasOwnProperty("isNew") && data.isNew;
-        var newIndex = data.hasOwnProperty("index") ? data.index : -1;
+        var isNew = _.get(data, 'isNew', false);
+        var newIndex = _.get(data, 'index', -1);
 
-        var record = this.createRecordCopy(data.record);
+        var record = RecordListController.createRecordCopy(record);
 
         if (!isNew && index >= 0 && (newIndex === index || newIndex === -1)) {
             this.records[index] = record;
             this.loadVisibleRecords();
-        } else {
-            this.hideOptions();
-            if (!isNew) {
-                this.records.splice(index, 1);
-            }
-            if (newIndex >= 0) {
-                this.records.splice(data.index, 0, record);
-            } else {
-                newIndex = this.records.length;
-                this.records.push(record);
-            }
-            if (!data.hasOwnProperty("page") || data.page === "last") {
-                var totalItems = this.records.length;
-                var itemsPerPage = this.scope.pageSize;
-                var pageCount = ((totalItems + itemsPerPage - 1) / itemsPerPage) | 0;
-                if (pageCount <= 1) {
-                    this.loadVisibleRecords();
-                } else {
-                    var page = (newIndex / itemsPerPage) + 1;
-                    this.showPage(page);
-                }
-            } else {
-                this.loadVisibleRecords();
-            }
+            return;
         }
 
-        if (deferred != null) {
-            deferred.resolve();
+        this.hideOptions();
+
+        if (!isNew) {
+            this.records.splice(index, 1);
+        }
+
+        if (newIndex >= 0) {
+            this.records.splice(data.index, 0, record);
+        } else {
+            newIndex = this.records.length;
+            this.records.push(record);
+        }
+
+        var page = _.get(data, 'page', 'last');
+
+        if (page !== "last") {
+            this.loadVisibleRecords();
+            return;
+        }
+
+        var totalItems = this.records.length;
+        var itemsPerPage = this.scope.pageSize;
+        var pageCount = ((totalItems + itemsPerPage - 1) / itemsPerPage) | 0;
+        if (pageCount <= 1) {
+            this.loadVisibleRecords();
+        } else {
+            this.showPage((newIndex / itemsPerPage) + 1);
         }
     }
 
@@ -567,12 +585,15 @@ class RecordListController {
             recordId: this.currentRecordId
         };
 
-        function sendCommand(): ng.IPromise<void> {
-            var deferred: ng.IDeferred<void> = this.qService.defer();
+        var sendCommand = ():ng.IPromise<void> => {
+            var deferred: ng.IDeferred<void> = this.qService.defer<void>();
             this.commandProcessor.sendCommand(action.name, actionData)
-                .then((data) => this.handleActionResult(data, index, deferred));
+                .then((data) => {
+                    this.handleActionResult(data, index);
+                    deferred.resolve();
+                });
             return deferred.promise;
-        }
+        };
 
         if (action.type === RecordActionType.RECORD_INITIALIZE_CREATE) {
             this.commandProcessor.sendCommand(action.name, actionData)
@@ -580,7 +601,7 @@ class RecordListController {
                 if (data.message && data.message.length > 0) {
                     this.inputForm.message(data.message, "Information");
                 } else {
-                    this.inputForm.editObject(data.record, action.parameter, (object) => {
+                    this.inputForm.editObject(_.get(data, 'record', null), action.parameter, (object) => {
                         actionData.newObject = object;
                         return sendCommand();
                     });
@@ -599,7 +620,7 @@ class RecordListController {
         }
     }
 
-    private extractLink(text: string, row: RecordListRow) {
+    private static extractLink(text: string, row: RecordListRecord) {
         var link = text;
         var offset = 0;
         while (true) {
@@ -788,7 +809,7 @@ class RecordListController {
         for (var i = 0; i < updated.length; i++) {
             var source = updated[i];
             var recordId = source.id;
-            var target = this.createRecordCopy(source);
+            var target = RecordListController.createRecordCopy(source);
 
             for (var j = 0; j < this.records.length; j++) {
                 var currentRecord = this.records[j];
@@ -818,23 +839,24 @@ class RecordListController {
     }
 
     private initializeRecords() {
-        for (var i = 0; i < this.configuration.records.length; i++) {
-            var source = this.configuration.records[i];
+
+        _.forEach(this.configuration.records, (source: RecordListRecord) => {
             var recordId = source.id;
 
-            for (var j = 0; j < this.configuration.records.length; j++) {
-                if (this.records[j].id !== recordId) {
-                    continue;
-                }
-                var target = this.records[j];
-                for (var property in source) {
-                    target[property] = source[property];
-                }
+            var target = _.find(this.records, (record: RecordListRecord) => {
+                return record.id === recordId;
+            });
 
-                target.loaded = true;
-                break;
+            if (!target) {
+                return;
             }
-        }
+
+            _.forOwn(source, (value, key) => {
+                target[key] = value;
+            });
+
+            target.loaded = true;
+        });
     }
 }
 

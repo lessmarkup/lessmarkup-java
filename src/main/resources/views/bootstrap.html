@@ -1,11 +1,11 @@
 <script type="text/javascript" src="[[#map]]scripts/config/paths.js[[/map]]"></script>
 <script type="text/javascript">
     document.getElementById("noscript").innerHTML = "";
-    require.baseUrl = "[[#map]]scripts[[/map]]";
+    require.baseUrl = "[[#map]][[/map]]";
 </script>
 <script type="text/javascript" src="[[#map]]lib/requirejs/require.js[[/map]]"></script>
 <script type="text/javascript">
-    require(['app', 'jquery'], function(app, $) {
+    require(['scripts/app', 'jquery'], function(app, $) {
         var footerHeight = 0;
         $(window).resize(function() {
             var newFooterHeight = $('footer').outerHeight();

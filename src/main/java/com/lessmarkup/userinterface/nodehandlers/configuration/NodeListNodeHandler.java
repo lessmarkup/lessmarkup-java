@@ -63,7 +63,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
     public NodeListNodeHandler(ModuleProvider moduleProvider, DataCache dataCache) {
         this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;
-        addScript("controllers/nodelist");
+        addScript("scripts/controllers/NodeListController");
     }
 
     @Override

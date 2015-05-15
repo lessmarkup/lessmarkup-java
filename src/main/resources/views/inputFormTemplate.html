@@ -1,15 +1,15 @@
-<div ng-form="form">
-    <div class="modal-header">
-        <h3 class="modal-title">{{definition.title}}</h3>
-    </div>
-    <div class="modal-body">
+<md-dialog ng-form="form" aria-label="{{title}}" flex="80">
+    <md-dialog-content>
+        <md-subheader>{{title}}</md-subheader>
+    </md-dialog-content>
+    <md-content>
         [[>views/inputFormTemplateBody.html]]
-    </div>
-    <div class="modal-footer">
+    </md-content>
+    <div class="md-actions">
         <md-button class="md-raised md-primary" ng-click="submit(form)" ng-disabled="okDisabled(form)">
-            <span>[[#text]]ButtonOk[[/text]]</span>
-            <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0,position:'relative'}" ng-show="isApplying"></span>
+            <span>{{ 'Main.ButtonOk' | translate }}</span>
+            <md-progress-circular ng-show="isApplying" md-mode="indeterminate"></md-progress-circular>
         </md-button>
-        <md-button class="md-raised" ng-click="cancel()" ng-disabled="isApplying">[[#text]]ButtonCancel[[/text]]</md-button>
+        <md-button class="md-raised" ng-click="cancel()" ng-disabled="isApplying">{{ 'Main.ButtonCancel' | translate }}</md-button>
     </div>
-</div>
+</md-dialog>

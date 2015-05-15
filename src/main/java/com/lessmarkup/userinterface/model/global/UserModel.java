@@ -16,7 +16,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ class UserModelCollection implements EditableModelCollection<UserModel> {
 
     @Override
     public int getCollectionId() {
-        return domainModelProvider.getCollectionId(User.class);
+        return domainModelProvider.getCollectionId(User.class).getAsInt();
     }
 
     @Override

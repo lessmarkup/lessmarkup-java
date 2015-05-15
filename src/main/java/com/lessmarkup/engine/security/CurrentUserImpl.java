@@ -377,7 +377,7 @@ public class CurrentUserImpl implements CurrentUser {
             if (allowAdmin && email.equals(engineConfiguration.getNoAdminName()) && noGlobalAdminUser(model)) {
                 LoggingHelper.getLogger(getClass()).info("No admin defined and user email is equal to NoAdminName");
 
-                if (!loginUser(email, email, -1, false)) {
+                if (!loginUser(email, email, -1, savePassword)) {
                     return false;
                 }
                 

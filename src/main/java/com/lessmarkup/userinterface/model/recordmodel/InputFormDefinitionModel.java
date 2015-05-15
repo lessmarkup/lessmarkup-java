@@ -59,7 +59,7 @@ public class InputFormDefinitionModel {
             return;
         }
 
-        this.title = definition.getTitleTextId();
+        this.title = LanguageHelper.getText(definition.getModuleType(), definition.getTitleTextId());
 
         if (definition.isSubmitWithCaptcha()) {
             EngineConfiguration engineConfiguration = RequestContextHolder.getContext().getEngineConfiguration();

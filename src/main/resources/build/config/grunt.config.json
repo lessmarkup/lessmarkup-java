@@ -95,5 +95,18 @@
       "src": "../css/main.css",
       "dest": "../css/main.min.css"
     }
+  },
+  "haml": {
+    "default": {
+      "files": {
+      }
+    }
+  },
+  "csslint": {
+    "default": {
+      "options": {
+      },
+      "src": ["../css/main.css"]
+    }
   }
 }

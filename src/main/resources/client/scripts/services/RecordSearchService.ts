@@ -34,7 +34,7 @@ class RecordSearchService {
 
         this.searchResults = [];
 
-        if (response.results && response.results.length > 0) {
+        if (_.isArray(response.results) && response.results.length > 0) {
             this.searchResults = response.results;
 
             _.forEach(this.searchResults, (searchResult: SearchResult) => {

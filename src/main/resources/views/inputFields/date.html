@@ -1,8 +1,8 @@
-<label>{{label}}</label>
+<label>{{field.text | translate}}</label>
 <span>
     <input type="text" ng-model="model"
-        ng-readonly="readonly()" datepicker-popup close-text="[[#text]]Close[[/text]]"
-        clear-text="[[#text]]Clear[[/text]]" current-text="[[#text]]Today[[/text]]"
+        ng-readonly="readonly(field)" datepicker-popup close-text="{{'Main.Close' | translate}}"
+        clear-text="{{ 'Main.Clear' | translate }}" current-text="{{ 'Main.Today' || translate }}"
         is-open="field.isOpen"/>
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="showDateTimeField($event, field)">
@@ -10,3 +10,4 @@
         </button>
     </span>
 </span>
+<input-field-error></input-field-error>

@@ -1,5 +1,6 @@
-<label>{{label}}</label>
+<label>{{field.text | translate}}</label>
 <div>
-    <textarea ng-if="!readOnly()" ck-editor ng-model="model[field.property]" cols="10"></textarea>
-    <div ng-if="readOnly()" ng-bind-html="model[field.property]"></div>
+    <textarea ng-if="!readOnly(field)" ck-editor ng-model="object[field.property]" cols="10"></textarea>
+    <div ng-if="readOnly(field)" ng-bind-html="object[field.property]"></div>
 </div>
+<input-field-error></input-field-error>

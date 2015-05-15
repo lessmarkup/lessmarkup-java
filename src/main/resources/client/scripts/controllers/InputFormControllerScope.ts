@@ -6,11 +6,13 @@
 
 interface InputFormControllerScope extends ng.IScope {
     fields: InputFieldDefinition[];
+    title: string;
     submitError: string;
     isApplying: boolean;
     submitWithCaptcha: boolean;
     okDisabled(form: ng.IFormController): boolean;
-    codeMirrorDefaultOptions: CodeMirror.EditorConfiguration;
+    codeMirrorDefaultOptions: any;
+    useCodemirror: boolean;
     isNewObject: boolean;
     object: any;
     getFieldTemplate: (field: InputFieldDefinition) => string;

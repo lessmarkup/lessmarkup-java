@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.lessmarkup.framework.helpers.DependencyResolver;
+import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
@@ -175,6 +176,7 @@ public class JsonEntryPointModel {
             response.add("data", resultData);
             response.addProperty("success", true);
         } catch (Exception e) {
+            LoggingHelper.logException(getClass(), e);
             response.addProperty("success", false);
             String message = e.getMessage();
             response.addProperty("message", StringHelper.getMessage(e));

@@ -5,10 +5,7 @@ import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Node;
 import com.lessmarkup.dataobjects.NodeAccess;
-import com.lessmarkup.framework.helpers.DependencyResolver;
-import com.lessmarkup.framework.helpers.JsonSerializer;
-import com.lessmarkup.framework.helpers.LanguageHelper;
-import com.lessmarkup.framework.helpers.StringHelper;
+import com.lessmarkup.framework.helpers.*;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.cache.DataCache;
@@ -100,7 +97,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
                         }
                     });
         } catch (Exception ex) {
-            Logger.getLogger(NodeCacheImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, ex);
         }
         
         Optional<CachedNodeInformationImpl> root = cachedNodesImpl.stream().filter(n -> !n.getParentNodeId().isPresent()).findFirst();
@@ -117,6 +114,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
             rootImpl.setNodeId(1);
             rootImpl.setTitle("Home");
             rootImpl.setHandlerId(DefaultRootNodeHandler.class.getSimpleName());
+            rootImpl.setHandlerType(DefaultRootNodeHandler.class);
             rootImpl.setVisible(true);
             cachedNodesImpl.add(rootImpl);
         }
@@ -129,7 +127,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         
         addVirtualNode(ConfigurationRootNodeHandler.class, 
                 Constants.NodePath.CONFIGURATION, 
-                LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.CONFIGURATION),
+                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.CONFIGURATION),
                 Constants.ModuleType.MAIN,
                 NodeAccessType.NO_ACCESS);
         
@@ -300,13 +298,11 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
 
     @Override
     public NodeHandler getNodeHandler(String path, GetNodeHandlerPreprocess filter) {
-        Logger logger = Logger.getLogger(NodeCacheImpl.class.getName());
-
         if (path != null) {
             try {
                 path = URLDecoder.decode(path, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
-                logger.log(Level.SEVERE, null, ex);
+                LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -320,7 +316,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         Tuple<CachedNodeInformation, String> foundNode = getNode(path);
        
         if (foundNode == null) {
-            logger.log(Level.INFO, "Cannot get node for path ''{0}''", path);
+            LoggingHelper.getLogger(getClass()).log(Level.INFO, "Cannot get node for path ''{0}''", path);
             return null;
         }
         
@@ -329,16 +325,16 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
 
         if (node.isLoggedIn() && !currentUser.getUserId().isPresent()) {
-            logger.log(Level.INFO, "This node requires user to be logged in");
+            LoggingHelper.getLogger(getClass()).info("This node requires user to be logged in");
             return null;
         }
-        
-        logger.log(Level.INFO, "Checking node access rights");
+
+        LoggingHelper.getLogger(getClass()).info("Checking node access rights");
         
         NodeAccessType accessType = node.checkRights(currentUser);
         
         if (accessType == NodeAccessType.NO_ACCESS) {
-            logger.log(Level.INFO, "Current user has no access to specified node");
+            LoggingHelper.getLogger(getClass()).info("Current user has no access to specified node");
             return null;
         }
         
@@ -347,7 +343,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         }
         
         if (node.getHandlerType() == null) {
-            logger.log(Level.WARNING, "Node handler is not set for node path ''{0}''", path);
+            LoggingHelper.getLogger(getClass()).log(Level.WARNING, "Node handler is not set for node path ''{0}''", path);
             return null;
         }
 

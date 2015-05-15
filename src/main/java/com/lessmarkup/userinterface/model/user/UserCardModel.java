@@ -33,7 +33,7 @@ class UserCardModelCollection implements ModelCollection<UserCardModel> {
 
     @Override
     public int getCollectionId() {
-        return domainModelProvider.getCollectionId(User.class);
+        return domainModelProvider.getCollectionId(User.class).getAsInt();
     }
 
     @Override

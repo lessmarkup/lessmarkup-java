@@ -1,4 +1,4 @@
 <input type="file" style="display: none"/>
-<button class="btn btn-default" style="margin-right: 0.5em" ng-click="chooseFile()">[[#text]]ChooseFile[[/text]]</button>
-<button class="btn btn-default" style="margin-right: 0.5em" ng-click="clear()">[[#text]]ClearFile[[/text]]</button>
+<md-button ng-click="chooseFile()">{{ 'Main.ChooseFile' | translate }}</md-button>
+<md-button ng-click="clear()">{{ 'Main.ClearFile' | translate }}</md-button>
 <span>{{comment}}</span>

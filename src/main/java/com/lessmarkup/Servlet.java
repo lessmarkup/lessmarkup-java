@@ -130,7 +130,9 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        LoggingHelper.getLogger(getClass()).info("Start of doGet");
         processRequest(request, response);
+        LoggingHelper.getLogger(getClass()).info("End of doGet");
     }
 
     /**
@@ -144,7 +146,9 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        LoggingHelper.getLogger(getClass()).info("Start of doPost");
         processRequest(request, response);
+        LoggingHelper.getLogger(getClass()).info("End of doPost");
     }
 
     /**

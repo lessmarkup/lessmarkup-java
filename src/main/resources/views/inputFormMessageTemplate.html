@@ -1,9 +1,11 @@
-<div class="modal-header">
-    <h3 class="modal-title">{{title}}</h3>
-</div>
-<div class="modal-body">
-    <p>{{message}}</p>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" ng-click="submit()">[[#text]]ButtonOk[[/text]]</button>
-</div>
+<md-dialog class="input-form" aria-label="{{title}}">
+    <md-dialog-content>
+        <md-subheader>{{title}}</md-subheader>
+    </md-dialog-content>
+    <md-content>
+        <p>{{message}}</p>
+    </md-content>
+    <div class="md-actions">
+        <md-button class="md-primary" ng-click="close()">{{ 'Main.ButtonOk' | translate }}</md-button>
+    </div>
+</md-dialog>

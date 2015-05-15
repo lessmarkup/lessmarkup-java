@@ -4,6 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-class RecordListRow {
-
+class RecordListRecord {
+    loaded: boolean;
+    id: number;
+    isOdd: boolean;
 }
+
+export = RecordListRecord;

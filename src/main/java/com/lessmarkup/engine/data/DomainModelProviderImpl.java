@@ -8,6 +8,8 @@ import com.lessmarkup.interfaces.module.ModuleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.OptionalInt;
+
 @Component
 class DomainModelProviderImpl implements DomainModelProvider {
 
@@ -49,7 +51,7 @@ class DomainModelProviderImpl implements DomainModelProvider {
     }
 
     @Override
-    public int getCollectionId(Class<?> collectionType) {
+    public OptionalInt getCollectionId(Class<?> collectionType) {
         return DomainModelImpl.getCollectionId(collectionType);
     }
 }

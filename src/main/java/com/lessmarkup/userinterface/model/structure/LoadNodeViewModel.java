@@ -79,7 +79,7 @@ public class LoadNodeViewModel {
             
             this.title = nodeTitle;
             this.path = nodePath;
-            
+
             return false;
         });
 

@@ -44,9 +44,6 @@
     "bootstrap.timepicker/bootstrap.timepicker.d.ts": {
       "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
     },
-    "lodash/lodash.d.ts": {
-      "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
-    },
     "jasmine/jasmine.d.ts": {
       "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
     },
@@ -63,9 +60,6 @@
       "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
     },
     "recaptcha/recaptcha.d.ts": {
-      "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
-    },
-    "ckeditor/ckeditor.d.ts": {
       "commit": "61d066fef5a1ac9e2389b51b9cf88746b7bbfde9"
     }
   }

@@ -1,0 +1,152 @@
+.grid-control {
+  border-top: solid 1px #aaa;
+  border-bottom: solid 1px #aaa;
+  width: 100%;
+
+  th {
+    font-weight: bold;
+    background: #eee;
+    border-bottom: solid 1px #ccc;
+    padding: 5px;
+  }
+
+  .options-panel {
+    border: solid 1px black;
+    background: #aaa;
+
+    td {
+      padding: 5px 8px;
+
+      * {
+        margin: 3px 0;
+        margin-right: 10px;
+        display: inline-block;
+      }
+    }
+  }
+
+  &.show-options .options-row {
+    border: solid 1px black;
+    border-bottom: solid 1px #ccc;
+  }
+
+  &.show-options tr.options-row .grid-data {
+    background: none;
+  }
+
+  &.show-options .options-space {
+    height: 5px;
+  }
+
+  .grid-data {
+    padding: 5px;
+    vertical-align: top;
+  }
+
+  &.has-options .grid-data:not(.ignore-options) {
+    cursor: pointer;
+  }
+
+  tr.odd .grid-data {
+    background: #f0f0f0;
+  }
+
+  .grid-left {
+    text-align: left;
+  }
+
+  .grid-right {
+    text-align: right;
+  }
+
+  .grid-center {
+    text-align: center;
+  }
+
+  .grid-cell-options {
+    text-align: center;
+    cursor: pointer;
+    width: 1.7em;
+
+    > span:before {
+      font-family: 'FontAwesome', serif;
+      content: "\f141";
+    }
+  }
+
+  th {
+    position: relative;
+  }
+
+  .toggle-search-button {
+    position: absolute;
+    right: 4px;
+
+    button {
+      padding: 0 5px;
+      margin: 0;
+    }
+  }
+
+  .search-row {
+    > td {
+      padding: 8px;
+      background: #aaa;
+    }
+
+    td {
+      input {
+        display: inline-block;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      button {
+        padding: 6px 10px;
+        margin-left: 7px;
+      }
+    }
+
+    table {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      width: 100%;
+
+      td:last-child {
+        width: 10px;
+      }
+    }
+  }
+}
+
+.grid-control-panel-bottom {
+  margin-top: 10px;
+  margin-bottom: 1em;
+}
+
+.grid-control-panel-top {
+  margin-bottom: 20px;
+}
+
+.grid-control-panel-bottom button, .grid-control-panel-top button {
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.recordlist-refresh-panel {
+  text-align: center;
+
+  button {
+    margin: 1em;
+  }
+}
+
+.grid-refreshing {
+  opacity: 0.4;
+  cursor: wait;
+}
+
+.pagination-top {
+  margin-top: 0;
+}

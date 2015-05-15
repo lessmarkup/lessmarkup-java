@@ -1,6 +1,7 @@
 ﻿<md-content layout-padding layout="column">
+
     <div ng-repeat="field in fields | orderBy: 'position'">
-        <md-input-container ng-include="getFieldTemplate(field)">
+        <md-input-container ng-include="getFieldTemplate(field)" ng-if="fieldVisible(field)">
         </md-input-container>
     </div>
 

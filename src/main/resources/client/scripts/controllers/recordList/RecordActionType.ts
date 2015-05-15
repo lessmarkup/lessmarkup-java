@@ -10,3 +10,5 @@ class RecordActionType {
     public static RECORD_INITIALIZE_CREATE = "RECORD_INITIALIZE_CREATE";
     public static CREATE = "CREATE";
 }
+
+export = RecordActionType;

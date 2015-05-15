@@ -1,3 +1,3 @@
-<label>{{label}}</label>
-<input type="number" ng-model="model[field.property]" ng-readonly="readOnly()" ng-required="required" />
+<label>{{field.text | translate}}</label>
+<input type="number" ng-model="object[field.property]" ng-readonly="readOnly(field)" ng-required="required" />
 <input-field-error></input-field-error>

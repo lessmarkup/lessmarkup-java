@@ -398,10 +398,6 @@ public class UserSecurityImpl implements UserSecurity {
 
                 OffsetDateTime expirationTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(objectStream.readLong()), ZoneOffset.UTC);
 
-                if (expirationTime.isBefore(OffsetDateTime.now())) {
-                    return null;
-                }
-
                 String remoteAddress = objectStream.readUTF();
 
                 if (!RequestContextHolder.getContext().getRemoteAddress().equals(remoteAddress)) {
@@ -413,6 +409,10 @@ public class UserSecurityImpl implements UserSecurity {
                 ticket.setName(objectStream.readUTF());
                 ticket.setEmail(objectStream.readUTF());
                 ticket.setPersistent(objectStream.readBoolean());
+
+                if (!ticket.isPersistent() && expirationTime.isBefore(OffsetDateTime.now())) {
+                    return null;
+                }
 
                 return ticket;
             }

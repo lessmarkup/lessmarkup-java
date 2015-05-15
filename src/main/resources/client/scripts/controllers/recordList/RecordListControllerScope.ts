@@ -4,6 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import RecordListAction = require('./RecordListAction');
+import RecordListRecord = require('../../datatypes/RecordListRecord');
+import RecordListColumn = require('../../datatypes/RecordListColumn');
+import RecordListControllerConfiguration = require('./RecordListControllerConfiguration');
+
 interface RecordListControllerScope extends ng.IScope {
     hasOptionsBar: boolean;
     optionsTemplate: string;
@@ -40,4 +45,7 @@ interface RecordListControllerScope extends ng.IScope {
     navigateToLink: (link) => void;
     linkUrl: (link) => string;
     getColumnLink: (column, row) => string;
+    executeAction: (action: RecordListAction) => void;
 }
+
+export = RecordListControllerScope;

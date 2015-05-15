@@ -11,3 +11,7 @@ declare class Autolinker {
     constructor();
     link(textOrHtml: string): string;
 }
+
+declare module "autolinker" {
+    export = Autolinker;
+}

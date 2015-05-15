@@ -10,8 +10,8 @@
         <span ng-bind="submitError"></span>
     </div>
     <button class="btn btn-primary" ng-click="submit()">
-        <span>[[#text]]ButtonYes[[/text]]</span>
-        <span us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0}" ng-show="isApplying"></span>
+        <span>{{ 'Main.ButtonYes' | translate }}</span>
+        <md-progress-circular ng-show="isApplying" md-mode="indeterminate"></md-progress-circular>
     </button>
-    <button class="btn btn-warning" ng-click="cancel()">[[#text]]ButtonNo[[/text]]</button>
+    <button class="btn btn-warning" ng-click="cancel()">{{ 'Main.ButtonNo' | translate }}</button>
 </div>

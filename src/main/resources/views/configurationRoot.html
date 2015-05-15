@@ -1,9 +1,9 @@
 <ul ng-controller="configuration" class="configuration">
     <li ng-repeat="group in groups">
-        <h2 ng-bind="group.title"></h2>
+        <h2 ng-if="groups.length > 1" ng-bind="group.title | translate"></h2>
         <ul>
             <li ng-repeat="item in group.items">
-                <a href="{{rootPath+item.path}}" ng-click="navigateToView(rootPath+item.path)" ng-bind="item.title"></a>
+                <node-link path="item.path" ng-bind="item.title | translate"></node-link>
             </li>
         </ul>
     </li>

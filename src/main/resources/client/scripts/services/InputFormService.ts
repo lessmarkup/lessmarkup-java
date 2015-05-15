@@ -1,5 +1,5 @@
-import ng = require('angular');
 import _ = require('lodash');
+import $ = require('jquery');
 
 class FormRequestCommand {
     id: string;
@@ -16,67 +16,40 @@ class InputFormService {
     private definitions: {[key: string]: InputFormDefinition} = {};
     private commandProcessor: CommandProcessorService;
     private moduleLoader: ModuleLoaderService;
+    private serverConfiguration: ServerConfiguration;
 
-    constructor(rootScope: ng.IRootScopeService, qService: ng.IQService, dialog: angular.material.MDDialogService, commandProcessor: CommandProcessorService, moduleLoader: ModuleLoaderService) {
+    constructor(rootScope: ng.IRootScopeService,
+                qService: ng.IQService,
+                dialog: angular.material.MDDialogService,
+                commandProcessor: CommandProcessorService,
+                moduleLoader: ModuleLoaderService,
+                serverConfiguration: ServerConfiguration) {
         this.dialogService = dialog;
         this.qService = qService;
         this.commandProcessor = commandProcessor;
         this.moduleLoader = moduleLoader;
+        this.serverConfiguration = serverConfiguration;
     }
 
     private fillRichTextModules(requires: string[]) {
-        requires.push("lib/ckeditor/ckeditor");
-        requires.push("scripts/directives/angular-ckeditor");
+        requires.push("scripts/directives/CkEditorDirective");
     }
 
     private fillCodeTextModules(requires: string[]) {
-        requires.push("lib/codemirror/codemirror");
-        requires.push("lib/codemirror/plugins/css");
-        requires.push("lib/codemirror/plugins/css-hint");
-        requires.push("lib/codemirror/plugins/dialog");
-        requires.push("lib/codemirror/plugins/anyword-hint");
-        requires.push("lib/codemirror/plugins/brace-fold");
-        requires.push("lib/codemirror/plugins/closebrackets");
-        requires.push("lib/codemirror/plugins/closetag");
-        requires.push("lib/codemirror/plugins/colorize");
-        requires.push("lib/codemirror/plugins/comment");
-        requires.push("lib/codemirror/plugins/comment-fold");
-        requires.push("lib/codemirror/plugins/continuecomment");
-        requires.push("lib/codemirror/plugins/foldcode");
-        requires.push("lib/codemirror/plugins/fullscreen");
-        requires.push("lib/codemirror/plugins/html-hint");
-        requires.push("lib/codemirror/plugins/htmlembedded");
-        requires.push("lib/codemirror/plugins/htmlmixed");
-        requires.push("lib/codemirror/plugins/indent-fold");
-        requires.push("lib/codemirror/plugins/javascript");
-        requires.push("lib/codemirror/plugins/javascript-hint");
-        requires.push("lib/codemirror/plugins/mark-selection");
-        requires.push("lib/codemirror/plugins/markdown-fold");
-        requires.push("lib/codemirror/plugins/match-highlighter");
-        requires.push("lib/codemirror/plugins/matchbrackets");
-        requires.push("lib/codemirror/plugins/matchtags");
-        requires.push("lib/codemirror/plugins/placeholder");
-        requires.push("lib/codemirror/plugins/rulers");
-        requires.push("lib/codemirror/plugins/scrollpastend");
-        requires.push("lib/codemirror/plugins/search");
-        requires.push("lib/codemirror/plugins/searchcursor");
-        requires.push("lib/codemirror/plugins/xml");
-        requires.push("lib/codemirror/plugins/xml-fold");
-        requires.push("lib/codemirror/plugins/xml-hint");
-        requires.push("lib/codemirror/ui-codemirror");
-        this.moduleLoader.requireModule('ui.codemirror');
+        requires.push("scripts/directives/CodeMirrorDirective");
     }
 
     private editObjectWithDefinitionAndModulesLoaded<T>(object: T, definition: InputFormDefinition, defer: ng.IDeferred<T>, resolver: (object: T) => ng.IPromise<void>): void {
         this.dialogService.show({
-            templateUrl: '/views/inputFormTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormTemplate.html',
             locals: {
                 object: object,
                 definition: definition,
                 defer: defer,
                 resolver: resolver
             },
-            controller: 'inputForm'
+            controller: 'inputForm',
+            parent: $('#body-wrapper')
         }).catch(() => {
             defer.reject("Cancelled");
         });
@@ -115,7 +88,6 @@ class InputFormService {
 
         if (requires.length > 0) {
             require(requires, () => {
-                this.moduleLoader.loadModules();
                 this.editObjectWithDefinitionAndModulesLoaded(object, definition, defer, resolver);
             });
         } else {
@@ -137,7 +109,7 @@ class InputFormService {
         var defer = this.qService.defer<void>();
 
         this.dialogService.show({
-            templateUrl: '/views/inputFormQuestionTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormQuestionTemplate.html',
             locals: {
                 message: message,
                 title: title,
@@ -157,7 +129,7 @@ class InputFormService {
         var defer = this.qService.defer<void>();
 
         this.dialogService.show({
-            templateUrl: '/views/inputFormMessageTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormMessageTemplate.html',
             locals: {
                 message: message,
                 title: title || "LessMarkup",
@@ -187,13 +159,15 @@ class InputFormService {
     }
 }
 
-class InputFormServiceProvider implements ng.IServiceProvider {
-    $get() {
-        return ['$rootScope', '$q', '$mdDialog', 'commandProcessor', 'moduleLoader', InputFormService];
-    }
-}
-
 import module = require('./module');
-module.provider('inputForm', InputFormServiceProvider);
+module.service('inputForm', [
+    '$rootScope',
+    '$q',
+    '$mdDialog',
+    'commandProcessor',
+    'moduleLoader',
+    'serverConfiguration',
+    InputFormService
+]);
 
 export = InputFormService;

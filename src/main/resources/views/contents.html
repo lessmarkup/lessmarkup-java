@@ -2,11 +2,10 @@
     <md-toolbar>
         <div class="md-toolbar-tools" tabindex="-1">
             <div layout="row" flex>
-                <h1 class="logo" ng-click="toggleSidenav()">
+                <span class="md-toolbar-item logo" ng-click="toggleSidenav()">
                     <md-icon md-svg-icon="[[#map]]icons/menu.svg[[/map]]"></md-icon>
                     <span>[[#property]]SiteName[[/property]]</span>
-                </h1>
-                <breadcrumbs></breadcrumbs>
+                </span>
                 [[topMenu]]
                 [[>views/topMenuPlugins.html]]
                 <search-panel></search-panel>
@@ -25,7 +24,7 @@
             </md-content>
         </md-sidenav>
         <md-content flex>
-            <md-subheader ng-bind="title"></md-subheader>
+            <breadcrumbs-panel></breadcrumbs-panel>
             <alerts-and-messages></alerts-and-messages>
             <bind-module class="scriptonly" template="template" configuration="configuration">
                 [[#text]]PleaseWaitLoading[[/text]]

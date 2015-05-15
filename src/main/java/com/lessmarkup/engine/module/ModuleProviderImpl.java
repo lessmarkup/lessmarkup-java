@@ -6,6 +6,7 @@ import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
+import com.lessmarkup.interfaces.exceptions.CommonException;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleInitializer;
 import com.lessmarkup.interfaces.module.ModuleProvider;
@@ -18,6 +19,8 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -80,7 +83,7 @@ public class ModuleProviderImpl implements ModuleProvider {
             try (PrintWriter writer = new PrintWriter(System.out)) {
                 writer.write(userName);
             }
-            return;
+            throw new CommonException("Access denied for user: " + userName + " and file:" + directory.getPath());
         }
 
         for (File file : files) {
@@ -178,7 +181,13 @@ public class ModuleProviderImpl implements ModuleProvider {
             return;
         }
 
-        List<String> elements = listAllModuleElements(moduleUrl.getPath());
+        List<String> elements = null;
+        try {
+            elements = listAllModuleElements(URLDecoder.decode(moduleUrl.getPath(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return;
+        }
         List<String> moduleInitializerClasses = elements.stream()
                 .filter(path -> path.endsWith("ModuleInitializer.class"))
                 .collect(Collectors.toCollection(LinkedList::new));

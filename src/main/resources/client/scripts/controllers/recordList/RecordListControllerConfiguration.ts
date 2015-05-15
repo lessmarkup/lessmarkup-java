@@ -4,6 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import RecordListRecord = require('../../datatypes/RecordListRecord')
+import RecordListColumn = require('../../datatypes/RecordListColumn');
+
 interface RecordListControllerConfiguration {
     columns: RecordListColumn[];
     links: RecordListLink[];
@@ -16,3 +19,5 @@ interface RecordListControllerConfiguration {
     records: RecordListRecord[];
     extensionScript: string;
 }
+
+export = RecordListControllerConfiguration;

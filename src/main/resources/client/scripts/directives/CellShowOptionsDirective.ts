@@ -2,24 +2,28 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+import RecordListControllerScope = require('../controllers/recordList/RecordListControllerScope');
+
 class CellShowOptionsDirectiveLink {
 
     private scope: RecordListControllerScope;
-    private compile: ng.ICompileService;
+    private compileService: ng.ICompileService;
+    private element: JQuery;
 
-    constructor(scope: RecordListControllerScope, element: JQuery, attrs, compile: ng.ICompileService) {
+    constructor(scope: RecordListControllerScope, element: JQuery, compileService: ng.ICompileService) {
         if (!scope.hasOptionsBar) {
             return;
         }
 
         this.scope = scope;
-        this.compile = compile;
+        this.compileService = compileService;
+        this.element = element;
 
-        element.on("click", () => this.onClickHandler(element) );
+        element.on("click", () => this.onClickHandler() );
     }
 
-    private onClickHandler(element: JQuery): boolean {
-        var row = element.parent("tr");
+    private onClickHandler(): boolean {
+        var row = this.element.parent("tr");
 
         if (row.hasClass("options-row")) {
             return true;
@@ -39,7 +43,7 @@ class CellShowOptionsDirectiveLink {
 
         var space = "<tr class=\"options-space\"><td colspan=\"" + (this.scope.columns.length+1).toString() + "\"></td></tr>";
 
-        var html = this.compile(this.scope.optionsTemplate)(this.scope);
+        var html = this.compileService(this.scope.optionsTemplate)(this.scope);
 
         row.before($(space));
         row.after($(space));
@@ -51,10 +55,10 @@ class CellShowOptionsDirectiveLink {
 
 import module = require('./module');
 
-module.directive('cellShowOptions', [() => {
+module.directive('cellShowOptions', ['$compile', (compile: ng.ICompileService) => {
     return <ng.IDirective>{
-        restrict: 'A',
-        replace: false,
-        link: ['$compile', CellShowOptionsDirectiveLink]
+        link: (scope: RecordListControllerScope, element: JQuery) => {
+            new CellShowOptionsDirectiveLink(scope, element, compile);
+        }
     };
 }]);

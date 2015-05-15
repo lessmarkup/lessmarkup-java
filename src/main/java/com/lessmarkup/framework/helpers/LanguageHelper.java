@@ -13,6 +13,12 @@ public final class LanguageHelper {
         if (id == null) {
             return null;
         }
+
+        int pos = id.indexOf('.');
+        if (pos > 0) {
+            moduleType = id.substring(0, pos);
+            id = id.substring(pos+1);
+        }
         
         String translation = getLanguageCache().getTranslation(id, moduleType);
         

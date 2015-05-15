@@ -1,9 +1,10 @@
-<label>{{label}}</label>
+<label>{{field.text | translate}}</label>
 <div>
     <div>
-        <input ng-if="!readOnly()" type="file" fileread="model[field.property]" />
+        <input ng-if="!readOnly(field)" type="file" fileread="object[field.property]" />
     </div>
     <div style="margin-top: 1em;">
-        <img ng-if="model[field.property] != null" ng-src="/Image/Thumbnail/{{model[field.property]}}" />
+        <img ng-if="object[field.property] != null" ng-src="/Image/Thumbnail/{{object[field.property]}}" />
     </div>
 </div>
+<input-field-error></input-field-error>

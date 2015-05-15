@@ -48,7 +48,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
 
     @Override
     public int getCollectionId() {
-        return domainModelProvider.getCollectionId(dataType);
+        return domainModelProvider.getCollectionId(dataType).getAsInt();
     }
     
     protected void updateModel(TM model, TD record) {

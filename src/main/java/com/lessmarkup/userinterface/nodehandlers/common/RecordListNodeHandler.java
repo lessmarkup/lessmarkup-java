@@ -392,6 +392,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         return returnRecordResult(deserializedModifiedObject, false, getIndex(deserializedModifiedObject, filter));
     }
 
+    @ActionAccess(minimumAccess = NodeAccessType.WRITE)
     public JsonObject createRecord() {
         EditableModelCollection<T> collection = getEditableCollection();
 
@@ -426,6 +427,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         return returnRemovedResult();
     }
 
+    @ActionAccess(minimumAccess = NodeAccessType.READ)
     public JsonObject getRecordIds(String filter) {
         ModelCollection<T> collection = getCollection();
         JsonArray recordIds = new JsonArray();
@@ -513,7 +515,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
     protected void readRecords(JsonObject values, List<Long> ids, DomainModel domainModel) {
         JsonArray array = new JsonArray();
-        if (!ids.isEmpty()) {
+        if (ids != null && !ids.isEmpty()) {
             Collection<T> records;
             records = getCollection().read(domainModel.query(), ids);
             postProcessRecords(records);
@@ -584,7 +586,8 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         return ret;
     }
 
-    public JsonObject fetch(List<Long> ids) {
+    @ActionAccess(minimumAccess = NodeAccessType.READ)
+    public JsonObject fetch(@Parameter("ids") List<Long> ids) {
         try (DomainModel domainModel = domainModelProvider.create()) {
             JsonObject ret = new JsonObject();
             readRecords(ret, ids, domainModel);

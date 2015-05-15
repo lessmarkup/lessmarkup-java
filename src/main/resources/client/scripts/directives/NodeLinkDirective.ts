@@ -11,7 +11,11 @@ interface NodeLinkDirectiveScope extends ng.IScope {
 
 class NodeLinkDirectiveController {
     constructor(scope: NodeLinkDirectiveScope, serverConfiguration: ServerConfiguration) {
-        scope.fullPath = serverConfiguration.rootPath + '/' + scope.path;
+        if (scope.path === '' || scope.path === '/') {
+            scope.fullPath = serverConfiguration.rootPath;
+        } else {
+            scope.fullPath = serverConfiguration.rootPath + scope.path;
+        }
     }
 }
 
@@ -22,7 +26,7 @@ class NodeLinkDirectiveLink {
     private nodeLoader: NodeLoaderService;
     private scope: NodeLinkDirectiveScope;
 
-    clickHandler(): JQuery {
+    clickHandler() {
         this.nodeLoader.loadNode(this.scope.path);
         return null;
     }
@@ -30,7 +34,10 @@ class NodeLinkDirectiveLink {
     constructor(scope: NodeLinkDirectiveScope, element: JQuery, nodeLoader: NodeLoaderService){
         this.scope = scope;
         this.nodeLoader = nodeLoader;
-        element.click = () => this.clickHandler();
+        element.on('click', (e: JQueryEventObject) => {
+            e.preventDefault();
+            this.clickHandler();
+        });
     }
 }
 
@@ -39,7 +46,7 @@ import module = require('./module');
 module.directive('nodeLink', ['nodeLoader', (nodeLoader: NodeLoaderService) => {
     return <ng.IDirective>{
         template: '<a class="{{class}}" href="{{fullPath}}"><ng-transclude></ng-transclude></a>',
-        restrict: 'E',
+        restrict: 'EA',
         transclude: true,
         replace: true,
         scope: {

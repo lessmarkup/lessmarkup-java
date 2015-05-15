@@ -13,6 +13,6 @@ public final class LoggingHelper {
         return Logger.getLogger(type.getName());
     }
     public static void logException(Class<?> type, Throwable e) {
-        getLogger(type).log(Level.SEVERE, null, e);
+        getLogger(type).log(Level.SEVERE, "Exception occurred", e);
     }
 }
