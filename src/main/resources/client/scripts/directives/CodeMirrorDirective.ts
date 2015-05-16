@@ -3,7 +3,6 @@
 
 /// <reference path="../types/Codemirror.d.ts" />
 
-import ng = require('angular');
 import _ = require('lodash');
 
 interface CodeMirrorDirectiveScope extends ng.IScope {

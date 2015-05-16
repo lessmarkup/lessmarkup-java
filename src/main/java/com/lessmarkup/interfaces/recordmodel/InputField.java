@@ -18,4 +18,5 @@ public @interface InputField {
     String visibleCondition() default "";
     String enumTextIdBase() default "";
     String defaultValue() default "";
+    boolean inlineWithPrevious() default false;
 }

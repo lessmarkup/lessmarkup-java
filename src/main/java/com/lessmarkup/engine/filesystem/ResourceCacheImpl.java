@@ -60,6 +60,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
             case "svg":
             case "ttf":
             case "woff":
+            case "woff2":
             case "map":
             case "ts":
                 return true;

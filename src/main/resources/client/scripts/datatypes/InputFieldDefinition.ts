@@ -17,4 +17,9 @@ interface InputFieldDefinition {
     readOnlyFunction: Function;
     dynamicSource: DynamicInputFieldDefinition;
     isOpen: boolean;
+    inlineWithPrevious: boolean;
+    children: InputFieldDefinition[];
+    isGroup: boolean;
+    reference: string;
+    position: string;
 }

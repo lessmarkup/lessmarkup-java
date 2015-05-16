@@ -7,6 +7,7 @@
 ///<amd-dependency path="./CollectionUpdatesDirective" />
 ///<amd-dependency path="./CodeMirrorDirective" />
 ///<amd-dependency path="./FileReadDirective" />
+///<amd-dependency path="./InputFieldDirective" />
 ///<amd-dependency path="./InputFieldErrorDirective" />
 ///<amd-dependency path="./LanguagesPanelDirective" />
 ///<amd-dependency path="./LoginDialogDirective" />
@@ -18,6 +19,7 @@
 ///<amd-dependency path="./SearchPanelDirective" />
 ///<amd-dependency path="./ToolbarPanelDirective" />
 ///<amd-dependency path="./UserPanelDirective" />
+///<amd-dependency path="./ValidateEquals" />
 
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public

@@ -1,7 +1,9 @@
 ﻿md-content(layout-padding layout="column")
 
     div(ng-repeat="field in fields | orderBy: 'position'")
-        md-input-container(ng-include="getFieldTemplate(field)" ng-if="fieldVisible(field)")
+        input-field(field="field" object="object" form="form" ng-if="fieldVisible(field) && !field.isGroup")
+        div(ng-if="field.isGroup" layout="row" layout-sm="column")
+            input-field(ng-repeat="child in field.children" field="child" object="object" form="form" ng-if="fieldVisible(child)" flex="")
 
     div(ng-if="submitWithCaptcha" captcha="recaptchaPublicKey")
 

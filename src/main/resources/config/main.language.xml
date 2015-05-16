@@ -167,6 +167,7 @@
         <translation id="IndonesianRupiah" text="Indonesian Rupiah"/>
         <translation id="InitialConfiguration" text="Initial Configuration"/>
         <translation id="InputFieldEmailError" text="Wrong e-mail address" />
+        <translation id="InputFieldEqualsError" text="Fields are not equal" />
         <translation id="InputFieldMaxLength" text="This field has to be less than {0} characters long" />
         <translation id="InputFieldRequired" text="This field is mandatory" />
         <translation id="InvalidEmail" text="Invalid E-mail: '{0}'"/>

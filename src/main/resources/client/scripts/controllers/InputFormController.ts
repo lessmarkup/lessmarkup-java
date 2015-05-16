@@ -162,8 +162,10 @@ class InputFormController {
             indentWithTabs: true,
             theme: 'default',
             extraKeys: {
-                "F11": (cm) => cm.setOption("fullScreen", !cm.getOption("fullScreen")),
-                "Esc": (cm) => {
+                "F11": (cm: any) => {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                },
+                "Esc": (cm: any) => {
                     if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
                 }
             }
@@ -190,44 +192,123 @@ class InputFormController {
         }
     }
 
+    private processField(field: InputFieldDefinition) {
+
+        switch (field.type) {
+            case InputFieldTypes.DYNAMIC_FIELD_LIST:
+                this.processDynamicFields(field);
+                break;
+            case InputFieldTypes.HIDDEN:
+                break;
+            default:
+                this.addField(field);
+                break;
+        }
+    }
+
+    private processDynamicFields(field: InputFieldDefinition) {
+
+        var dynamicFields: DynamicInputFieldDefinition[] = this.scope.object[field.property];
+
+        if (!_.isArray(dynamicFields)) {
+            return;
+        }
+
+        _.forEach(dynamicFields, (dynamicField: DynamicInputFieldDefinition) => {
+            var dynamicDefinition: InputFieldDefinition = _.cloneDeep<InputFieldDefinition>(dynamicField.field);
+            dynamicDefinition.property = field.property + "$" + dynamicDefinition.property;
+            dynamicDefinition.dynamicSource = dynamicField;
+            this.addField(dynamicDefinition);
+            this.scope.object[dynamicDefinition.property] = dynamicField.value;
+        });
+    }
+
+    private addField(field: InputFieldDefinition) {
+
+        if (field.type === InputFieldTypes.PASSWORD_REPEAT) {
+
+            field = _.cloneDeep<InputFieldDefinition>(field);
+            field.type = InputFieldTypes.PASSWORD;
+
+            this.addSimpleField(field);
+
+            var passwordRepeat = _.cloneDeep<InputFieldDefinition>(field);
+            passwordRepeat.property = field.property + InputFormController.PASSWORD_REPEAT_SUFFIX;
+            passwordRepeat.inlineWithPrevious = true;
+            passwordRepeat.reference = field.property;
+            passwordRepeat.type = InputFieldTypes.PASSWORD_REPEAT;
+            passwordRepeat.required = false;
+
+            this.addSimpleField(passwordRepeat);
+
+        } else {
+            this.addSimpleField(field);
+        }
+    }
+
+    private addSimpleField(field: InputFieldDefinition) {
+
+        if (!this.scope.object.hasOwnProperty(field.property)) {
+            if (_.isUndefined(field.defaultValue)) {
+                this.scope.object[field.property] = "";
+            } else {
+                this.scope.object[field.property] = field.defaultValue;
+            }
+        }
+
+        if (!field.inlineWithPrevious || this.scope.fields.length === 0) {
+            this.scope.fields.push(field);
+        } else {
+            var lastField = this.scope.fields[this.scope.fields.length - 1];
+            if (lastField.isGroup) {
+                lastField.children.push(field);
+            } else {
+                var groupField: InputFieldDefinition = <any>{};
+                groupField.isGroup = true;
+                groupField.type = "";
+                groupField.children = [];
+                groupField.children.push(lastField);
+                groupField.children.push(field);
+                groupField.position = lastField.position;
+                this.scope.fields[this.scope.fields.length-1] = groupField;
+            }
+        }
+
+        switch (field.type) {
+            case InputFieldTypes.IMAGE:
+            case InputFieldTypes.FILE:
+                this.scope.object[field.property] = null;
+                break;
+            case InputFieldTypes.SELECT:
+                if (_.isArray(field.selectValues)) {
+                    var valueDefinitions: SelectValueDefinition[] = <any> field.selectValues; // to hide compilation bug in IntelliJ IDEA
+                    if (valueDefinitions.length > 0) {
+                        this.scope.object[field.property] = valueDefinitions[0].value;
+                    }
+                }
+                break;
+            case InputFieldTypes.DATE:
+                field.isOpen = false;
+                break;
+        }
+
+        if (field.visibleCondition && field.visibleCondition.length > 0) {
+            field.visibleFunction = new Function("obj", "with(obj) { return " + field.visibleCondition + "; }");
+        } else {
+            field.visibleFunction = null;
+        }
+
+        if (field.readOnlyCondition && field.readOnlyCondition.length > 0) {
+            field.readOnlyFunction = new Function("obj", "with(obj) { return " + field.readOnlyCondition + "; }");
+        } else {
+            field.readOnlyFunction = null;
+        }
+    }
+
     private initializeFields() {
         this.scope.fields = [];
         _.forEach(this.definition.fields, (field: InputFieldDefinition) => {
-            if (!this.scope.object.hasOwnProperty(field.property)) {
-                if (typeof (field.defaultValue) != "undefined") {
-                    this.scope.object[field.property] = field.defaultValue;
-                } else {
-                    this.scope.object[field.property] = "";
-                }
-            }
-
-            if (field.type == InputFieldTypes.DYNAMIC_FIELD_LIST) {
-
-                var dynamicFields: DynamicInputFieldDefinition[] = this.scope.object[field.property];
-
-                if (dynamicFields == null) {
-                    return;
-                }
-
-                _.forEach(dynamicFields, (dynamicField: DynamicInputFieldDefinition) => {
-                    var dynamicDefinition: InputFieldDefinition = _.cloneDeep<InputFieldDefinition>(dynamicField.field);
-                    dynamicDefinition.property = field.property + "$" + dynamicDefinition.property;
-                    this.scope.fields.push(dynamicDefinition);
-                    dynamicDefinition.dynamicSource = dynamicField;
-                    this.initializeField(dynamicDefinition);
-                    this.scope.object[dynamicDefinition.property] = dynamicField.value;
-                });
-
-                for (var j = 0; j < dynamicFields.length; j++) {
-                    var dynamicField = dynamicFields[j];
-                }
-                return;
-            }
-
-            if (field.type !== InputFieldTypes.HIDDEN) {
-                this.scope.fields.push(field);
-                this.initializeField(field);
-            }
+            this.processField(field);
         });
     }
 
@@ -374,37 +455,6 @@ class InputFormController {
         } catch (err) {
             this.scope.isApplying = false;
             this.scope.submitError = err.toString();
-        }
-    }
-
-    private initializeField(field: InputFieldDefinition) {
-        if (field.type == InputFieldTypes.PASSWORD_REPEAT) {
-            this.scope.object[field.property] = "";
-            this.scope.object[field.property + InputFormController.PASSWORD_REPEAT_SUFFIX] = "";
-        } else if (field.type == InputFieldTypes.IMAGE || field.type == InputFieldTypes.FILE) {
-            this.scope.object[field.property] = null;
-        }
-        if (field.type == InputFieldTypes.SELECT && field.selectValues != null) {
-            var valueDefinitions: SelectValueDefinition[] = <any> field.selectValues; // to hide compilation bug in IntelliJ IDEA
-            if (valueDefinitions.length > 0) {
-                this.scope.object[field.property] = valueDefinitions[0].value;
-            }
-        }
-
-        if (field.type == InputFieldTypes.DATE) {
-            field.isOpen = false;
-        }
-
-        if (field.visibleCondition && field.visibleCondition.length > 0) {
-            field.visibleFunction = new Function("obj", "with(obj) { return " + field.visibleCondition + "; }");
-        } else {
-            field.visibleFunction = null;
-        }
-
-        if (field.readOnlyCondition && field.readOnlyCondition.length > 0) {
-            field.readOnlyFunction = new Function("obj", "with(obj) { return " + field.readOnlyCondition + "; }");
-        } else {
-            field.readOnlyFunction = null;
         }
     }
 }

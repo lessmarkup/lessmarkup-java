@@ -23,6 +23,8 @@ public class InputFieldDefinition {
     private final int position;
     private final String defaultValue;
     private List<InputFieldEnum> enumValues;
+
+    private final boolean inlineWithPrevious;
     
     public InputFieldDefinition(PropertyDescriptor property, InputField definition) {
         this.property = property;
@@ -42,6 +44,7 @@ public class InputFieldDefinition {
         this.maxWidth = definition.maxWidth();
         this.position = definition.position();
         this.defaultValue = definition.defaultValue();
+        this.inlineWithPrevious = definition.inlineWithPrevious();
 
         if (property.getType().isEnum() &&
                 (type == InputFieldType.SELECT || type == InputFieldType.SELECT_TEXT || type == InputFieldType.MULTI_SELECT) && 
@@ -75,4 +78,5 @@ public class InputFieldDefinition {
     public int getPosition() { return position; }
     public String getDefaultValue() { return defaultValue; }
     public List<InputFieldEnum> getEnumValues() { return enumValues; }
+    public boolean isInlineWithPrevious() { return inlineWithPrevious; }
 }

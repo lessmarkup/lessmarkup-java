@@ -80,6 +80,7 @@ public class ResourceModel {
                 this.contentType = "application/font-sfnt";
                 break;
             case "woff":
+            case "woff2":
                 this.contentType = "application/font-woff";
                 break;
             case "map":

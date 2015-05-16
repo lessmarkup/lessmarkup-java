@@ -12,6 +12,7 @@ declare module CodeMirror {
 
         public static defaults: any;
 
+        getOption(option: string) : any;
         setOption(option: string, value: any): void;
         setValue(content: string): void;
         getValue(separator?: string): string;
