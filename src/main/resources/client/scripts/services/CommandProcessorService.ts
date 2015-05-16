@@ -88,7 +88,7 @@ class CommandProcessorService {
     }
 
     private onFailure<T>(response: ng.IHttpPromiseCallbackArg<any>, defer: ng.IDeferred<T>) {
-        this.backgroundRefresh.subscribeForUpdates(this.sendIdle);
+        this.backgroundRefresh.subscribeForUpdates(() => this.sendIdle());
         var message = response.status > 0 ? "Request failed, error " + response.status : "Request failed, unknown communication error";
         defer.reject(message);
     }
@@ -98,7 +98,7 @@ class CommandProcessorService {
     }
 
     public onUserActivity():void {
-        this.backgroundRefresh.onUserActivity(this.sendIdle);
+        this.backgroundRefresh.onUserActivity(() => this.sendIdle());
     }
 
     public sendCommand<T>(command:string, data:any = null, path:string = null): ng.IPromise<T> {
@@ -106,7 +106,7 @@ class CommandProcessorService {
         data = data || {};
 
         if (command !== "idle") {
-            this.backgroundRefresh.onUserActivity(this.sendIdle);
+            this.backgroundRefresh.onUserActivity(() => this.sendIdle());
         }
 
         this.backgroundRefresh.cancelUpdates();

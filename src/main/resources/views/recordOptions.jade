@@ -1,0 +1,12 @@
+﻿tr.options-panel(ng-show="showOptions")
+    td(colspan="{{columns.length+1}}")
+        md-button.md-primary.md-raised(
+            ng-disabled="!isActionVisible(action)"
+            ng-repeat="action in actions"
+            ng-bind="action.text | translate"
+            ng-click="executeAction(action)"
+            aria-label="action.text | translate"
+        )
+        span(ng-repeat="link in links")
+            node-link.btn.btn-info(ng-if="!link.external" path="{{linkUrl(link)}}" ng-bind="link.text | translate")
+            a.btn.btn-info(ng-if="link.external" href="{{linkUrl(link)}}" ng-bind="link.text | translate")

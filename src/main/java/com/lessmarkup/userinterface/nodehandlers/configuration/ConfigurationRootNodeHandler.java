@@ -208,7 +208,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
         
         ret.setId(OptionalLong.of(handlerData.getId()));
         ret.setHandler(handler);
-        ret.setTitle(LanguageHelper.getFullTextId(handlerData.getModuleType(), handlerData.getTitleTextId()));
+        ret.setTitle(LanguageHelper.getText(handlerData.getModuleType(), handlerData.getTitleTextId()));
         ret.setPath(path);
         ret.setRest(StringHelper.join(",", parts));
         

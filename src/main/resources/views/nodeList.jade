@@ -1,0 +1,26 @@
+﻿div(ng-controller="nodelist")
+
+    div(ng-if="nodes.length == 0")
+        md-button(ng-click="createNode(null)") {{ 'Main.CreateRootNode' | translate }}
+
+    ul.nodes
+        li(ng-repeat="node in nodes" ng-style="getLevelStyle(node)" ng-class="{'node-disabled' : !nodeEnabled(node)}")
+            div
+                span.title(ng-bind="node.data.title" ng-click="changeProperties(node)")
+                span.buttons
+                    md-button(ng-disabled="upDisabled(node)" ng-click="moveUp(node)") {{ 'Main.NodeUp' | translate }}
+                    md-button(ng-disabled="downDisabled(node)" ng-click="moveDown(node)") {{ 'Main.NodeDown' | translate }}
+                    md-button(ng-disabled="leftDisabled(node)" ng-click="moveLeft(node)") {{ 'Main.NodeLeft' | translate }}
+                    md-button(ng-disabled="rightDisabled(node)" ng-click="moveRight(node)") {{ 'Main.NodeRight' | translate }}
+                    md-button(ng-if="hasSettings(node)" ng-click="changeSettings(node)") {{ 'Main.NodeSettings' | translate }}
+                    md-button(ng-click="createNode(node)") {{ 'Main.AddChild' | translate }}
+                    md-button(ng-if="canBeDeleted(node)" ng-click="deleteNode(node)") {{ 'Main.Delete' | translate }}
+                    node-link(path="nodeAccessPage(node)") {{ 'Main.EditAccess' | translate }}
+
+    .bg-danger.dialog-notification(ng-if="updateError.length > 0")
+        span.glyphicon.glyphicon-exclamation-sign
+        span(ng-bind="updateError")
+
+    div(ng-if="updateProgress")
+        span(us-spinner="{radius:3,width:2,length:4,lines:9,top:0,left:0}")
+        span {{ 'Main.Updating' | translate }}

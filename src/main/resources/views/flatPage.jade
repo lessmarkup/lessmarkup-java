@@ -1,0 +1,36 @@
+﻿.flat-design(ng-controller="flatpage" ng-switch="position")
+    .row(ng-switch-when="Right")
+        .col-md-10
+            .flatpage(ng-repeat="page in flat")
+                div(ng-switch="page.level")
+                    h2.spyelement(ng-switch-when="1" ng-bind="page.title" id="{{page.anchor}}")
+                    h3.spyelement(ng-switch-when="2" ng-bind="page.title" id="{{page.anchor}}")
+
+                .toolbar
+                    button.btn.btn-default(
+                        ng-repeat="button in getPageScope(page).toolbarButtons"
+                        type="button"
+                        ng-disabled="!isToolbarButtonEnabled(button.id)"
+                        ng-click="onToolbarButtonClick(button.id)"
+                        ng-bind="button.text"
+                    )
+
+                div(bind-compiled-html="{name: 'bindHtml', scope: getPageScope, html: page.viewBody, context: page}")
+
+        .col-md-2.scrollspy.scrollspy-side
+            ul.nav(scrollspy-side='')
+                li(ng-repeat="node in tree" class="spyref" data-anchor="{{node.anchor}}")
+                    a(href="#" ng-bind="node.title" ng-click="scrollToPage(node.anchor)")
+                    ul(ng-if="node.children.length > 0")
+                        li.spyref(ng-repeat="child in node.children" data-anchor="{{child.anchor}}")
+                            a(href="#" ng-bind="child.title" ng-click="scrollToPage(child.anchor)")
+    div(ng-switch-when="Top")
+        .flatpage(ng-repeat="page in flat")
+            div(ng-switch="page.level")
+                h2.spyelement(ng-switch-when="1" ng-bind="page.title" id="{{page.anchor}}")
+                h3.spyelement(ng-switch-when="2" ng-bind="page.title" id="{{page.anchor}}")
+            div(bind-compiled-html="{name: 'bindHtml', scope: getPageScope, html: page.viewBody, context: page}")
+        div(scrollspy-top)
+            ul.nav.navbar-nav.navbar-left
+                li.scrollspy-menu.spyref(ng-repeat="node in tree" data-anchor="{{node.anchor}}")
+                    a(href="#" ng-bind="node.title" ng-click="scrollToPage(node.anchor)")

@@ -1,0 +1,6 @@
+ul.configuration(ng-controller="configuration")
+    li(ng-repeat="group in groups")
+        h2(ng-if="groups.length > 1", ng-bind="group.title | translate")
+        ul
+            li(ng-repeat="item in group.items")
+                node-link(path="item.path", ng-bind="item.title | translate")

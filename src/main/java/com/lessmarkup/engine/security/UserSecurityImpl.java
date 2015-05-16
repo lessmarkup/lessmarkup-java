@@ -690,6 +690,7 @@ public class UserSecurityImpl implements UserSecurity {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T decryptObject(Class<T> type, String encrypted) {
         Cipher cipher = initializeCipher(Cipher.DECRYPT_MODE);

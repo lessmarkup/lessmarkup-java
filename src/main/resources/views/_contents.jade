@@ -1,0 +1,25 @@
+div(layout='column', tabindex='-1', role='main', flex)
+    md-toolbar
+        div.md-toolbar-tools(tabindex='-1')
+            div(layout='row', flex)
+                span.md-toolbar-item.logo(ng-click='toggleSidenav()')
+                    md-icon(md-svg-icon='[[#map]]icons/menu.svg[[/map]]')
+                    span [[#property]]SiteName[[/property]]
+                = '[[topMenu]]'
+                != '[[>views/topMenuPlugins.html]]'
+                search-panel
+                span(flex)
+                languages-panel
+                collection-updates(platform='desktop')
+                user-panel
+    div(layout='row',flex)
+        md-sidenav.site-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id="left", md-is-locked-open="lockSidenav")
+            md-content(flex, role="navigation")
+                navigation-tree(platform="desktop")
+        md-content(flex)
+            #alerts-anchor
+            breadcrumbs-panel
+            alerts-and-messages
+            bind-module(class="scriptonly", template="template", configuration="configuration")
+                = '[[#text]]PleaseWaitLoading[[/text]]'
+            = '[[noScriptBlock]]'

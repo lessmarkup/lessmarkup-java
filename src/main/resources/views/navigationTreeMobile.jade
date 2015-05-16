@@ -1,0 +1,7 @@
+li
+    node-link(path='/')
+        span.glyphicon.glyphicon-home
+        span(ng-bind="rootTitle") = '[#property]]SiteName[[/property]]'
+
+li.scriptonly(ng-repeat="item in navigationTree" style="{{item.style}}")
+    node-link(path="item.url" ng-bind="item.title")

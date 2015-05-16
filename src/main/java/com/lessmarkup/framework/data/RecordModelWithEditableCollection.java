@@ -32,14 +32,15 @@ public abstract class RecordModelWithEditableCollection<TM extends RecordModel, 
         this.modelType = modelType;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public ModelCollection<TM> createCollection() {
-        return new RecordModelEditableCollection(
+        return new RecordModelEditableCollection<TM, TD>(
                 DependencyResolver.resolve(DomainModelProvider.class),
                 DependencyResolver.resolve(DataCache.class), 
                 DependencyResolver.resolve(ChangeTracker.class),
                 this.modelType,
-                getDataType()
+                (Class<TD>) getDataType()
         );
     }
 }

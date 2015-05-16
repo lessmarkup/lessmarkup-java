@@ -1,0 +1,11 @@
+form.navbar-form.navbar-left.scriptonly(role="search" ng-if="hasSearch")
+    .input-group.search-panel
+        input.form-control(type="text" placeholder="{{ 'Main.Search' | translate }}" ng-model="getScope().searchText")
+        ul.results(ng-show="searchText.length > 0")
+            li(ng-if="searchResults.length == 0") {{ 'Main.NoResultsFound' | translate }}
+            li(ng-repeat="result in searchResults")
+                node-link(path='result.url')
+                    span.search-result-name(ng-bind="result.name")
+                    span.search-result-body(ng-bind-html="result.text")
+            li
+                ng-button(ng-click="clearSearch()") {{ 'Main.Close' | translate }}

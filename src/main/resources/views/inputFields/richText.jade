@@ -1,0 +1,5 @@
+label {{field.text | translate}}
+div
+    textarea(ng-if="!readOnly(field)" ck-editor="" ng-model="object[field.property]" cols="10")
+    div(ng-if="readOnly(field)" ng-bind-html="object[field.property]")
+input-field-error

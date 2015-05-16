@@ -1,0 +1,12 @@
+div(ng-form="form")
+    div(ng-if="!changesApplied")
+        include _inputFormTemplateBody
+        md-content(layout-padding)
+            md-button.md-raised.md-primary(ng-click="submit(form)" ng-disabled="okDisabled(form)")
+                span(ng-bind="applyCaption | translate")
+                span(us-spinner="{radius:3,width:2,length:4,lines:9,color:'#fff',top:0,left:0}" ng-show="isApplying")
+
+    div(ng-if="changesApplied")
+        .bg-success.dialog-notification(ng-bind="submitSuccess")
+        md-content(layout-padding)
+            md-button.md-raised(ng-click="openForm(form)" ng-bind="'Main.OpenForm' | translate" aria-label="Open")

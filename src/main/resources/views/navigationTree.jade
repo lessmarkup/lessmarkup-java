@@ -1,0 +1,6 @@
+ul.navigation-tree
+    li
+        md-button.md-primary(ng-click="navigateRoot()" ng-bind="rootTitle" aria-label="Root")
+
+    li(ng-repeat="menu in tree")
+        md-button(ng-click="navigateItem(menu)" ng-bind="menu.title")

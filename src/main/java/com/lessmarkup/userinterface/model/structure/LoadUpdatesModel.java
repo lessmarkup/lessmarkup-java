@@ -62,7 +62,7 @@ public class LoadUpdatesModel {
 
             handler.initialize(OptionalLong.of(node.getValue1().getNodeId()), 
                     settings != null && settings.isJsonObject() ? settings.getAsJsonObject() : null, node.getValue1().getPath(), node.getValue1().getFullPath(), node.getValue2());
-            handlers.add(new Tuple(node.getValue1().getNodeId(), notificationProvider));
+            handlers.add(new Tuple<>(node.getValue1().getNodeId(), notificationProvider));
         }
 
         if ((!newVersionId.isPresent() || newVersionId == versionId) && currentProvider == null) {
@@ -77,7 +77,7 @@ public class LoadUpdatesModel {
                     continue;
                 }
 
-                if (handler.getValue2() == currentProvider && currentProvider != null) {
+                if (handler.getValue2() == currentProvider) {
                     int change = handler.getValue2().getValueChange(null, newVersionId, domainModel);
                     JsonObject c = new JsonObject();
                     c.addProperty("id", handler.getValue1());

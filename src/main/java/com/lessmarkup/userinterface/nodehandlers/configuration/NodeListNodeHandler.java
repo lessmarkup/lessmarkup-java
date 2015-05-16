@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.nodehandlers.configuration;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
@@ -73,7 +74,10 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
         NodeSettingsModel node = DependencyResolver.resolve(NodeSettingsModel.class);
 
         JsonObject ret = new JsonObject();
-        ret.add("root", JsonSerializer.serializePojoToTree(node.getRootNode()));
+
+        NodeSettingsModel rootNode = node.getRootNode();
+
+        ret.add("root", rootNode != null ? JsonSerializer.serializePojoToTree(node.getRootNode()) : JsonNull.INSTANCE);
         ret.addProperty("nodeSettingsModelId", modelCache.getDefinition(NodeSettingsModel.class).getId());
 
         JsonArray handlers = new JsonArray();

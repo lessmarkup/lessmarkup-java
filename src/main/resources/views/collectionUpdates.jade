@@ -1,0 +1,5 @@
+li.navbar-notification.scriptonly(ng-repeat="collection in collections" ng-show="collections.count > 0")
+    node-link(path="collection.path")
+        span.glyphicon(ng-if="collection.icon" ng-class="collection.icon")
+        span(ng-bind="collection.title")
+        span.badge(ng-bind="collection.count" ng-class="collectionClass(collection)")

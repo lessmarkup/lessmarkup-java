@@ -1,0 +1,24 @@
+li.scriptonly(ng-show="!loggedIn && hasLogin")
+    a(ng-click="showLogin()")
+        span.glyphicon.glyphicon-user(style="font-size:small")
+        ='[[#text]]User[[/text]]'
+
+li.scriptonly(ng-show="loggedIn")
+    node-link(path="profilePath")
+        span.glyphicon.glyphicon-user(style="font-size:small")
+        span {{userName}}
+
+li.scriptonly(ng-show="loggedIn")
+    a(href="#" ng-if="loggedIn && userNotVerified")
+        span
+            span.badge(
+                style="background-color: #a94442"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="{{ 'Main.EmailNotVerified' | translate }}"
+            ) !
+
+li.scriptonly(ng-show="loggedIn")
+    a(href="#" ng-click="doLogout()") {{ 'Main.Logout' | translate }}
+
+

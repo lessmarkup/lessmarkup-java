@@ -1,0 +1,20 @@
+script(type="text/javascript", src="[[#map]]scripts/config/paths.js[[/map]]")
+script(type="text/javascript").
+    document.getElementById("noscript").innerHTML = "";
+    require.baseUrl = "[[#map]][[/map]]";
+script(type="text/javascript", src="[[#map]]lib/requirejs/require.js[[/map]]")
+script(type="text/javascript").
+    require(['scripts/app', 'jquery'], function(app, $) {
+        var footerHeight = 0;
+        $(window).resize(function() {
+            var newFooterHeight = $('footer').outerHeight();
+            var wrapper = $('#body-wrapper');
+            if (newFooterHeight !== footerHeight) {
+                footerHeight = newFooterHeight;
+                wrapper.css('margin-bottom', '-' + footerHeight +'px');
+                wrapper.css('padding-bottom', footerHeight +'px');
+            }
+        });
+        $(window).resize();
+        app.initialize([[initialData]], [[serverConfiguration]], [[languages]]);
+    });

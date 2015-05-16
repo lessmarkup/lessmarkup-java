@@ -96,7 +96,7 @@
       "dest": "../css/main.min.css"
     }
   },
-  "haml": {
+  "jade": {
     "default": {
       "files": {
       }

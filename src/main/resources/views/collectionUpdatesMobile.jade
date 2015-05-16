@@ -1,0 +1,4 @@
+node-link(ng-repeat="collection in collections" path="collection.path" ng-show="hasCollections()")
+    span.glyphicon(ng-if="collection.icon" ng-class="collection.icon")
+    span.badge(ng-bind="collection.count" ng-class="collectionClass(collection)")
+

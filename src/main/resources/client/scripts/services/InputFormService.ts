@@ -41,7 +41,7 @@ class InputFormService {
 
     private editObjectWithDefinitionAndModulesLoaded<T>(object: T, definition: InputFormDefinition, defer: ng.IDeferred<T>, resolver: (object: T) => ng.IPromise<void>): void {
         this.dialogService.show({
-            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputForm.html',
             locals: {
                 object: object,
                 definition: definition,
@@ -109,7 +109,7 @@ class InputFormService {
         var defer = this.qService.defer<void>();
 
         this.dialogService.show({
-            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormQuestionTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormQuestion.html',
             locals: {
                 message: message,
                 title: title,
@@ -129,7 +129,7 @@ class InputFormService {
         var defer = this.qService.defer<void>();
 
         this.dialogService.show({
-            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormMessageTemplate.html',
+            templateUrl: this.serverConfiguration.rootPath + '/views/inputFormMessage.html',
             locals: {
                 message: message,
                 title: title || "LessMarkup",

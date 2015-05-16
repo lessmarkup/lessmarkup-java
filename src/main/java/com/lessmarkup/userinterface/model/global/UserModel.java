@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.userinterface.model.global;
 
 import com.lessmarkup.TextIds;
@@ -16,15 +22,20 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+@Component
+@Scope("prototype")
 class UserModelCollection implements EditableModelCollection<UserModel> {
 
     private final DomainModelProvider domainModelProvider;
     private final UserSecurity userSecurity;
     private final ChangeTracker changeTracker;
 
+    @Autowired
     public UserModelCollection(DomainModelProvider domainModelProvider, UserSecurity userSecurity, ChangeTracker changeTracker) {
         this.domainModelProvider = domainModelProvider;
         this.userSecurity = userSecurity;

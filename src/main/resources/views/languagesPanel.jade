@@ -1,0 +1,12 @@
+ul.nav.navbar-nav.navbar-right.scriptonly(ng-if="languages.length > 1")
+    li.dropdown
+        a.dropdown-toggle(role="button")
+            img.language-icon(ng-if="selectedLanguage.imageUrl" ng-src="{{selectedLanguage.imageUrl}}")
+            span(ng-bind="selectedLanguage.shortName")
+            b.caret
+
+        ul.dropdown-menu
+            li(ng-repeat="language in languages")
+                a(href="#" ng-click="switchLanguage(language.id)")
+                    img(ng-if="language.imageUrl" ng-src="{{language.imageUrl}}")
+                    = '{{language.name}} ({{language.shortName}})'

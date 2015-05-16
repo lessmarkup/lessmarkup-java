@@ -9,7 +9,7 @@ import com.lessmarkup.interfaces.system.RequestContext;
 
 public final class RequestContextHolder {
     
-    private static final ThreadLocal contextHolder = new ThreadLocal();
+    private static final ThreadLocal<RequestContext> contextHolder = new ThreadLocal<>();
     
     public static void onRequestStarted(RequestContext context) {
         contextHolder.set(context);
@@ -20,6 +20,6 @@ public final class RequestContextHolder {
     }
     
     public static RequestContext getContext() {
-        return (RequestContext) contextHolder.get();
+        return contextHolder.get();
     }
 }

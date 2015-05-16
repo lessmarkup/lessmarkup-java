@@ -1,0 +1,3 @@
+div
+    alert.scriptonly(ng-repeat="alert in alerts", type="{{alert.type}}", close="closeAlert(alert.id)")
+        div(ng-bind="alert.message")

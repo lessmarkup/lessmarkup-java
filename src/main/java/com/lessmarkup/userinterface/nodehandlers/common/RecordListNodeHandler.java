@@ -15,7 +15,6 @@ import com.lessmarkup.interfaces.structure.ActionAccess;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.interfaces.structure.Parameter;
 import com.lessmarkup.interfaces.structure.RecordAction;
-import com.lessmarkup.interfaces.system.LanguageCache;
 import com.lessmarkup.interfaces.system.ResourceCache;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import com.lessmarkup.interfaces.system.UserCache;
@@ -56,7 +55,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         }
     }
 
-    static enum ActionType {
+    enum ActionType {
         RECORD, // Is assigned to each record
         CREATE, // To show new type create dialog (like new record or new forum thread etc)
         RECORD_CREATE, // To show new type create dialog associated with existing record
@@ -214,7 +213,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         }
 
         modelCollection = createCollection();
-        editableModelCollection = (EditableModelCollection<T>) modelCollection;
+        editableModelCollection = modelCollection instanceof EditableModelCollection ? (EditableModelCollection<T>) modelCollection : null;
         modelCollection.initialize(getObjectId(), getAccessType());
 
         if (modelCollection == null) {
@@ -222,6 +221,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected ModelCollection<T> createCollection() {
         return (ModelCollection<T>) recordModel.createModelCollection();
     }
@@ -371,7 +371,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             query = applyFilterAndOrderBy(domainModel.query(), filter);
         }
         List<Long> recordIds = getCollection().readIds(query, false);
-        long recordId = (long) modifiedObject.getId();
+        long recordId = modifiedObject.getId();
         return recordIds.indexOf(recordId);
     }
 

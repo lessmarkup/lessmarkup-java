@@ -1,8 +1,0 @@
-<li>
-    <a href="/" ng-click="navigateToView(rootPath)">
-        <span class="glyphicon glyphicon-home"></span> <span ng-bind="rootTitle">[[#property]]SiteName[[/property]]</span>
-    </a>
-</li>
-<li ng-repeat="item in navigationTree" style="{{item.style}}" class="scriptonly">
-    <a href="{{item.url}}" ng-click="navigateToView(rootPath+item.url)" ng-bind="item.title"></a>
-</li>

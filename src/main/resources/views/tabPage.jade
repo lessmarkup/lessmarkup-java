@@ -1,0 +1,7 @@
+﻿div(ng-controller="tabpage")
+    ul.nav.nav-tabs(role="tablist")
+        li(ng-repeat="page in pages" ng-class="{'active' : page.uniqueId == activePage.uniqueId }")
+            a(href="{{'#' + page.uniqueId}}" role="tab" data-toggle="tab" ng-bind="page.title")
+    .tab-content
+        .tab-pane(ng-repeat="page in pages" id="{{page.uniqueId}}" ng-class="{'active' : page.uniqueId == activePage.uniqueId }")
+            div(bind-compiled-html="{name: 'bindHtml', scope: getPageScope, html: page.viewBody, context: page}")

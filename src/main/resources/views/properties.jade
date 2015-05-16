@@ -1,0 +1,8 @@
+﻿table.properties
+    tr(ng-repeat="property in viewData.properties")
+        td.property-name
+            span(ng-bind="property.name")
+        td.property-value(ng-switch="property.type")
+            span(ng-switch-when="Date" ng-bind="property.value | date:'medium'")
+            img.img-thumbnail(ng-switch-when="Image" ng-src="{{property.value}}")
+            span(ng-switch-default="" ng-bind="property.value")

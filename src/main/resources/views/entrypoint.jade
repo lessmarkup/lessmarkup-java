@@ -1,0 +1,26 @@
+doctype html
+html(lang='en', ng-controller='main')
+    head
+        meta(name="viewport", content="width=device-width")
+        include _styles
+        title(ng-bind="title")
+        ='[[googleAnalytics]]'
+
+        style.
+            .scriptblock {
+                display: none !important;
+            }
+
+        style#noscript.
+            [ng-cloak] {
+                display: inherit;
+            }
+            .scriptonly {
+                display: none !important;
+            }
+            .scriptblock {
+                display: block !important;
+            }
+    body
+        !='[[>views/body.html]]'
+        !='[[#useScripts]][[>views/bootstrap.html]][[/useScripts]]'

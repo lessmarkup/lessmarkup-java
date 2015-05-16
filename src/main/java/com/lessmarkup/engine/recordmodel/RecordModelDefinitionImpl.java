@@ -37,6 +37,7 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     private String id;
     private RecordModel recordModelInstance;
     
+    @SuppressWarnings("unchecked")
     public void initialize(Class<? extends RecordModel> modelType, String moduleType) {
         
         this.recordModelInstance = DependencyResolver.resolve(modelType);
@@ -107,9 +108,9 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
     public List<RecordColumnDefinition> getColumns() {
         return this.columns;
     }
-    
-    private final String ChallengeFieldKey = "-RecaptchaChallenge-";
-    private final String ResponseFieldKey = "-RecaptchaResponse-";
+
+    private static final String ChallengeFieldKey = "-RecaptchaChallenge-";
+    private static final String ResponseFieldKey = "-RecaptchaResponse-";
 
     @Override
     public void validateInput(JsonElement objectToValidate, boolean isNew) throws RecordValidationException {
@@ -124,7 +125,7 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
             }
             
             JsonObject propertiesObject = objectToValidate.getAsJsonObject();
-            
+
             String challengeValue = propertiesObject.getAsJsonPrimitive(ChallengeFieldKey).toString();
             String responseValue = propertiesObject.getAsJsonPrimitive(ResponseFieldKey).toString();
 

@@ -1,5 +1,0 @@
-<label>{{field.text | translate}}</label>
-<select ng-model="object[field.property]" class="form-control">
-    <option ng-repeat="select in field.selectValues" value="{{select.value}}" ng-bind="select.text" ng-selected="fieldValueSelected(model, field, select)"></option>
-</select>
-<input-field-error></input-field-error>

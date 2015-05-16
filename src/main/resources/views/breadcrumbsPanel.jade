@@ -1,0 +1,7 @@
+.breadcrumbs
+    span(ng-if="loadingNewPage")
+        span(us-spinner="{radius:2,width:2,length:3,lines:9,top:'15px',left:'-4px',position:'relative'}")
+    span.breadcrumb-page(ng-repeat="item in breadcrumbs")
+        node-link.breadcrumb-page(path="item.url", ng-bind="item.text")
+    span.breadcrumb-page.active(ng-bind="title")
+

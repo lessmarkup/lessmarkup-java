@@ -1,7 +1,0 @@
-<li ng-repeat="collection in collections" class="navbar-notification scriptonly" ng-show="collections.count > 0">
-    <node-link path="collection.path">
-        <span ng-if="collection.icon" class="glyphicon" ng-class="collection.icon"></span>
-        <span ng-bind="collection.title"></span>
-        <span class="badge" ng-bind="collection.count" ng-class="collectionClass(collection)"></span>
-    </node-link>
-</li>

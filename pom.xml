@@ -89,7 +89,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>WEB-INF/classes/build/**,WEB-INF/classes/client/**,WEB-INF/classes/types/**,WEB-INF/classes/.idea/**,WEB-INF/classes/views/**/*.haml</packagingExcludes>
+                    <packagingExcludes>WEB-INF/classes/build/**,WEB-INF/classes/client/**,WEB-INF/classes/types/**,WEB-INF/classes/.idea/**,WEB-INF/classes/views/**/*.jade</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>

@@ -51,7 +51,7 @@ public class EditableCollectionCache extends AbstractCacheHandler {
     
     synchronized List<RecordToDataPropertyMapper> getProperties(Class<? extends RecordModel> modelType, Class<? extends DataObject> dataType) {
         
-        Tuple<Class<? extends RecordModel>, Class<? extends DataObject>> key = new Tuple(modelType, dataType);
+        Tuple<Class<? extends RecordModel>, Class<? extends DataObject>> key = new Tuple<>(modelType, dataType);
         
         List<RecordToDataPropertyMapper> ret = propertySets.get(key);
         if (ret != null) {

@@ -1,0 +1,93 @@
+﻿div(ng-controller="recordList")
+    .grid-control-panel-top(ng-if="toolbarButtons.length > 0")
+        md-button(
+            ng-repeat="button in toolbarButtons"
+            class="md-default md-raised"
+            aria-label="button.text | translate"
+            ng-click="onToolbarButtonClick(button)"
+            ng-bind="button.text | translate"
+        )
+
+    .recordlist-refresh-panel(ng-if="manualRefresh")
+        md-button.md-primary(ng-click="refreshNewRecords()" ng-show="hasNewRecords")
+            ="{{ 'Main.GetNewRecords' | translate }}"
+
+    pagination.pagination-sm.pagination-top(
+        ng-show="showPagination"
+        items-per-page="itemsPerPage"
+        boundary-links="true"
+        direction-links="true"
+        total-items="totalItems"
+        ng-model="currentPageNumeric"
+        previous-text="&lsaquo;" next-text="&rsaquo;"
+        first-text="&laquo;"
+        last-text="&raquo;"
+        max-size="paginationItems"
+        ng-class="{ 'grid-refreshing' : updating }"
+    )
+
+    table.grid-control(ng-class="{ 'show-options' : showOptions, 'has-options' : hasOptionsBar, 'grid-refreshing' : updating }")
+        tr
+            th(
+                ng-repeat="column in columns"
+                width="{{column.width}}"
+                colspan="{{column.colSpan}}"
+                class="{{column.headerClass}}"
+            )
+                span(
+                    ng-click="sortColumn(column)"
+                    ng-bind="column.text | translate"
+                    ng-class="{ 'sort-up' : column.sort == 'up', 'sort-down' : column.sort == 'down' }"
+                )
+                span.toggle-search-button(ng-if="hasRecordSearch && column == columns[columns.length-1]")
+                    ng-button(ng-click="toggleRecordSearch()")
+                        span.glyphicon(ng-class="{ 'glyphicon-chevron-up' : recordSearchVisible, 'glyphicon-search' : !recordSearchVisible }")
+
+        tr.search-row(ng-if="hasRecordSearch" ng-show="recordSearchVisible")
+            td(colspan="{{(tableColumns)}}")
+                form(ui-keypress="{ 13: searchRecords() }")
+                    table
+                        tr
+                            td
+                                input.form-control(type="text" placeholder="Enter text to search" ng-model="getRecordListScope().recordSearchText")
+                            td
+                                ng-button(ng-click="searchRecords()")
+                                    span.glyphicon.glyphicon-search
+
+        tr(ng-repeat="row in rows" ng-class="{ 'odd': row.isOdd }")
+            td.grid-cell-options(
+                ng-if="hasOptionsBar"
+                ng-class="columns[0].cellClass"
+                cell-show-options=''
+                ng-click="onClickOptions(row, null, $event)"
+            )
+                span
+
+            td(
+                ng-repeat="column in columns"
+                bind-cell="column" row="row"
+                ng-class="column.cellClass"
+                cell-show-options=""
+                ng-click="onClickOptions(row, column, $event)")
+
+    pagination.pagination-sm(
+        ng-show="showPagination"
+        items-per-page="itemsPerPage"
+        boundary-links="true"
+        direction-links="true"
+        total-items="totalItems"
+        ng-model="currentPageNumeric"
+        previous-text="&lsaquo;"
+        next-text="&rsaquo;"
+        first-text="&laquo;"
+        last-text="&raquo;"
+        max-size="paginationItems"
+        ng-class="{ 'grid-refreshing' : updating }")
+
+    .grid-control-panel-bottom(ng-if="toolbarButtons.length > 0")
+        md-button.md-default.md-raised(
+            ng-repeat="button in toolbarButtons"
+            aria-label="button.text | translate"
+            ng-click="onToolbarButtonClick(button)"
+            ng-bind="button.text | translate"
+        )

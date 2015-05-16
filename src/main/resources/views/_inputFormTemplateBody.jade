@@ -1,0 +1,14 @@
+﻿md-content(layout-padding layout="column")
+
+    div(ng-repeat="field in fields | orderBy: 'position'")
+        md-input-container(ng-include="getFieldTemplate(field)" ng-if="fieldVisible(field)")
+
+    div(ng-if="submitWithCaptcha" captcha="recaptchaPublicKey")
+
+    .bg-danger.dialog-notification(ng-if="submitError.length > 0")
+        span.glyphicon.glyphicon-exclamation-sign
+        span(ng-bind="submitError")
+
+    .bg-success.dialog-notification(ng-if="submitSuccess.length > 0")
+        span.glyphicon.glyphicon-ok-circle
+        span(ng-bind="submitSuccess")
