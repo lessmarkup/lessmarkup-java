@@ -2,7 +2,7 @@ label {{field.text | translate}}
 span
     input(
         type="text"
-        ng-model="model"
+        ng-model="object[field.property]"
         ng-readonly="readonly(field)"
         datepicker-popup=""
         close-text="{{ 'Main.Close' | translate}}"

@@ -11,12 +11,6 @@ interface CodeMirrorDirectiveScope extends ng.IScope {
     readonly: boolean;
 }
 
-interface IInputContaner {
-    setInvalid: (boolean) => void;
-    setHasValue: (boolean) => void;
-    setFocused: (boolean) => void;
-}
-
 class CodeMirrorDirectivePostLink {
 
     private editor: CodeMirror.CodeMirror;

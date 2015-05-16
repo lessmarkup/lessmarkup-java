@@ -5,9 +5,34 @@
  */
 
 import _ = require('lodash');
-import ckeditor = require('ckeditor');
+
+interface CkEditorEditor {
+    getData(noEvents?: Object): string;
+    setData(data: string, options?: { internal?: boolean; callback?: Function; noSnapshot?: boolean; }): void;
+    on(eventName: string, listenerFunction: (eventInfo: CkEditorEventInfo) => void, scopeObj?: Object, listenerData?: Object, priority?: number): Object;
+}
+
+interface CkEditorEventInfo {
+    data: any;
+    editor: CkEditorEditor;
+    listenerData: any;
+    name: string;
+    sender: any;
+    cancel(): void;
+    removeListener(): void;
+    stop(): void;
+}
+
+interface CkEditor {
+    replace(element: string, config?: any): CkEditorEditor;
+    replace(element: HTMLTextAreaElement, config?: any): CkEditorEditor;
+    appendTo(element: string, config?: any): CkEditorEditor;
+    appendTo(element: HTMLTextAreaElement, config?: any): CkEditorEditor;
+}
 
 interface CkEditorDirectiveScope extends ng.IScope {
+    options: any;
+    readonly: boolean;
 }
 
 class CkEditorOptions {
@@ -28,33 +53,50 @@ class CkEditorDirectiveLink {
     private options: CkEditorOptions;
     private scope: CkEditorDirectiveScope;
     private friendlyFormatting: FriendlyFormattingService;
-    private editor: ckeditor.Editor;
-    private ngModel: ng.INgModelController;
+    private editor: CkEditorEditor;
+    private model: ng.INgModelController;
+    private inputContainer: IInputContaner;
 
-    constructor(scope: CkEditorDirectiveScope, element: JQuery, attrs, ngModel: ng.INgModelController, serverConfiguration: ServerConfiguration, friendlyFormatting: FriendlyFormattingService) {
+    constructor(scope: CkEditorDirectiveScope,
+                element: JQuery,
+                attrs,
+                model: ng.INgModelController,
+                inputContainer: IInputContaner,
+                serverConfiguration: ServerConfiguration,
+                friendlyFormatting: FriendlyFormattingService,
+                ckeditor: CkEditor) {
         this.serverConfiguration = serverConfiguration;
         this.options = new CkEditorOptions();
         this.scope = scope;
         this.friendlyFormatting = friendlyFormatting;
-        this.ngModel = ngModel;
+        this.model = model;
+        this.inputContainer = inputContainer;
         this.initializeSmiles();
 
-        this.editor = ckeditor.replace(<any>element[0], this.options);
+        inputContainer.setHasValue(true);
 
-        this.editor.on('change', () => this.applyChanges);
-        this.editor.on('key', () => this.applyChanges);
+        this.editor = ckeditor.appendTo(<any>element[0], this.options);
 
-        ngModel.$render = () => this.render();
+        this.editor.on('change', () => this.applyChanges());
+        this.editor.on('key', () => this.applyChanges());
+
+        model.$render = () => this.render();
+    }
+
+    private updateEditorState(newValue: any) {
+        this.inputContainer.setHasValue(true);
+        this.inputContainer.setInvalid(this.model.$invalid && this.model.$touched);
     }
 
     private render() {
-        var text = this.ngModel.$modelValue;
+        var text = this.model.$viewValue || '';
 
         if (text && this.friendlyFormatting.getSmilesExpression()) {
             text = this.friendlyFormatting.smilesToImg(text);
         }
 
         this.editor.setData(text);
+        this.updateEditorState(text);
     }
 
     private applyChanges() {
@@ -78,7 +120,9 @@ class CkEditorDirectiveLink {
             });
         }
 
-        this.ngModel.$setViewValue(text);
+        this.model.$setViewValue(text);
+        this.model.$setTouched();
+        this.updateEditorState(text);
     }
 
     private initializeSmiles() {
@@ -101,11 +145,19 @@ class CkEditorDirectiveLink {
 
 import module = require('./module');
 
-module.directive('ckEditor', [() => {
+module.directive('ckEditor', ['serverConfiguration', 'friendlyFormatting', (serverConfiguration: ServerConfiguration, friendlyFormatting: FriendlyFormattingService) => {
     return <ng.IDirective>{
-        require: '?ngModel',
-        restrict: 'A',
+        require: ['?ngModel', '^?mdInputContainer'],
+        restrict: 'AE',
         replace: false,
-        link: ['serverConfiguration', 'friendlyFormatting', CkEditorDirectiveLink]
+        scope: {
+            options: '=',
+            readonly: '='
+        },
+        link: (scope: CkEditorDirectiveScope, element: JQuery, attrs, controllers: any[]) => {
+            require(['ckeditor'], (ckeditor) => {
+                return new CkEditorDirectiveLink(scope, element, attrs, controllers[0], controllers[1], serverConfiguration, friendlyFormatting, ckeditor);
+            });
+        }
     };
 }]);

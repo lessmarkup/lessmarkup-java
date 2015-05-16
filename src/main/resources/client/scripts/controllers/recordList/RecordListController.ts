@@ -31,6 +31,7 @@ class RecordListController {
     private inputForm: InputFormService;
     private qService: ng.IQService;
     private nodeLoader: NodeLoaderService;
+    private serverConfiguration: ServerConfiguration;
 
     constructor(
         scope:RecordListControllerScope,
@@ -40,8 +41,12 @@ class RecordListController {
         qService: ng.IQService,
         nodeLoader: NodeLoaderService) {
 
+        this.serverConfiguration = serverConfiguration;
         this.scope = scope;
         this.scope.pageSize = serverConfiguration.pageSize;
+        if (this.scope.pageSize <= 0) {
+            this.scope.pageSize = 10;
+        }
         this.configuration = scope.configuration;
         this.updateProperties = new RecordListUpdateProperties();
         this.commandProcessor = commandProcessor;
@@ -735,7 +740,7 @@ class RecordListController {
         }
 
         this.scope.totalItems = this.records.length;
-        var itemsPerPage = this.scope.pageSize;
+        var itemsPerPage = this.serverConfiguration.pageSize;
         var pageCount = ((this.scope.totalItems + itemsPerPage - 1) / itemsPerPage) | 0;
 
         var localPage = page;

@@ -3,6 +3,7 @@
 ///<amd-dependency path="./BindCellDirective" />
 ///<amd-dependency path="./BreadcrumbsPanelDirective" />
 ///<amd-dependency path="./CellShowOptionsDirective" />
+///<amd-dependency path="./CkEditorDirective" />
 ///<amd-dependency path="./CollectionUpdatesDirective" />
 ///<amd-dependency path="./CodeMirrorDirective" />
 ///<amd-dependency path="./FileReadDirective" />
