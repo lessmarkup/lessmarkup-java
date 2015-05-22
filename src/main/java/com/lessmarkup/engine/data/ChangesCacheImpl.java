@@ -1,5 +1,6 @@
 package com.lessmarkup.engine.data;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.EntityChangeHistory;
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
@@ -9,9 +10,7 @@ import com.lessmarkup.interfaces.data.DataChange;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.data.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.lessmarkup.interfaces.module.Implements;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -95,8 +94,7 @@ class Change implements DataChange {
     }
 }
 
-@Component
-@Scope("prototype")
+@Implements(ChangesCache.class)
 class ChangesCacheImpl extends AbstractCacheHandler implements ChangesCache {
 
     private OptionalLong lastUpdateId = OptionalLong.empty();
@@ -106,7 +104,7 @@ class ChangesCacheImpl extends AbstractCacheHandler implements ChangesCache {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Map<Integer, List<Change>> changes = new HashMap<>();
 
-    @Autowired
+    @Inject
     public ChangesCacheImpl(DomainModelProvider domainModelProvider) {
         super(null);
         this.domainModelProvider = domainModelProvider;

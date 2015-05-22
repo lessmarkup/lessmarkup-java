@@ -9,11 +9,7 @@ import com.lessmarkup.TextIds;
 import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class FlatPageSettingsModel extends RecordModel<FlatPageSettingsModel> {
     private boolean loadOnShow;
     private FlatPagePosition position;

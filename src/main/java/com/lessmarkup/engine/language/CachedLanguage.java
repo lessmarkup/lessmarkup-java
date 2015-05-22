@@ -5,12 +5,14 @@
  */
 package com.lessmarkup.engine.language;
 
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.system.Language;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalLong;
 
+@Implements(Language.class)
 public class CachedLanguage implements Language {
     private String name;
     private OptionalLong iconId = OptionalLong.empty();

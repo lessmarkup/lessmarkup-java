@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.engine.language;
 
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
@@ -13,6 +14,7 @@ import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.exceptions.CommonException;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.system.Language;
@@ -22,10 +24,6 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
+@Implements(LanguageCache.class)
 public class LanguageCacheImpl extends AbstractCacheHandler implements LanguageCache {
 
     private final DomainModelProvider domainModelProvider;
@@ -43,7 +40,7 @@ public class LanguageCacheImpl extends AbstractCacheHandler implements LanguageC
     private String defaultLanguageId = null;
     private final boolean IS_DEBUG = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
 
-    @Autowired
+    @Inject
     public LanguageCacheImpl(DomainModelProvider domainModelProvider, ModuleProvider moduleProvider) {
         super(new Class<?>[]{com.lessmarkup.dataobjects.Language.class});
         this.domainModelProvider = domainModelProvider;

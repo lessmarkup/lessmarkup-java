@@ -8,6 +8,7 @@ package com.lessmarkup.engine.security;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.FailedLoginHistory;
@@ -24,6 +25,7 @@ import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.exceptions.DatabaseException;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.security.CurrentUser;
 import com.lessmarkup.interfaces.security.LoginTicket;
 import com.lessmarkup.interfaces.security.UserSecurity;
@@ -45,9 +47,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.servlet.http.Cookie;
 import org.apache.commons.net.util.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 class CookieUserModel {
     private long userId;
@@ -129,15 +128,14 @@ class CookieUserModel {
     }
 }
 
-@Component
-@Scope("prototype")
+@Implements(CurrentUser.class)
 public class CurrentUserImpl implements CurrentUser {
 
     private final DomainModelProvider domainModelProvider;
     private final UserSecurity userSecurity;
     private CookieUserModel userData;
 
-    @Autowired
+    @Inject
     public CurrentUserImpl(DomainModelProvider domainModelProvider, UserSecurity userSecurity) {
         this.domainModelProvider = domainModelProvider;
         this.userSecurity = userSecurity;

@@ -9,8 +9,6 @@ import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.Tuple;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -21,8 +19,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class EditableCollectionCache extends AbstractCacheHandler {
 
     private final Map<Tuple<Class<? extends RecordModel>, Class<? extends DataObject>>, List<RecordToDataPropertyMapper>> propertySets = new HashMap<>();

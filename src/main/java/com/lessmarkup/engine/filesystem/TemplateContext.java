@@ -24,11 +24,10 @@ public class TemplateContext {
     private final Mustache.Lambda map;
     
     public static Mustache.Compiler createCompiler(ResourceCache resourceCache) {
-        Mustache.Compiler compiler = Mustache.compiler()
+        return Mustache.compiler()
                 .escapeHTML(false)
                 .withDelims("[[ ]]")
                 .withLoader(s -> new StringReader(resourceCache.readText(s)));
-        return compiler;
     }
     
     public TemplateContext(DataCache dataCache) {

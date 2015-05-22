@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.engine.security;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
@@ -24,6 +25,7 @@ import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.exceptions.CommonException;
 import com.lessmarkup.interfaces.exceptions.DatabaseException;
 import com.lessmarkup.interfaces.exceptions.UserValidationException;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.security.EntityAccessType;
 import com.lessmarkup.interfaces.security.LoginTicket;
 import com.lessmarkup.interfaces.security.UserSecurity;
@@ -58,12 +60,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.net.util.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+@Implements(UserSecurity.class)
 public class UserSecurityImpl implements UserSecurity {
 
     private final DomainModelProvider domainModelProvider;
@@ -71,7 +69,7 @@ public class UserSecurityImpl implements UserSecurity {
     private final MailSender mailSender;
     private final ChangeTracker changeTracker;
 
-    @Autowired
+    @Inject
     public UserSecurityImpl(DomainModelProvider domainModelProvider, DataCache dataCache, MailSender mailSender, ChangeTracker changeTracker) {
         this.domainModelProvider = domainModelProvider;
         this.dataCache = dataCache;

@@ -1,21 +1,19 @@
 package com.lessmarkup.engine.data;
 
+import com.google.inject.Inject;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.OptionalInt;
 
-@Component
 class DomainModelProviderImpl implements DomainModelProvider {
 
     private final ModuleProvider moduleProvider;
 
-    @Autowired
+    @Inject
     public DomainModelProviderImpl(ModuleProvider moduleProvider) {
         this.moduleProvider = moduleProvider;
     }

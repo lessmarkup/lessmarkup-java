@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
@@ -7,20 +8,15 @@ import com.lessmarkup.interfaces.structure.ChildHandlerSettings;
 import com.lessmarkup.interfaces.system.UserCache;
 import com.lessmarkup.userinterface.model.user.UserCardModel;
 import com.lessmarkup.userinterface.nodehandlers.common.RecordListNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class UserCardRecordsNodeHandler extends RecordListNodeHandler<UserCardModel> {
 
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public UserCardRecordsNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache) {
         super(domainModelProvider, dataCache, UserCardModel.class);
         this.dataCache = dataCache;

@@ -37,11 +37,7 @@ class QueryBuilderImpl implements QueryBuilder {
     
     void setConnection(Connection connection) {
         this.connection = connection;
-        try {
-            this.dialect = DatabaseLanguageDialectFactory.createDialect(this.connection);
-        } catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
+        this.dialect = DatabaseLanguageDialectFactory.createDialect(this.connection);
     }
 
     @Override

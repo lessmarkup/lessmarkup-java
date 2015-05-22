@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.model.structure;
 
 import com.google.gson.JsonElement;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Node;
@@ -29,9 +30,6 @@ import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.DatabaseCon
 import com.lessmarkup.userinterface.nodehandlers.user.ForgotPasswordNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.user.UserCardRecordsNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.user.UserProfileNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -42,10 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
 public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
 
     private final DomainModelProvider domainModelProvider;
@@ -55,7 +50,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
     private final List<CachedNodeInformation> cachedNodes = new ArrayList<>();
     private final HashMap<Long, CachedNodeInformation> idToNode = new HashMap<>();
 
-    @Autowired
+    @Inject
     public NodeCacheImpl(DomainModelProvider domainModelProvider, ModuleProvider moduleProvider, DataCache dataCache) {
         super(new Class<?>[] {Node.class });
         this.domainModelProvider = domainModelProvider;

@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.userinterface.model.global;
 
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -14,12 +15,7 @@ import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class EmailConfigurationModel extends RecordModel<EmailConfigurationModel> {
     private String server;
     private String username;
@@ -30,7 +26,7 @@ public class EmailConfigurationModel extends RecordModel<EmailConfigurationModel
     private String noReplyName;
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public EmailConfigurationModel(DataCache dataCache) {
         this.dataCache = dataCache;
     }

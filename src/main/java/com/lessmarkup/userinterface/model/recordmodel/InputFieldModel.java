@@ -9,14 +9,10 @@ import com.lessmarkup.interfaces.recordmodel.InputFieldDefinition;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
 import com.lessmarkup.interfaces.recordmodel.SelectValueModel;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class InputFieldModel {
 
     private final List<SelectValueModel> selectValues = new ArrayList<>();

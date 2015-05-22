@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.configuration;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.Node;
 import com.lessmarkup.dataobjects.NodeAccess;
@@ -12,24 +13,18 @@ import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.recordmodel.EditableModelCollection;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class NodeAccessModelCollectionManager implements EditableModelCollection<NodeAccessModel> {
     private long nodeId;
     private final DomainModelProvider domainModelProvider;
     private final ChangeTracker changeTracker;
 
-    @Autowired
+    @Inject
     public NodeAccessModelCollectionManager(DomainModelProvider domainModelProvider, ChangeTracker changeTracker) {
         this.domainModelProvider = domainModelProvider;
         this.changeTracker = changeTracker;

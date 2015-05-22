@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
@@ -16,15 +17,10 @@ import com.lessmarkup.interfaces.security.UserSecurity;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.system.MailSender;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.OptionalLong;
 import java.util.Random;
 
-@Component
-@Scope("prototype")
 public class ForgotPasswordModel extends RecordModel<ForgotPasswordModel> {
 
     private String message;
@@ -35,7 +31,7 @@ public class ForgotPasswordModel extends RecordModel<ForgotPasswordModel> {
     private final DomainModelProvider domainModelProvider;
     private final MailSender mailSender;
 
-    @Autowired
+    @Inject
     public ForgotPasswordModel(UserSecurity userSecurity, DataCache dataCache, DomainModelProvider domainModelProvider, MailSender mailSender) {
         super(TextIds.FORGOT_PASSWORD, true);
         this.userSecurity = userSecurity;

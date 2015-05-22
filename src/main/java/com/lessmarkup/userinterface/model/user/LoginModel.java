@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.model.user;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.LanguageHelper;
@@ -15,17 +16,12 @@ import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Random;
 
-@Component
-@Scope("prototype")
 public class LoginModel extends RecordModel<LoginModel> {
 
     private String email;
@@ -34,7 +30,7 @@ public class LoginModel extends RecordModel<LoginModel> {
 
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public LoginModel(DataCache dataCache) {
         super(TextIds.LOGIN);
         this.dataCache = dataCache;

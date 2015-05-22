@@ -1,18 +1,14 @@
 package com.lessmarkup.userinterface.model.structure;
 
+import com.google.inject.Inject;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.system.RequestContext;
 import com.lessmarkup.interfaces.system.ResourceCache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Component
-@Scope("prototype")
 public class ResourceModel {
     
     private final DataCache dataCache;
@@ -20,7 +16,7 @@ public class ResourceModel {
     private String path;
     private String extension;
 
-    @Autowired
+    @Inject
     public ResourceModel(DataCache dataCache) {
         this.dataCache = dataCache;
     }

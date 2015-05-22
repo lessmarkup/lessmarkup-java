@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
@@ -15,15 +16,10 @@ import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.RequestContext;
 import com.lessmarkup.userinterface.model.user.ChangePasswordModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordModel> {
 
     private String ticket;
@@ -32,7 +28,7 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
     private final DomainModelProvider domainModelProvider;
     private final UserSecurity userSecurity;
 
-    @Autowired
+    @Inject
     public ResetPasswordNodeHandler(DataCache dataCache, DomainModelProvider domainModelProvider, UserSecurity userSecurity) {
         super(dataCache, ChangePasswordModel.class);
         this.domainModelProvider = domainModelProvider;

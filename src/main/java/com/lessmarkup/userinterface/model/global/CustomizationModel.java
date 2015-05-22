@@ -12,11 +12,7 @@ import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.InputFile;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class CustomizationModel extends RecordModelWithEditableCollection<CustomizationModel, SiteCustomization> {
     private boolean typeDefined;
     private byte[] body;

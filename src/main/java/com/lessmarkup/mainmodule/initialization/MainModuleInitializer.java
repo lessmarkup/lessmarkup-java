@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.mainmodule.initialization;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.*;
 import com.lessmarkup.dataobjects.migrations.Initial;
@@ -32,20 +33,15 @@ import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteCustomi
 import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteGroupsNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SitePropertiesNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.SiteUsersNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Component
-@Scope("prototype")
 public class MainModuleInitializer implements ModuleInitializer {
 
     private final ModuleIntegration moduleIntegration;
 
-    @Autowired
+    @Inject
     public MainModuleInitializer(ModuleIntegration moduleIntegration) {
         this.moduleIntegration = moduleIntegration;
     }

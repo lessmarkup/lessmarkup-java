@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -9,15 +10,10 @@ import com.lessmarkup.interfaces.structure.ChildHandlerSettings;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.userinterface.model.user.ForgotPasswordModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class ForgotPasswordNodeHandler extends DialogNodeHandler<ForgotPasswordModel> {
 
-    @Autowired
+    @Inject
     public ForgotPasswordNodeHandler(DataCache dataCache) {
         super(dataCache, ForgotPasswordModel.class);
     }

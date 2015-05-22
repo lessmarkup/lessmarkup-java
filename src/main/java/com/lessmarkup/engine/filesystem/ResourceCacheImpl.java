@@ -6,6 +6,7 @@
 
 package com.lessmarkup.engine.filesystem;
 
+import com.google.inject.Inject;
 import com.lessmarkup.dataobjects.SiteCustomization;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
@@ -14,6 +15,7 @@ import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.system.ResourceCache;
@@ -25,12 +27,8 @@ import java.util.logging.Level;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+@Implements(ResourceCache.class)
 class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
 
     private final ModuleProvider moduleProvider;
@@ -39,7 +37,7 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
     private final Map<String, ResourceReference> resources = new HashMap<>();
     private Mustache.Compiler compiler;
 
-    @Autowired
+    @Inject
     public ResourceCacheImpl(ModuleProvider moduleProvider, DomainModelProvider domainModelProvider, DataCache dataCache) {
         super(null);
         this.moduleProvider = moduleProvider;

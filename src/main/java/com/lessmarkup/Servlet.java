@@ -173,8 +173,6 @@ public class Servlet extends HttpServlet {
         try {
             ModuleProvider moduleProvider = DependencyResolver.resolve(ModuleProvider.class);
 
-            moduleProvider.discoverAndRegisterModules();
-
             DependencyResolver.resolve(DomainModelProvider.class).initialize();
 
             MigrateEngine migrateEngine = DependencyResolver.resolve(MigrateEngine.class);

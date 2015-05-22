@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.nodehandlers.configuration;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -12,9 +13,6 @@ import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.structure.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,8 +94,6 @@ class ConfigurationHandlerData {
     }
 }
 
-@Component
-@Scope("prototype")
 public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
 
     private final ModuleProvider moduleProvider;
@@ -105,7 +101,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
     private final List<ConfigurationGroupData> configurationGroups = new ArrayList<>();
     private final HashMap<String, ConfigurationHandlerData> configurationHandlers = new HashMap<>();
 
-    @Autowired
+    @Inject
     public ConfigurationRootNodeHandler(ModuleProvider moduleProvider, DataCache dataCache) {
         this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;

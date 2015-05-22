@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -18,14 +19,9 @@ import com.lessmarkup.interfaces.structure.ConfigurationHandler;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.userinterface.model.configuration.NodeSettingsModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 @ConfigurationHandler(titleTextId = TextIds.VIEWS_TREE)
 public class NodeListNodeHandler extends AbstractNodeHandler {
     public static String getHandlerName(Class<?> handlerType, String moduleType) {
@@ -60,7 +56,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
     private final ModuleProvider moduleProvider;
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public NodeListNodeHandler(ModuleProvider moduleProvider, DataCache dataCache) {
         this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;

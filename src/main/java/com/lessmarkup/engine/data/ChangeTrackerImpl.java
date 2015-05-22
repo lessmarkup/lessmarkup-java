@@ -1,5 +1,6 @@
 package com.lessmarkup.engine.data;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.EntityChangeHistory;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -9,9 +10,7 @@ import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.lessmarkup.interfaces.module.Implements;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -21,8 +20,7 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
+@Implements(ChangeTracker.class)
 class ChangeTrackerImpl implements ChangeTracker {
 
     private boolean changeTrackingInitialized;
@@ -32,7 +30,7 @@ class ChangeTrackerImpl implements ChangeTracker {
     private final Queue<EntityChangeHistory> changeQueue = new LinkedList<>();
     private final List<ChangeListener> listeners = new ArrayList<>();
 
-    @Autowired
+    @Inject
     public ChangeTrackerImpl(DomainModelProvider domainModelProvider) {
         this.domainModelProvider = domainModelProvider;
     }

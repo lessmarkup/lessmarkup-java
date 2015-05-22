@@ -5,28 +5,21 @@
  */
 package com.lessmarkup.engine.mail;
 
+import com.google.inject.Inject;
 import com.lessmarkup.interfaces.cache.DataCache;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.system.MailTemplateModel;
 import com.lessmarkup.interfaces.system.MailTemplateProvider;
 import com.lessmarkup.interfaces.system.ResourceCache;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-@Component
-@Scope("prototype")
+@Implements(MailTemplateProvider.class)
 class MailTemplateProviderImpl implements MailTemplateProvider {
     
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public MailTemplateProviderImpl(DataCache dataCache) {
         this.dataCache = dataCache;
     }

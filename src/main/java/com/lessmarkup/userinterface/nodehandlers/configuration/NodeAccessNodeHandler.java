@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.configuration;
 
+import com.google.inject.Inject;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.dataobjects.UserGroup;
 import com.lessmarkup.framework.helpers.StringHelper;
@@ -11,20 +12,15 @@ import com.lessmarkup.interfaces.recordmodel.PropertyCollectionManager;
 import com.lessmarkup.userinterface.model.configuration.NodeAccessModel;
 import com.lessmarkup.userinterface.model.configuration.NodeAccessModelCollectionManager;
 import com.lessmarkup.userinterface.nodehandlers.common.RecordListNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class NodeAccessNodeHandler extends RecordListNodeHandler<NodeAccessModel> implements PropertyCollectionManager {
 
     private long nodeId;
 
-    @Autowired
+    @Inject
     public NodeAccessNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache) {
         super(domainModelProvider, dataCache, NodeAccessModel.class);
     }

@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.nodehandlers.globalconfiguration;
 
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Module;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -14,22 +15,17 @@ import com.lessmarkup.interfaces.structure.ConfigurationHandler;
 import com.lessmarkup.interfaces.structure.RecordAction;
 import com.lessmarkup.userinterface.model.global.ModuleModel;
 import com.lessmarkup.userinterface.nodehandlers.common.RecordListNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ConfigurationHandler(titleTextId = TextIds.MODULES)
-@Component
-@Scope("prototype")
 public class ModulesNodeHandler extends RecordListNodeHandler<ModuleModel> {
 
     private final ChangeTracker changeTracker;
     private final DomainModelProvider domainModelProvider;
 
-    @Autowired
+    @Inject
     public ModulesNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache, ChangeTracker changeTracker) {
         super(domainModelProvider, dataCache, ModuleModel.class);
         this.domainModelProvider = domainModelProvider;

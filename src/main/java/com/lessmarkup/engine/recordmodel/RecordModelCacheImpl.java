@@ -1,16 +1,15 @@
 package com.lessmarkup.engine.recordmodel;
 
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.recordmodel.RecordModelCache;
 import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,8 +19,7 @@ import java.util.HashMap;
 import java.util.OptionalLong;
 import java.util.logging.Level;
 
-@Component
-@Scope("prototype")
+@Implements(RecordModelCache.class)
 public class RecordModelCacheImpl extends AbstractCacheHandler implements RecordModelCache {
 
     private final ModuleProvider moduleProvider;
@@ -30,7 +28,7 @@ public class RecordModelCacheImpl extends AbstractCacheHandler implements Record
     private final HashMap<String, RecordModelDefinition> idToDefinition = new HashMap<>();
     private final HashMap<Class<?>, String> typeToId = new HashMap<>();
 
-    @Autowired
+    @Inject
     public RecordModelCacheImpl(ModuleProvider moduleProvider) {
         super(new Class<?>[] { com.lessmarkup.dataobjects.Language.class });
         this.moduleProvider = moduleProvider;

@@ -6,14 +6,7 @@
 package com.lessmarkup.engine.module;
 
 import com.lessmarkup.interfaces.data.DataObject;
-import com.lessmarkup.interfaces.module.BackgroundJobHandler;
-import com.lessmarkup.interfaces.module.EntitySearch;
-import com.lessmarkup.interfaces.module.ModuleActionHandler;
-import com.lessmarkup.interfaces.module.ModuleIntegration;
-import com.lessmarkup.interfaces.module.UserProperty;
-import com.lessmarkup.interfaces.module.UserPropertyProvider;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.lessmarkup.interfaces.module.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,8 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Component
-@Scope("prototype")
+@Implements(ModuleIntegration.class)
 public class ModuleIntegrationImpl implements ModuleIntegration {
 
     private final Map<Class<?>, EntitySearch> entitySearch = new HashMap<>();

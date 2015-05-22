@@ -1,8 +1,8 @@
 package com.lessmarkup.userinterface.nodehandlers.globalconfiguration;
 
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
-import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
@@ -11,21 +11,16 @@ import com.lessmarkup.interfaces.structure.ConfigurationHandler;
 import com.lessmarkup.userinterface.model.global.UserBlockModel;
 import com.lessmarkup.userinterface.model.global.UserModel;
 import com.lessmarkup.userinterface.nodehandlers.common.RecordListNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 @ConfigurationHandler(titleTextId = TextIds.USERS)
 public class SiteUsersNodeHandler extends RecordListNodeHandler<UserModel> {
 
     private final DomainModelProvider domainModelProvider;
 
-    @Autowired
+    @Inject
     public SiteUsersNodeHandler(DomainModelProvider domainModelProvider, DataCache dataCache) {
         super(domainModelProvider, dataCache, UserModel.class);
         this.domainModelProvider = domainModelProvider;

@@ -4,14 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.structure.NodeCache;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.system.ResourceCache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -19,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class LoadNodeViewModel {
     
     private NodeHandler nodeHandler;
@@ -36,7 +32,7 @@ public class LoadNodeViewModel {
     private boolean isStatic;
     private List<String> require;
 
-    @Autowired
+    @Inject
     public LoadNodeViewModel(DataCache dataCache) {
         this.dataCache = dataCache;
     }

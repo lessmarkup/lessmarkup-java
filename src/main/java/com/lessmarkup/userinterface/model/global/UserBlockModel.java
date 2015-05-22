@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.global;
 
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.dataobjects.UserBlockHistory;
@@ -9,15 +10,10 @@ import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class UserBlockModel extends RecordModel<UserBlockModel> {
 
     private String reason;
@@ -27,7 +23,7 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
     private final DomainModelProvider domainModelProvider;
     private final ChangeTracker changeTracker;
 
-    @Autowired
+    @Inject
     public UserBlockModel(DomainModelProvider domainModelProvider, ChangeTracker changeTracker) {
         super(TextIds.BLOCK_USER);
         this.domainModelProvider = domainModelProvider;

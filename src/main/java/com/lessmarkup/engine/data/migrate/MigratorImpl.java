@@ -93,19 +93,19 @@ public class MigratorImpl implements Migrator {
         Class<?> propertyType = property.getType();
         
         if (propertyType.equals(OptionalLong.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.LONG, false);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.LONG(), false);
         }
         
         if (propertyType.equals(OptionalInt.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.INT, false);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.INT(), false);
         }
 
         if (propertyType.equals(OptionalBoolean.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.BOOLEAN, false);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.BOOLEAN(), false);
         }
 
         if (propertyType.equals(OptionalDouble.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.DOUBLE, false);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.DOUBLE(), false);
         }
 
         boolean required = property.getAnnotation(RequiredField.class) != null;
@@ -117,38 +117,38 @@ public class MigratorImpl implements Migrator {
         }
 
         if (propertyType.equals(int.class) || propertyType.equals(Integer.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.INT, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.INT(), required);
         }
         
         if (propertyType.equals(OffsetDateTime.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.DATE_TIME, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.DATE_TIME(), required);
         }
 
         if (propertyType.equals(long.class) || propertyType.equals(Long.class)) {
             if (property.getName().equals(Constants.Data.ID_PROPERTY_NAME)) {
-                return this.dialect.getTypeDeclaration(DatabaseDataType.IDENTITY, required);
+                return this.dialect.getTypeDeclaration(DatabaseDataType.IDENTITY(), required);
             }
-            return this.dialect.getTypeDeclaration(DatabaseDataType.LONG, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.LONG(), required);
         }
 
         if (propertyType.equals(boolean.class) || propertyType.equals(Boolean.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.BOOLEAN, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.BOOLEAN(), required);
         }
 
         if (propertyType.equals(double.class) || propertyType.equals(Double.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.DOUBLE, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.DOUBLE(), required);
         }
 
         if (propertyType.equals(String.class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.STRING, maxLength, required, null);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.STRING(), maxLength, required, null);
         }
 
         if (propertyType.equals(byte[].class)) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.BINARY, maxLength, required, null);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.BINARY(), maxLength, required, null);
         }
 
         if (propertyType.isEnum()) {
-            return this.dialect.getTypeDeclaration(DatabaseDataType.INT, required);
+            return this.dialect.getTypeDeclaration(DatabaseDataType.INT(), required);
         }
 
         throw new IllegalArgumentException();

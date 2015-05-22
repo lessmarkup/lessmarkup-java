@@ -1,12 +1,10 @@
 package com.lessmarkup.engine.currencies;
 
+import com.google.inject.Inject;
 import com.lessmarkup.dataobjects.Currency;
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +19,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
-@Scope("prototype")
 public class CurrencyCache extends AbstractCacheHandler {
 
     private final Map<Long, CurrencyCacheItem> currencies = new HashMap<>();
@@ -32,7 +28,7 @@ public class CurrencyCache extends AbstractCacheHandler {
     
     private static final String CookieCurrencyName = "currency";
 
-    @Autowired
+    @Inject
     public CurrencyCache(DomainModelProvider domainModelProvider) {
         super(new Class<?>[] { Currency.class });
         this.domainModelProvider = domainModelProvider;

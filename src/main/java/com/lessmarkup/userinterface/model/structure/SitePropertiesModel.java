@@ -3,6 +3,7 @@ package com.lessmarkup.userinterface.model.structure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.SiteProperties;
 import com.lessmarkup.framework.helpers.JsonSerializer;
@@ -11,26 +12,19 @@ import com.lessmarkup.framework.helpers.PropertyDescriptor;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.helpers.TypeHelper;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
-import com.lessmarkup.interfaces.data.ChangeTracker;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class SitePropertiesModel implements SiteConfiguration {
 
     private final DomainModelProvider domainModelProvider;
-    private final ChangeTracker changeTracker;
 
     private String siteName = "Site";
     private int recordsPerPage = 10;
@@ -55,12 +49,10 @@ public class SitePropertiesModel implements SiteConfiguration {
     private String validFileExtension = null;
     private String engineOverride = null;
 
-    @Autowired
-    public SitePropertiesModel(DomainModelProvider domainModelProvider, ChangeTracker changeTracker) {
+    @Inject
+    public SitePropertiesModel(DomainModelProvider domainModelProvider) {
         this.domainModelProvider = domainModelProvider;
-        this.changeTracker = changeTracker;
     }
-
 
     @InputField(type = InputFieldType.TEXT, textId = TextIds.SITE_NAME)
     public void setSiteName(String siteName) { this.siteName = siteName; }

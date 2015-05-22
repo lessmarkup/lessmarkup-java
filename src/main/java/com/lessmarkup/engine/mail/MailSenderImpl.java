@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.engine.mail;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.TestMail;
 import com.lessmarkup.dataobjects.User;
@@ -12,6 +13,7 @@ import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
 import com.lessmarkup.interfaces.system.MailSender;
 import com.lessmarkup.interfaces.system.MailTemplateModel;
@@ -24,19 +26,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SimpleSMTPHeader;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+@Implements(MailSender.class)
 public class MailSenderImpl implements MailSender {
 
     private final DomainModelProvider domainModelProvider;
     private final MailTemplateProvider mailTemplateProvider;
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public MailSenderImpl(DomainModelProvider domainModelProvider, MailTemplateProvider mailTemplateProvider, DataCache dataCache) {
         this.domainModelProvider = domainModelProvider;
         this.mailTemplateProvider = mailTemplateProvider;

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
@@ -17,9 +18,6 @@ import com.lessmarkup.userinterface.model.common.SearchTextModel;
 import com.lessmarkup.userinterface.model.recordmodel.InputFormDefinitionModel;
 import com.lessmarkup.userinterface.model.user.LoginModel;
 import com.lessmarkup.userinterface.model.user.RegisterModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,15 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class JsonEntryPointModel {
     
     private final DataCache dataCache;
     private final ChangeTracker changeTracker;
     private OptionalLong nodeId = OptionalLong.empty();
 
-    @Autowired
+    @Inject
     public JsonEntryPointModel(DataCache dataCache, ChangeTracker changeTracker) {
         this.dataCache = dataCache;
         this.changeTracker = changeTracker;

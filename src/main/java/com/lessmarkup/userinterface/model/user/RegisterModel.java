@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.model.user;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.JsonSerializer;
@@ -17,12 +18,7 @@ import com.lessmarkup.interfaces.recordmodel.RecordModelCache;
 import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
 import com.lessmarkup.interfaces.security.UserSecurity;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class RegisterModel extends RecordModel<RegisterModel> {
 
     private final DataCache dataCache;
@@ -36,7 +32,7 @@ public class RegisterModel extends RecordModel<RegisterModel> {
     private String userAgreement;
     private boolean agree;
 
-    @Autowired
+    @Inject
     public RegisterModel(DataCache dataCache, UserSecurity userSecurity) {
         this.dataCache = dataCache;
         this.userSecurity = userSecurity;

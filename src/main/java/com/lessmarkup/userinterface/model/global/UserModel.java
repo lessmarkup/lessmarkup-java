@@ -6,6 +6,7 @@
 
 package com.lessmarkup.userinterface.model.global;
 
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.framework.helpers.DependencyResolver;
@@ -23,19 +24,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-@Component
-@Scope("prototype")
 class UserModelCollection implements EditableModelCollection<UserModel> {
 
     private final DomainModelProvider domainModelProvider;
     private final UserSecurity userSecurity;
     private final ChangeTracker changeTracker;
 
-    @Autowired
+    @Inject
     public UserModelCollection(DomainModelProvider domainModelProvider, UserSecurity userSecurity, ChangeTracker changeTracker) {
         this.domainModelProvider = domainModelProvider;
         this.userSecurity = userSecurity;
@@ -145,8 +140,6 @@ class UserModelCollection implements EditableModelCollection<UserModel> {
     }
 }
 
-@Component
-@Scope("prototype")
 public class UserModel extends RecordModel<UserModel> {
 
     private String name;

@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.model.configuration;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Node;
@@ -28,9 +29,6 @@ import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.userinterface.nodehandlers.configuration.NodeListNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +40,6 @@ import java.util.OptionalLong;
 import java.util.Set;
 import java.util.logging.Level;
 
-@Component
-@Scope("prototype")
 public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements InputSource {
 
     private final ModuleProvider moduleProvider;
@@ -65,7 +61,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
     private final List<NodeSettingsModel> children = new ArrayList<>();
     private OptionalLong parentId;
 
-    @Autowired
+    @Inject
     public NodeSettingsModel(ModuleProvider moduleProvider, DomainModelProvider domainModelProvider, DataCache dataCache, ChangeTracker changeTracker) {
         super(TextIds.NODE_SETTINGS);
         this.moduleProvider = moduleProvider;

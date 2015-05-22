@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
@@ -7,21 +8,16 @@ import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 class UserCardModelCollection implements ModelCollection<UserCardModel> {
 
     private final DomainModelProvider domainModelProvider;
 
-    @Autowired
+    @Inject
     public UserCardModelCollection(DomainModelProvider domainModelProvider) {
         this.domainModelProvider = domainModelProvider;
     }
@@ -51,8 +47,6 @@ class UserCardModelCollection implements ModelCollection<UserCardModel> {
     }
 }
 
-@Component
-@Scope("prototype")
 public class UserCardModel extends RecordModel<UserCardModel> {
 
     private String name;

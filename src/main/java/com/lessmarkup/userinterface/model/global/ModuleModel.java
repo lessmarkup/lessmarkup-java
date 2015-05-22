@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.model.global;
 
+import com.google.inject.Inject;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.Module;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
@@ -7,26 +8,18 @@ import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class ModuleModel extends RecordModel<ModuleModel> {
 
-    @Component
-    @Scope("prototype")
     public static class ModuleModelCollection implements ModelCollection<ModuleModel> {
 
         private final DomainModelProvider domainModelProvider;
 
-        @Autowired
+        @Inject
         public ModuleModelCollection(DomainModelProvider domainModelProvider) {
             this.domainModelProvider = domainModelProvider;
         }

@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.engine.security;
 
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.dataobjects.UserGroupMembership;
@@ -12,22 +13,19 @@ import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.structure.CachedNodeInformation;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.interfaces.structure.NodeCache;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.UserCache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
+@Implements(UserCache.class)
 public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
 
     private OptionalLong userId;
@@ -49,7 +47,7 @@ public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
     private String name;
     private final List<Tuple<CachedNodeInformation, NodeAccessType>> nodes = new ArrayList<>();
 
-    @Autowired
+    @Inject
     public UserCacheImpl(DomainModelProvider domainModelProvider, DataCache dataCache) {
         super(new Class<?>[] { User.class });
         this.domainModelProvider = domainModelProvider;

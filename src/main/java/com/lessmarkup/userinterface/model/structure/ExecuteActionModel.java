@@ -2,6 +2,7 @@ package com.lessmarkup.userinterface.model.structure;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
@@ -17,17 +18,12 @@ import java.lang.reflect.Parameter;
 import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class ExecuteActionModel {
     
     private final DataCache dataCache;
     
-    @Autowired
+    @Inject
     public ExecuteActionModel(DataCache dataCache) {
         this.dataCache = dataCache;
     }

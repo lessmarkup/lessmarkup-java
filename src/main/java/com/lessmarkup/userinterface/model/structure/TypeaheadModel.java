@@ -3,6 +3,7 @@ package com.lessmarkup.userinterface.model.structure;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
@@ -13,24 +14,19 @@ import com.lessmarkup.interfaces.structure.ChildHandlerSettings;
 import com.lessmarkup.interfaces.structure.NodeCache;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.Tuple;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
 public class TypeaheadModel {
     
     private final DataCache dataCache;
     private final DomainModelProvider domainModelProvider;
     private List<String> records;
 
-    @Autowired
+    @Inject
     public TypeaheadModel(DataCache dataCache, DomainModelProvider domainModelProvider) {
         this.dataCache = dataCache;
         this.domainModelProvider = domainModelProvider;

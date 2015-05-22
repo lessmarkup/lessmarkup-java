@@ -15,13 +15,9 @@ import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.ActionAccess;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 
-@Component
-@Scope("prototype")
 public class DatabaseConfigurationModel extends RecordModel<DatabaseConfigurationModel> {
     private String database;
 

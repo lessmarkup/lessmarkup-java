@@ -3,6 +3,7 @@ package com.lessmarkup.userinterface.model.structure;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -15,22 +16,17 @@ import com.lessmarkup.interfaces.structure.NodeCache;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.NotificationProvider;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.OptionalLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
 public class UserInterfaceElementsModel {
     private final DomainModelProvider domainModelProvider;
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public UserInterfaceElementsModel(DomainModelProvider domainModelProvider, DataCache dataCache) {
         this.domainModelProvider = domainModelProvider;
         this.dataCache = dataCache;

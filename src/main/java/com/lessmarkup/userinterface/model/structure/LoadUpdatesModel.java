@@ -3,6 +3,7 @@ package com.lessmarkup.userinterface.model.structure;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.interfaces.cache.DataCache;
@@ -10,20 +11,15 @@ import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.structure.*;
 import com.lessmarkup.interfaces.system.UserCache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
-@Scope("prototype")
 public class LoadUpdatesModel {
 
     private final DomainModelProvider domainModelProvider;
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public LoadUpdatesModel(DomainModelProvider domainModelProvider, DataCache dataCache){
         this.domainModelProvider = domainModelProvider;
         this.dataCache = dataCache;

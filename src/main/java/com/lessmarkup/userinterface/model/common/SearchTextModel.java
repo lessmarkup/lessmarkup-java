@@ -4,26 +4,22 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.text.SearchResults;
 import com.lessmarkup.interfaces.text.TextSearch;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
 public class SearchTextModel {
     
     private final DomainModelProvider domainModelProvider;
     private final DataCache dataCache;
     
-    @Autowired
+    @Inject
     public SearchTextModel(DataCache dataCache, DomainModelProvider domainModelProvider) {
         this.domainModelProvider = domainModelProvider;
         this.dataCache = dataCache;

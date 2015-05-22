@@ -5,6 +5,7 @@
  */
 package com.lessmarkup.engine.data.migrate;
 
+import com.google.inject.Inject;
 import com.lessmarkup.dataobjects.MigrationHistory;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -15,9 +16,6 @@ import com.lessmarkup.interfaces.data.Migrator;
 import com.lessmarkup.interfaces.exceptions.CommonException;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -25,14 +23,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
-@Scope("prototype")
 public class MigrateEngine {
     
     private final ModuleProvider moduleProvider;
     private final DomainModelProvider domainModelProvider;
 
-    @Autowired
+    @Inject
     public MigrateEngine(ModuleProvider moduleProvider, DomainModelProvider domainModelProvider) {
         this.moduleProvider = moduleProvider;
         this.domainModelProvider = domainModelProvider;

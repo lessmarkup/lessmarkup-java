@@ -6,11 +6,7 @@ import com.lessmarkup.framework.data.RecordModelWithEditableCollection;
 import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class UserGroupModel extends RecordModelWithEditableCollection<UserGroupModel, UserGroup> {
 
     private String name;

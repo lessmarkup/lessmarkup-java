@@ -3,7 +3,7 @@ package com.lessmarkup.userinterface.model.recordmodel;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.DependencyResolver;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -16,16 +16,11 @@ import com.lessmarkup.interfaces.recordmodel.RecordModelCache;
 import com.lessmarkup.interfaces.recordmodel.RecordModelDefinition;
 import com.lessmarkup.interfaces.recordmodel.SelectValueModel;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@Component
-@Scope("prototype")
 public class InputFormDefinitionModel {
     
     private final DataCache dataCache;
@@ -33,7 +28,7 @@ public class InputFormDefinitionModel {
     private String title;
     private boolean submitWithCaptcha;
     
-    @Autowired
+    @Inject
     public InputFormDefinitionModel(DataCache dataCache) {
         this.dataCache = dataCache;
     }

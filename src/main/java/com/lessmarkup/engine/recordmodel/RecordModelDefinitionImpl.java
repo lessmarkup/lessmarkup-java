@@ -13,6 +13,7 @@ import com.lessmarkup.framework.helpers.TypeHelper;
 import com.lessmarkup.framework.system.RequestContextHolder;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.exceptions.RecordValidationException;
+import com.lessmarkup.interfaces.module.Implements;
 import com.lessmarkup.interfaces.recordmodel.*;
 import com.lessmarkup.interfaces.system.EngineConfiguration;
 
@@ -20,11 +21,8 @@ import java.util.*;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+@Implements(RecordModelDefinition.class)
 public class RecordModelDefinitionImpl implements RecordModelDefinition {
 
     private String titleTextId;

@@ -1,6 +1,7 @@
 package com.lessmarkup.userinterface.nodehandlers.globalconfiguration;
 
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.framework.helpers.StringHelper;
@@ -8,17 +9,12 @@ import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 import com.lessmarkup.userinterface.model.user.LoginModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
 public class LoginNodeHandler extends DialogNodeHandler<LoginModel> {
 
     private final DataCache dataCache;
 
-    @Autowired
+    @Inject
     public LoginNodeHandler(DataCache dataCache) {
         super(dataCache, LoginModel.class);
         this.dataCache = dataCache;

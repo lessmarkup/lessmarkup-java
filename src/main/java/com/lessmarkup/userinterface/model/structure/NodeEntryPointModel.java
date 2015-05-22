@@ -3,6 +3,7 @@ package com.lessmarkup.userinterface.model.structure;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.Smile;
 import com.lessmarkup.engine.filesystem.TemplateContext;
@@ -22,9 +23,6 @@ import com.lessmarkup.interfaces.system.*;
 import com.lessmarkup.userinterface.model.user.LoginModel;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Map;
@@ -32,8 +30,6 @@ import java.util.OptionalLong;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
-@Component
-@Scope("prototype")
 public class NodeEntryPointModel {
 
     public static class Context extends TemplateContext {
@@ -97,7 +93,7 @@ public class NodeEntryPointModel {
     private String nodeLoadError;
     private OptionalLong versionId;
     
-    @Autowired
+    @Inject
     public NodeEntryPointModel(DataCache dataCache, DomainModelProvider domainModelProvider) {
         this.dataCache = dataCache;
         this.context = new Context(dataCache);

@@ -1,5 +1,6 @@
 package com.lessmarkup.userinterface.nodehandlers.user;
 
+import com.google.inject.Inject;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
@@ -8,20 +9,15 @@ import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.UserCardHandler;
 import com.lessmarkup.interfaces.structure.UserCardNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.common.TabPageNodeHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.OptionalLong;
 
-@Component
-@Scope("prototype")
 public class UserCardTabsNodeHandler extends TabPageNodeHandler {
 
     private final ModuleProvider moduleProvider;
     private long userId;
 
-    @Autowired
+    @Inject
     public UserCardTabsNodeHandler(DataCache dataCache, ModuleProvider moduleProvider) {
         super(dataCache);
         this.moduleProvider = moduleProvider;
