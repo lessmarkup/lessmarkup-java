@@ -6,6 +6,8 @@
 
 package com.lessmarkup
 
+import java.lang.management.ManagementFactory
+
 object Constants {
 
   final val EngineNoScriptBlock: String = "<noscript><iframe style=\"width:100%;border:none;\" src=\"?noscript\"></iframe></noscript>"
@@ -34,4 +36,7 @@ object Constants {
 
   final val ModuleActionsValidateAccount: String = "validate"
   final val ModuleActionsChangePassword: String = "password"
+
+  final val IsDebug: Boolean = ManagementFactory.getRuntimeMXBean.getInputArguments.toString.contains("jdwp")
+
 }

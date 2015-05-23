@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.OptionalLong;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+import scala.collection.JavaConversions;
 
 public class NodeEntryPointModel {
 
@@ -195,19 +196,19 @@ public class NodeEntryPointModel {
 
         LanguageCache languageCache = this.dataCache.get(LanguageCache.class);
 
-        for (Language sourceLanguage: languageCache.getLanguages()) {
+        for (Language sourceLanguage: JavaConversions.asJavaCollection(languageCache.getLanguages())) {
             JsonObject targetLanguage = new JsonObject();
             targetLanguage.addProperty("selected", false);
             targetLanguage.addProperty("id", sourceLanguage.getShortName().toLowerCase());
             targetLanguage.addProperty("shortName", sourceLanguage.getShortName());
             targetLanguage.addProperty("name", sourceLanguage.getName());
             targetLanguage.addProperty("isDefault", sourceLanguage.getIsDefault());
-            targetLanguage.addProperty("iconUrl", sourceLanguage.getIconId().isPresent() ? ImageHelper.getImageUrl(sourceLanguage.getIconId().getAsLong()) : "");
+            targetLanguage.addProperty("iconUrl", sourceLanguage.getIconId().isDefined() ? ImageHelper.getImageUrl((Long)sourceLanguage.getIconId().get()) : "");
 
             JsonObject translations = new JsonObject();
 
-            for (Map.Entry<String, String> translation : sourceLanguage.getTranslations().entrySet()) {
-                translations.addProperty(translation.getKey(), translation.getValue());
+            for (scala.Tuple2<String, String> translation : JavaConversions.asJavaIterable(sourceLanguage.getTranslations().toIterable())) {
+                translations.addProperty(translation._1(), translation._2());
             }
 
             targetLanguage.add("translations", translations);
