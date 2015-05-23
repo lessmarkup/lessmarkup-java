@@ -38,9 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalLong;
+import java.util.*;
 import java.util.logging.Level;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -145,8 +143,8 @@ public class CurrentUserImpl implements CurrentUser {
     private boolean noGlobalAdminUser(DomainModel model) throws SQLException {
         User user = model.query()
                 .from(User.class)
-                .where("administrator = $ AND removed = $ AND (blocked = $ OR unblockTime < $)", true, false, false, OffsetDateTime.now())
-                .firstOrDefault(User.class, Constants.DataIdPropertyName());
+                .whereJava("administrator = $ AND removed = $ AND (blocked = $ OR unblockTime < $)", Arrays.asList(true, false, false, OffsetDateTime.now()))
+                        .firstOrDefaultJava(User.class, Constants.DataIdPropertyName());
         return user == null;
     }
     
@@ -384,7 +382,9 @@ public class CurrentUserImpl implements CurrentUser {
                 return true;
             }
 
-            User user = model.query().from(User.class).where("email = $", email).firstOrDefault(User.class);
+            User user = model.query().from(User.class)
+                    .whereJava("email = $", Collections.singletonList(email))
+                    .firstOrDefaultJava(User.class);
 
             if (user != null && user.isBlocked())
             {
@@ -455,7 +455,9 @@ public class CurrentUserImpl implements CurrentUser {
         }
 
         try (DomainModel model = domainModelProvider.create()) {
-            User user = model.query().from(User.class).where("authProvider = $ AND authProviderUserId = $", provider, providerUserId).firstOrDefault(User.class);
+            User user = model.query().from(User.class)
+                    .whereJava("authProvider = $ AND authProviderUserId = $", Arrays.asList(provider, providerUserId))
+                    .firstOrDefaultJava(User.class);
 
             if (user != null && user.isBlocked()) {
                 if (user.getUnblockTime() != null && user.getUnblockTime().isBefore(OffsetDateTime.now())) {
@@ -509,7 +511,9 @@ public class CurrentUserImpl implements CurrentUser {
         }
 
         try (DomainModel model = domainModelProvider.create()) {
-            User user = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $ AND removed = $", userData.getUserId(), false).firstOrDefault(User.class);
+            User user = model.query().from(User.class)
+                    .whereJava(Constants.DataIdPropertyName() + " = $ AND removed = $", Arrays.asList(userData.getUserId(), false))
+                    .firstOrDefaultJava(User.class);
 
             if (user == null) {
                 throw new Exception("Cannot find user");
@@ -532,8 +536,10 @@ public class CurrentUserImpl implements CurrentUser {
             return false;
         }
 
-        User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $ AND removed = $",
-                userData.getUserId(), false).firstOrDefault(User.class);
+        User user = domainModel.query()
+                .from(User.class)
+                .whereJava(Constants.DataIdPropertyName() + " = $ AND removed = $", Arrays.asList(userData.getUserId(), false))
+                .firstOrDefaultJava(User.class);
 
         return user != null &&
                 checkPassword(OptionalLong.of(user.getId()),
@@ -576,7 +582,10 @@ public class CurrentUserImpl implements CurrentUser {
 
         if (email.length() > 0) {
             try (DomainModel domainModel = domainModelProvider.create()) {
-                User user = domainModel.query().from(User.class).where("email = $ AND removed = $", email, false).firstOrDefault(User.class, "salt");
+                User user = domainModel.query()
+                        .from(User.class)
+                        .whereJava("email = $ AND removed = $", Arrays.asList(email, false))
+                        .firstOrDefaultJava(User.class, "salt");
 
                 if (user != null) {
                     hash1 = user.getSalt();
@@ -624,7 +633,10 @@ public class CurrentUserImpl implements CurrentUser {
                 return false;
             }
 
-            int attemptCount = model.query().from(FailedLoginHistory.class).where("userId IS NULL AND address = $ AND created > $", remoteAddress, timeLimit).count();
+            int attemptCount = model.query()
+                    .from(FailedLoginHistory.class)
+                    .whereJava("userId IS NULL AND address = $ AND created > $", Arrays.asList(remoteAddress, timeLimit))
+                    .count();
 
             if (attemptCount >= maxAttemptCount) {
                 LoggingHelper.getLogger(getClass()).info("User is exceeded failed attempt limit for remote address '" + remoteAddress + "'");
@@ -637,13 +649,19 @@ public class CurrentUserImpl implements CurrentUser {
 
             if (registrationExpires != null && registrationExpires.isBefore(OffsetDateTime.now())) {
                 LoggingHelper.getLogger(getClass()).info("User registration is expired, removing the user from users list");
-                User u = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).first(User.class);
+                User u = model.query()
+                        .from(User.class)
+                        .whereJava(Constants.DataIdPropertyName() + " = $", Collections.singletonList(userId.getAsLong()))
+                        .firstJava(User.class);
                 u.setRemoved(true);
                 model.update(u);
                 return false;
             }
 
-            attemptCount = model.query().from(FailedLoginHistory.class).where("userId = $ AND created > $", userId.getAsLong(), timeLimit).count();
+            attemptCount = model.query()
+                    .from(FailedLoginHistory.class)
+                    .whereJava("userId = $ AND created > $", Arrays.asList(userId.getAsLong(), timeLimit))
+                    .count();
 
             if (attemptCount >= maxAttemptCount) {
                 LoggingHelper.getLogger(getClass()).info("Found failed attempts for specified user which exceed maximum attempt count");
@@ -680,11 +698,14 @@ public class CurrentUserImpl implements CurrentUser {
                 LoggingHelper.getLogger(getClass()).info("Password is recognized as valid");
 
                 if (attemptCount > 0) {
-                    model.query().deleteFrom(FailedLoginHistory.class, "userId = $ AND created > $", userId.getAsLong(), timeLimit);
+                    model.query()
+                            .deleteFromJava(FailedLoginHistory.class, "userId = $ AND created > $", Arrays.asList(userId.getAsLong(), timeLimit));
                 }
 
                 if (registrationExpires != null) {
-                    User u = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).first(User.class);
+                    User u = model.query().from(User.class)
+                            .whereJava(Constants.DataIdPropertyName() + " = $", Collections.singletonList(userId.getAsLong()))
+                            .firstJava(User.class);
                     u.setRegistrationExpires(null);
                     model.update(u);
                 }

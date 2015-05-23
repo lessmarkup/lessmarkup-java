@@ -66,12 +66,12 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
       changeTrackingInitialized = true
       val domainModel: DomainModel = domainModelProvider.create
       try {
-        val history: EntityChangeHistory = domainModel.query
+        val history: Option[EntityChangeHistory] = domainModel.query
           .from(classOf[EntityChangeHistory])
           .orderByDescending(Constants.DataIdPropertyName)
-          .firstOrDefault(classOf[EntityChangeHistory])
-        if (history != null) {
-          lastUpdateId = history.getId
+          .first(classOf[EntityChangeHistory], None)
+        if (history.isDefined) {
+          lastUpdateId = history.get.getId
         }
       }
       catch {
@@ -93,7 +93,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
     record.setEntityId(objectId)
     record.setChangeType(changeType.ordinal)
     record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserId)
-    record.setCollectionId(DomainModelImpl.getCollectionId(`type`).getAsInt)
+    record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
     record.setCreated(OffsetDateTime.now)
     domainModel.create(record)
   }
@@ -104,7 +104,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
     record.setEntityId(dataObject.getId)
     record.setChangeType(changeType.ordinal)
     record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserId)
-    record.setCollectionId(DomainModelImpl.getCollectionId(`type`).getAsInt)
+    record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
     record.setCreated(OffsetDateTime.now)
     domainModel.create(record)
   }
@@ -126,7 +126,6 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
         .from(classOf[EntityChangeHistory])
         .where("id > " + lastUpdateId).orderBy("id")
         .toList(classOf[EntityChangeHistory])
-        .toList
         .foreach(h => {
         lastUpdateId = h.getId
         syncObject synchronized {

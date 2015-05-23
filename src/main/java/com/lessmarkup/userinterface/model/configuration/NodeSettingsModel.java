@@ -30,14 +30,7 @@ import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.userinterface.nodehandlers.configuration.NodeListNodeHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalLong;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements InputSource {
@@ -185,7 +178,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
         try (DomainModel domainModel = domainModelProvider.createWithTransaction())
         {
-            Node record = domainModel.query().find(Node.class, nodeId);
+            Node record = domainModel.query().findJava(Node.class, nodeId);
 
             record.setTitle(title);
             record.setParentId(parentId);
@@ -204,12 +197,15 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
     public Object deleteNode() {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            Node node = domainModel.query().find(Node.class, nodeId);
+            Node node = domainModel.query().findJava(Node.class, nodeId);
             OptionalLong nodeParentId = node.getParentId();
             domainModel.delete(Node.class, node.getId());
             changeTracker.addChange(Node.class, node, EntityChangeType.REMOVED, domainModel);
 
-            List<Node> nodes = domainModel.query().from(Node.class).where("parentId = $", nodeParentId).toList(Node.class);
+            List<Node> nodes = domainModel.query()
+                    .from(Node.class)
+                    .whereJava("parentId = $", Collections.singletonList(nodeParentId))
+                    .toListJava(Node.class);
 
             for (int i = 0; i < nodes.size(); i++) {
                 if (nodes.get(i).getPosition() != i) {
@@ -232,7 +228,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             nodes.stream().filter(n -> n.getNodeId() != rootNode.getNodeId() && !n.getParentId().isPresent()).forEach(node -> {
                 rootNode.getChildren().add(node);
                 node.setParentId(OptionalLong.of(rootNode.getNodeId()));
-                Node record = domainModel.query().find(Node.class, node.getNodeId());
+                Node record = domainModel.query().findJava(Node.class, node.getNodeId());
                 if (record.getParentId() != node.getParentId()) {
                     record.setParentId(node.getParentId());
                     domainModel.update(record);
@@ -248,7 +244,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                 if (child.getPosition() != i) {
                     child.setPosition(i);
-                    Node record = domainModel.query().find(Node.class, child.getNodeId());
+                    Node record = domainModel.query().findJava(Node.class, child.getNodeId());
                     if (record.getPosition() != i) {
                         record.setPosition(i);
                         domainModel.update(record);
@@ -270,7 +266,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         {
             domainModel.query()
                     .from(Node.class)
-                    .toList(Node.class)
+                    .toListJava(Node.class)
                     .stream()
                     .sorted((n1, n2) -> Integer.compare(n1.getPosition(), n2.getPosition()))
                     .forEach(source -> {
@@ -316,7 +312,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 NodeSettingsModel parent = nodeIds.get(node.getParentId().getAsLong());
                 if (parent == null) {
                     node.setParentId(null);
-                    Node record = domainModel.query().find(Node.class, node.getNodeId());
+                    Node record = domainModel.query().findJava(Node.class, node.getNodeId());
                     record.setParentId(null);
                     domainModel.update(record);
                     changedNodes.add(node.getNodeId());
@@ -342,7 +338,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
     public Object changeSettings() {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            Node node = domainModel.query().find(Node.class, nodeId);
+            Node node = domainModel.query().findJava(Node.class, nodeId);
 
             node.setSettings(settings != null ? settings.toString() : null);
 
@@ -357,7 +353,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
     public JsonElement updateParent() {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            Node node = domainModel.query().find(Node.class, nodeId);
+            Node node = domainModel.query().findJava(Node.class, nodeId);
 
             Set<Long> changedNodes = new HashSet<>();
 
@@ -367,11 +363,14 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                 if (node.getParentId().isPresent()) {
                     newRootNode = node;
-                    oldRootNode = domainModel.query().from(Node.class).where("parentId IS NULL").first(Node.class);
+                    oldRootNode = domainModel.query()
+                            .from(Node.class)
+                            .whereJava("parentId IS NULL", new LinkedList<>())
+                            .firstJava(Node.class);
                 }
                 else {
                     oldRootNode = node;
-                    newRootNode = domainModel.query().find(Node.class, parentId.getAsLong());
+                    newRootNode = domainModel.query().findJava(Node.class, parentId.getAsLong());
                 }
 
                 if (!newRootNode.getParentId().isPresent()) {
@@ -380,8 +379,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                 for (Node neighbor : domainModel.query()
                         .from(Node.class)
-                        .where("parentId = $ AND position > $", newRootNode.getParentId().getAsLong(), newRootNode.getPosition())
-                        .toList(Node.class)) {
+                        .whereJava("parentId = $ AND position > $", Arrays.asList(newRootNode.getParentId().getAsLong(), newRootNode.getPosition()))
+                        .toListJava(Node.class)) {
                     neighbor.setPosition(neighbor.getPosition() - 1);
                     domainModel.update(neighbor);
                     changedNodes.add(neighbor.getId());
@@ -393,8 +392,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                 for (Node neighbor : domainModel.query()
                         .from(Node.class)
-                        .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > 0", newRootNode.getId(), nodeId)
-                        .toList(Node.class)) {
+                        .whereJava("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > 0", Arrays.asList(newRootNode.getId(), nodeId))
+                        .toListJava(Node.class)) {
                     neighbor.setPosition(neighbor.getPosition() + 1);
                     domainModel.update(neighbor);
                     changedNodes.add(neighbor.getId());
@@ -409,8 +408,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                     if (position > node.getPosition()) {
                         for (Node neighbor : domainModel.query()
                                 .from(Node.class)
-                                .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > $ AND position <= $", parentId, nodeId, node.getPosition(), position)
-                                .toList(Node.class)) {
+                                .whereJava("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > $ AND position <= $", Arrays.asList(parentId, nodeId, node.getPosition(), position))
+                                .toListJava(Node.class)) {
                             neighbor.setPosition(neighbor.getPosition() - 1);
                             domainModel.update(neighbor);
                             changedNodes.add(neighbor.getId());
@@ -419,8 +418,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                     else if (position < node.getPosition()) {
                         for (Node neighbor : domainModel.query()
                                 .from(Node.class)
-                                .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position >= $ AND position < $", parentId, nodeId, position, node.getPosition())
-                                .toList(Node.class)) {
+                                .whereJava("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position >= $ AND position < $", Arrays.asList(parentId, nodeId, position, node.getPosition()))
+                                .toListJava(Node.class)) {
                             neighbor.setPosition(neighbor.getPosition() + 1);
                             domainModel.update(neighbor);
                             changedNodes.add(neighbor.getId());
@@ -430,8 +429,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 else {
                     for (Node neighbor : domainModel.query()
                             .from(Node.class)
-                            .where("parentId = $ AND position > $ AND " + Constants.DataIdPropertyName() + " != $", node.getParentId(), node.getPosition(), nodeId)
-                            .toList(Node.class)) {
+                            .whereJava("parentId = $ AND position > $ AND " + Constants.DataIdPropertyName() + " != $", Arrays.asList(node.getParentId(), node.getPosition(), nodeId))
+                            .toListJava(Node.class)) {
                         neighbor.setPosition(neighbor.getPosition() - 1);
                         domainModel.update(neighbor);
                         changedNodes.add(neighbor.getId());
@@ -439,8 +438,8 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                     for (Node neighbor : domainModel.query()
                             .from(Node.class)
-                            .where("parentId = $ AND position >= $ AND " + Constants.DataIdPropertyName() + " != $", parentId, position, nodeId)
-                            .toList(Node.class)) {
+                            .whereJava("parentId = $ AND position >= $ AND " + Constants.DataIdPropertyName() + " != $", Arrays.asList(parentId, position, nodeId))
+                            .toListJava(Node.class)) {
                         neighbor.setPosition(neighbor.getPosition() + 1);
                         domainModel.update(neighbor);
                         changedNodes.add(neighbor.getId());

@@ -14,10 +14,7 @@ import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.recordmodel.EditableModelCollection;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.OptionalLong;
+import java.util.*;
 
 public class NodeAccessModelCollectionManager implements EditableModelCollection<NodeAccessModel> {
     private long nodeId;
@@ -36,7 +33,7 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
 
     @Override
     public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-        return query.from(NodeAccess.class).where("nodeId = $", nodeId).toIdList();
+        return query.from(NodeAccess.class).whereJava("nodeId = $", Collections.singletonList(nodeId)).toIdListJava();
     }
 
     @Override
@@ -48,10 +45,11 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
     public Collection<NodeAccessModel> read(QueryBuilder query, List<Long> ids) {
         List<String> idsString = new LinkedList<>();
         ids.forEach(s -> idsString.add(s.toString()));
-        return query.from(NodeAccess.class, "na").where(String.format("na.nodeId = $ AND na." + Constants.DataIdPropertyName() + " IN (%s)", String.join(",", idsString)), nodeId)
+        return query.fromJava(NodeAccess.class, "na")
+                .whereJava(String.format("na.nodeId = $ AND na." + Constants.DataIdPropertyName() + " IN (%s)", String.join(",", idsString)), Collections.singletonList(nodeId))
             .leftJoin(User.class, "u", "u." + Constants.DataIdPropertyName() + " = na.userId")
             .leftJoin(UserGroup.class, "g", "g." + Constants.DataIdPropertyName() + " = na.groupId")
-            .toList(NodeAccessModel.class, "na.accessType, u.email, g.name, na." + Constants.DataIdPropertyName() + " AccessId");
+            .toListJava(NodeAccessModel.class, "na.accessType, u.email, g.name, na." + Constants.DataIdPropertyName() + " AccessId");
     }
 
     public boolean isFiltered() { return false; }
@@ -73,12 +71,18 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
             access.setNodeId(nodeId);
 
             if (record.getUser() != null && record.getGroup().length() > 0) {
-                long userId = domainModel.query().from(User.class).where("email = $", record.getUser()).first(User.class, "Id").getId();
+                long userId = domainModel.query()
+                        .from(User.class)
+                        .whereJava("email = $", Collections.singletonList(record.getUser()))
+                        .firstJava(User.class, "Id").getId();
                 access.setUserId(OptionalLong.of(userId));
             }
 
             if (record.getGroup() != null && record.getGroup().length() > 0) {
-                long groupId = domainModel.query().from(UserGroup.class).where("name = $", record.getGroup()).first(UserGroup.class, "Id").getId();
+                long groupId = domainModel.query()
+                        .from(UserGroup.class)
+                        .whereJava("name = $", Collections.singletonList(record.getGroup()))
+                        .firstJava(UserGroup.class, "Id").getId();
                 access.setGroupId(OptionalLong.of(groupId));
             }
 
@@ -93,11 +97,14 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
     @Override
     public void updateRecord(NodeAccessModel record) {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            NodeAccess access = domainModel.query().find(NodeAccess.class, record.getAccessId());
+            NodeAccess access = domainModel.query().findJava(NodeAccess.class, record.getAccessId());
             access.setAccessType(record.getAccessType());
 
             if (record.getUser() != null && record.getUser().length() > 0) {
-                long userId = domainModel.query().from(User.class).where("email = $", record.getUser()).first(User.class).getId();
+                long userId = domainModel.query()
+                        .from(User.class)
+                        .whereJava("email = $", Collections.singletonList(record.getUser()))
+                        .firstJava(User.class).getId();
                 access.setUserId(OptionalLong.of(userId));
             }
             else {
@@ -105,7 +112,10 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
             }
 
             if (record.getGroup() != null && record.getGroup().length() > 0) {
-                long groupId = domainModel.query().from(UserGroup.class).where("name = $", record.getGroup()).first(UserGroup.class).getId();
+                long groupId = domainModel.query()
+                        .from(UserGroup.class)
+                        .whereJava("name = $", Collections.singletonList(record.getGroup()))
+                        .firstJava(UserGroup.class).getId();
                 access.setGroupId(OptionalLong.of(groupId));
             }
             else {

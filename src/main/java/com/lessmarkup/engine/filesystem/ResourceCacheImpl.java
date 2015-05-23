@@ -101,7 +101,9 @@ class ResourceCacheImpl extends AbstractCacheHandler implements ResourceCache {
         }
         
         try (DomainModel domainModel = domainModelProvider.create()) {
-            for (SiteCustomization record : domainModel.query().from(SiteCustomization.class).toList(SiteCustomization.class)) {
+            for (SiteCustomization record : domainModel.query()
+                    .from(SiteCustomization.class)
+                    .toListJava(SiteCustomization.class)) {
                 String recordPath = record.getPath().toLowerCase();
                 
                 ResourceReference reference;

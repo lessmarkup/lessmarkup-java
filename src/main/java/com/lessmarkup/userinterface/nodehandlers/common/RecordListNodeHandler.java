@@ -641,7 +641,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
                 }
 
                 if (filterText.length() > 0) {
-                    queryBuilder = queryBuilder.where("(" + filterText + ")", filterParams);
+                    queryBuilder = queryBuilder.whereJava("(" + filterText + ")", filterParams);
                 }
             }
 

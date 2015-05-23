@@ -144,7 +144,9 @@ public class SitePropertiesModel implements SiteConfiguration {
     @Override
     public void initialize(OptionalLong objectId) {
         try (DomainModel domainModel = domainModelProvider.create()) {
-            SiteProperties propertiesDataObject = domainModel.query().from(SiteProperties.class).firstOrDefault(SiteProperties.class);
+            SiteProperties propertiesDataObject = domainModel.query()
+                    .from(SiteProperties.class)
+                    .firstOrDefaultJava(SiteProperties.class);
             if (propertiesDataObject == null || StringHelper.isNullOrEmpty(propertiesDataObject.getProperties())) {
                 return;
             }
@@ -191,7 +193,9 @@ public class SitePropertiesModel implements SiteConfiguration {
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
-            SiteProperties propertiesDataObject = domainModel.query().from(SiteProperties.class).firstOrDefault(SiteProperties.class);
+            SiteProperties propertiesDataObject = domainModel.query()
+                    .from(SiteProperties.class)
+                    .firstOrDefaultJava(SiteProperties.class);
             boolean isNew = false;
             if (propertiesDataObject == null) {
                 isNew = true;

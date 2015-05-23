@@ -17,11 +17,8 @@ import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.recordmodel.EditableModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.OptionalLong;
+
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +40,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
     
     @Override
     public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-        return query.from(dataType).toIdList();
+        return query.from(dataType).toIdListJava();
     }
 
     @Override
@@ -75,7 +72,10 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
         List<TM> ret = new ArrayList<>();
         ids.forEach(s -> idsString.add(s.toString()));
         try (DomainModel domainModel = domainModelProvider.create()) {
-            for (TD record : domainModel.query().from(dataType).where(String.format(Constants.DataIdPropertyName() + " in (%s)", String.join(",", idsString))).toList(dataType)) {
+            for (TD record : domainModel.query()
+                    .from(dataType)
+                    .whereJava(String.format(Constants.DataIdPropertyName() + " in (%s)", String.join(",", idsString)), new LinkedList<>())
+                    .toListJava(dataType)) {
                 TM model = DependencyResolver.resolve(modelType);
                 updateModel(model, record);
                 ret.add(model);
@@ -114,7 +114,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
     @Override
     public void updateRecord(TM record) {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            TD data = domainModel.query().from(dataType).find(dataType, record.getId());
+            TD data = domainModel.query().from(dataType).findJava(dataType, record.getId());
             updateData(data, record);
             domainModel.update(data);
             changeTracker.addChange(dataType, data, EntityChangeType.UPDATED, domainModel);

@@ -90,10 +90,10 @@ public class MailSenderImpl implements MailSender {
             User userTo = null;
             try (DomainModel domainModel = domainModelProvider.create()) {
                 if (userIdTo.isPresent()) {
-                    userTo = domainModel.query().from(User.class).whereId(userIdTo.getAsLong()).first(User.class);
+                    userTo = domainModel.query().from(User.class).whereId(userIdTo.getAsLong()).firstJava(User.class);
                 }
                 if (userIdFrom.isPresent()) {
-                    userFrom = domainModel.query().from(User.class).whereId(userIdFrom.getAsLong()).first(User.class);
+                    userFrom = domainModel.query().from(User.class).whereId(userIdFrom.getAsLong()).firstJava(User.class);
                 }
             }
             

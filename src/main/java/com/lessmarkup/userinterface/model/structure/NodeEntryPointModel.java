@@ -170,7 +170,7 @@ public class NodeEntryPointModel {
             JsonArray smiles = new JsonArray();
             serverConfiguration.add("smiles", smiles);
 
-            for (Smile smile : domainModel.query().from(Smile.class).toList(Smile.class)) {
+            for (Smile smile : domainModel.query().from(Smile.class).toListJava(Smile.class)) {
                 JsonObject smileTarget = new JsonObject();
                 smileTarget.addProperty("id", smile.getId());
                 smileTarget.addProperty("code", smile.getCode());

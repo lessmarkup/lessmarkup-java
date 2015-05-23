@@ -49,6 +49,8 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.logging.Level;
@@ -122,7 +124,10 @@ public class UserSecurityImpl implements UserSecurity {
 
     private void checkUserExistence(String email, DomainModel domainModel) throws UserValidationException
     {
-        User user = domainModel.query().from(User.class).where("email = $ AND isRemoved = $", email, false).firstOrDefault(User.class, "Id");
+        User user = domainModel.query()
+                .from(User.class)
+                .whereJava("email = $ AND isRemoved = $", Arrays.asList(email, false))
+                .firstOrDefaultJava(User.class, "Id");
 
         if (user != null) {
             LoggingHelper.getLogger(getClass()).info(String.format("User with e-mail '%s' already exists", email));
@@ -167,7 +172,10 @@ public class UserSecurityImpl implements UserSecurity {
         String defaultGroup = dataCache.get(SiteConfiguration.class).getDefaultUserGroup();
 
         if (defaultGroup != null && defaultGroup.length() > 0) {
-            UserGroup group = domainModel.query().from(UserGroup.class).where("Name = $", defaultGroup).firstOrDefault(UserGroup.class);
+            UserGroup group = domainModel.query()
+                    .from(UserGroup.class)
+                    .whereJava("Name = $", Collections.singletonList(defaultGroup))
+                    .firstOrDefaultJava(UserGroup.class);
 
             if (group == null) {
                 group = new UserGroup();
@@ -277,7 +285,10 @@ public class UserSecurityImpl implements UserSecurity {
         LoggingHelper.getLogger(getClass()).log(Level.INFO, "Creating password validation token for {0}", userId);
         
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId).firstOrDefault(User.class);
+            User user = domainModel.query()
+                    .from(User.class)
+                    .whereJava(Constants.DataIdPropertyName() + " = $", Collections.singletonList(userId))
+                    .firstOrDefaultJava(User.class);
             if (user == null) {
                 return null;
             }
@@ -298,7 +309,10 @@ public class UserSecurityImpl implements UserSecurity {
         LoggingHelper.getLogger(getClass()).log(Level.INFO, "Validating password change token {0}", token);
         
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).where("email = $ AND passwordChangeToken = $", email, token).firstOrDefault(User.class);
+            User user = domainModel.query()
+                    .from(User.class)
+                    .whereJava("email = $ AND passwordChangeToken = $", Arrays.asList(email, token))
+                    .firstOrDefaultJava(User.class);
             if (user == null) {
                 LoggingHelper.getLogger(getClass()).info("Cannot validate password - cannot find user or token");
                 return OptionalLong.empty();
@@ -629,7 +643,10 @@ public class UserSecurityImpl implements UserSecurity {
     public OptionalLong confirmUser(String validateSecret) {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction())
         {
-            User user = domainModel.query().from(User.class).where("validateSecret = $ AND emailConfirmed = $", validateSecret, false).firstOrDefault(User.class);
+            User user = domainModel.query()
+                    .from(User.class)
+                    .whereJava("validateSecret = $ AND emailConfirmed = $", Arrays.asList(validateSecret, false))
+                    .firstOrDefaultJava(User.class);
             if (user == null)
             {
                 return OptionalLong.empty();
@@ -658,8 +675,8 @@ public class UserSecurityImpl implements UserSecurity {
 
         domainModel.query()
                 .from(User.class)
-                .where("isAdministrator = $ AND isRemoved = $ AND isBlocked = $", true, false, false)
-                .toList(User.class, Constants.DataIdPropertyName())
+                .whereJava("isAdministrator = $ AND isRemoved = $ AND isBlocked = $", Arrays.asList(true, false, false))
+                .toListJava(User.class, Constants.DataIdPropertyName())
                 .forEach(admin -> mailSender.sendMail(NewUserCreatedModel.class, OptionalLong.empty(), OptionalLong.of(admin.getId()),
                         null, Constants.MailTemplatesAdminNewUserCreated(), model));
     }

@@ -63,7 +63,7 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
         else {
           query = query.where("created >= $ AND " + Constants.DataIdPropertyName + " > $", dateFrame, new java.lang.Long(lastUpdateId.get))
         }
-        query.toList(classOf[EntityChangeHistory]).toList.foreach(history => {
+        query.toList(classOf[EntityChangeHistory]).foreach(history => {
           lastUpdateId = Option(history.getId)
           var collection: Option[mutable.ListBuffer[Change]] = changes.get(history.getCollectionId)
           if (collection.isEmpty) {

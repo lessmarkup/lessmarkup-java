@@ -50,7 +50,7 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().findOrDefault(User.class, userId.getAsLong());
+            User user = domainModel.query().findOrDefaultJava(User.class, userId.getAsLong());
 
             if (user == null) {
                 LoggingHelper.getLogger(getClass()).info("Cannot change password: user id=" + userId.getAsLong() + " does not exist");

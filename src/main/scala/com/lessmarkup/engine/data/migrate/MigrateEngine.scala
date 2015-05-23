@@ -40,8 +40,7 @@ class MigrateEngine @Inject() (moduleProvider: ModuleProvider, domainModelProvid
     try {
       val existingMigrations = domainModel.query
         .from(classOf[MigrationHistory])
-        .toList(classOf[MigrationHistory], "uniqueId")
-        .toList
+        .toList(classOf[MigrationHistory], Option("uniqueId"))
         .map(_.getUniqueId)
         .toSet
       for (module <- moduleProvider.getModules) {

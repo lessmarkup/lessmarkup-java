@@ -43,7 +43,7 @@ public class ModulesNodeHandler extends RecordListNodeHandler<ModuleModel> {
 
     protected JsonObject enableModule(long moduleId, boolean enable) {
         try (DomainModel domainModel = domainModelProvider.create()) {
-            Module siteModule = domainModel.query().find(Module.class, moduleId);
+            Module siteModule = domainModel.query().findJava(Module.class, moduleId);
 
             siteModule.setEnabled(enable);
             domainModel.update(siteModule);

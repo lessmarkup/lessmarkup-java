@@ -14,6 +14,8 @@ import com.lessmarkup.userinterface.model.configuration.NodeAccessModelCollectio
 import com.lessmarkup.userinterface.nodehandlers.common.RecordListNodeHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NodeAccessNodeHandler extends RecordListNodeHandler<NodeAccessModel> implements PropertyCollectionManager {
@@ -42,23 +44,25 @@ public class NodeAccessNodeHandler extends RecordListNodeHandler<NodeAccessModel
             throw new IllegalArgumentException("searchText");
         }
 
-        searchText = "%" + searchText + "%";
+        final String searchText2 = "%" + searchText + "%";
 
         switch (property)
         {
             case "user": {
                 List<String> ret = new ArrayList<>();
                 domainModel.query()
-                        .from(User.class).where("name LIKE $ OR email LIKE $", searchText, searchText)
-                        .toList(User.class, "email")
+                        .from(User.class)
+                        .whereJava("name LIKE $ OR email LIKE $", Arrays.asList(searchText, searchText))
+                        .toListJava(User.class, "email")
                         .forEach(u -> ret.add(u.getEmail()));
                 return ret;
             }
             case "group": {
                 List<String> ret = new ArrayList<>();
                 domainModel.query()
-                        .from(UserGroup.class).where("name LIKE $", searchText)
-                        .toList(UserGroup.class, "name")
+                        .from(UserGroup.class)
+                        .whereJava("name LIKE $", Collections.singletonList(searchText2))
+                        .toListJava(UserGroup.class, "name")
                         .forEach(g -> ret.add(g.getName()));
                 return ret;
             }

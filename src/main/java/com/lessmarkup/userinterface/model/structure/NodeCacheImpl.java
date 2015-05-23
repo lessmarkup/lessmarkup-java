@@ -71,7 +71,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
             domainModel.query()
                     .from(Node.class)
                     .orderBy("position")
-                    .toList(Node.class)
+                    .toListJava(Node.class)
                     .stream()
                     .map(n -> new CachedNodeInformationImpl(n) {})
                     .forEach(cachedNodesImpl::add);
@@ -82,7 +82,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
             
             domainModel.query()
                     .from(NodeAccess.class)
-                    .toList(NodeAccess.class)
+                    .toListJava(NodeAccess.class)
                     .forEach(na -> {
                         CachedNodeInformation node = nodeMap.get(na.getNodeId());
                         if (node != null) {

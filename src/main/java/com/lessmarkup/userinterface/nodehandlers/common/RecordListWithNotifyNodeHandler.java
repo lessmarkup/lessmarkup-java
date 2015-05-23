@@ -57,7 +57,7 @@ public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> ext
         Set<Long> changeIds = new HashSet<>();
         changes.forEach(c -> changeIds.add(c.getEntityId()));
 
-        return collection.readIds(domainModel.query().whereIds(changeIds), true).size();
+        return collection.readIds(domainModel.query().whereIdsJava(changeIds), true).size();
     }
 
     @Override

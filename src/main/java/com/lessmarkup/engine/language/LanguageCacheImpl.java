@@ -24,12 +24,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalLong;
+import java.util.*;
 
 @Implements(LanguageCache.class)
 public class LanguageCacheImpl extends AbstractCacheHandler implements LanguageCache {
@@ -117,8 +112,8 @@ public class LanguageCacheImpl extends AbstractCacheHandler implements LanguageC
 
             for (com.lessmarkup.dataobjects.Language language : domainModel.query()
                     .from(com.lessmarkup.dataobjects.Language.class)
-                    .where("visible = $", true)
-                    .toList(com.lessmarkup.dataobjects.Language.class)) {
+                    .whereJava("visible = $", Collections.singletonList(true))
+                    .toListJava(com.lessmarkup.dataobjects.Language.class)) {
 
                 String shortName = language.getShortName().toLowerCase();
 
@@ -141,8 +136,8 @@ public class LanguageCacheImpl extends AbstractCacheHandler implements LanguageC
             if (!languageIds.isEmpty()) {
                 for (com.lessmarkup.dataobjects.Translation translation : domainModel.query()
                         .from(com.lessmarkup.dataobjects.Translation.class)
-                        .where("LanguageId in (" + StringHelper.join(",", languageIds) + ")")
-                        .toList(com.lessmarkup.dataobjects.Translation.class)) {
+                        .whereJava("LanguageId in (" + StringHelper.join(",", languageIds) + ")", new LinkedList<>())
+                        .toListJava(com.lessmarkup.dataobjects.Translation.class)) {
                     CachedLanguage language = idToLanguage.get(translation.getLanguageId());
                     if (language == null) {
                         continue;

@@ -12,6 +12,7 @@ import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.OptionalLong;
 
 public class UserBlockModel extends RecordModel<UserBlockModel> {
@@ -37,7 +38,7 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).find(User.class, userId);
+            User user = domainModel.query().from(User.class).findJava(User.class, userId);
             if (user == null) {
                 throw new IllegalArgumentException();
             }
@@ -64,14 +65,17 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
 
     public void unblockUser(long userId) {
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).find(User.class, userId);
+            User user = domainModel.query().from(User.class).findJava(User.class, userId);
             if (user == null || !user.isBlocked()) {
                 return;
             }
 
             user.setBlocked(false);
 
-            for (UserBlockHistory history : domainModel.query().from(UserBlockHistory.class).where("userId = $ AND unblocked = $", userId, false).toList(UserBlockHistory.class)) {
+            for (UserBlockHistory history : domainModel.query()
+                    .from(UserBlockHistory.class)
+                    .whereJava("userId = $ AND unblocked = $", Arrays.asList((Object) userId, false))
+                    .toListJava(UserBlockHistory.class)) {
                 history.setUnblocked(true);
                 domainModel.update(history);
             }

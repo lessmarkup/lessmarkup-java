@@ -18,6 +18,7 @@ import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.system.MailSender;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 
+import java.util.Collections;
 import java.util.OptionalLong;
 import java.util.Random;
 
@@ -57,7 +58,10 @@ public class ForgotPasswordModel extends RecordModel<ForgotPasswordModel> {
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).where("email = $", email).firstOrDefault(User.class);
+            User user = domainModel.query()
+                    .from(User.class)
+                    .whereJava("email = $", Collections.singletonList(email))
+                    .firstOrDefaultJava(User.class);
 
             if (user == null) {
                 try {

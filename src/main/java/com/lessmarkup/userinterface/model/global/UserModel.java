@@ -22,6 +22,7 @@ import com.lessmarkup.interfaces.structure.Tuple;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 class UserModelCollection implements EditableModelCollection<UserModel> {
@@ -39,7 +40,10 @@ class UserModelCollection implements EditableModelCollection<UserModel> {
 
     @Override
     public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-        return query.from(User.class).where("removed = $", false).toIdList();
+        return query
+                .from(User.class)
+                .whereJava("removed = $", Collections.singletonList(false))
+                .toIdListJava();
     }
 
     @Override
@@ -50,7 +54,10 @@ class UserModelCollection implements EditableModelCollection<UserModel> {
     @Override
     public Collection<UserModel> read(QueryBuilder queryBuilder, List<Long> ids) {
         Collection<UserModel> ret = new ArrayList<>();
-        for (User user : queryBuilder.from(User.class).where("removed = $", false).toList(User.class)) {
+        for (User user : queryBuilder
+                .from(User.class)
+                .whereJava("removed = $", Collections.singletonList(false))
+                .toListJava(User.class)) {
             UserModel model = new UserModel();
             model.setBlocked(user.isBlocked());
             model.setName(user.getName());
@@ -104,7 +111,7 @@ class UserModelCollection implements EditableModelCollection<UserModel> {
     @Override
     public void updateRecord(UserModel record) {
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
-            User user = domainModel.query().from(User.class).find(User.class, record.getId());
+            User user = domainModel.query().from(User.class).findJava(User.class, record.getId());
 
             user.setName(record.getName());
             user.setEmail(record.getEmail());

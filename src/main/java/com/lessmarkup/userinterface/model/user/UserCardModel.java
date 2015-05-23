@@ -11,6 +11,7 @@ import com.lessmarkup.interfaces.recordmodel.RecordModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 class UserCardModelCollection implements ModelCollection<UserCardModel> {
@@ -24,7 +25,10 @@ class UserCardModelCollection implements ModelCollection<UserCardModel> {
 
     @Override
     public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-        return query.from(User.class).where("removed = $", false).toIdList();
+        return query
+                .from(User.class)
+                .whereJava("removed = $", Collections.singletonList(false))
+                .toIdListJava();
     }
 
     @Override
@@ -35,7 +39,10 @@ class UserCardModelCollection implements ModelCollection<UserCardModel> {
     @Override
     public Collection<UserCardModel> read(QueryBuilder queryBuilder, List<Long> ids) {
         Collection<UserCardModel> ret = new ArrayList<>();
-        for (User user : queryBuilder.from(User.class).where("removed = $", false).toList(User.class)) {
+        for (User user : queryBuilder
+                .from(User.class)
+                .whereJava("removed = $", Collections.singletonList(false))
+                .toListJava(User.class)) {
             UserCardModel model = new UserCardModel();
             model.setId(user.getId());
             model.setName(user.getName());

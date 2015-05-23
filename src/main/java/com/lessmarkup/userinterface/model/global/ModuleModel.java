@@ -10,6 +10,7 @@ import com.lessmarkup.interfaces.recordmodel.RecordColumn;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +27,12 @@ public class ModuleModel extends RecordModel<ModuleModel> {
 
         @Override
         public List<Long> readIds(QueryBuilder query, boolean ignoreOrder) {
-            return query.from(Module.class).where("removed = $ AND system = $", false, false).toIdList();
+
+            query = query
+                    .from(Module.class)
+                    .whereJava("removed = $ AND system = $", Arrays.asList((Object) false, false));
+
+            return query.toIdListJava();
         }
 
         @Override
@@ -38,7 +44,10 @@ public class ModuleModel extends RecordModel<ModuleModel> {
         public Collection<ModuleModel> read(QueryBuilder queryBuilder, List<Long> ids) {
             Collection<ModuleModel> ret = new ArrayList<>();
 
-            for (Module module : queryBuilder.from(Module.class).where("removed = $ AND system = $", false, false).whereIds(ids).toList(Module.class)) {
+            for (Module module : queryBuilder
+                    .from(Module.class)
+                    .whereJava("removed = $ AND system = $", Arrays.asList((Object)false, false))
+                    .whereIdsJava(ids).toListJava(Module.class)) {
                 ModuleModel model = new ModuleModel();
                 model.setEnabled(module.isEnabled());
                 model.setName(module.getName());

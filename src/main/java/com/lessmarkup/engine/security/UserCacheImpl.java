@@ -22,6 +22,7 @@ import com.lessmarkup.interfaces.system.UserCache;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.OptionalLong;
 
@@ -57,7 +58,10 @@ public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
     private void initializeUser() {
         try (DomainModel domainModel = domainModelProvider.create()) {
             
-            User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).firstOrDefault(User.class);
+            User user = domainModel.query()
+                    .from(User.class)
+                    .whereJava(Constants.DataIdPropertyName() + " = $", Collections.singletonList(userId.getAsLong()))
+                    .firstOrDefaultJava(User.class);
 
             if (user == null) {
                 userId = OptionalLong.empty();
@@ -68,8 +72,8 @@ public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
             
             domainModel.query()
                     .from(UserGroupMembership.class)
-                    .where("userId = $", userId.getAsLong())
-                    .toList(UserGroupMembership.class, "UserGroupId")
+                    .whereJava("userId = $", Collections.singletonList(userId.getAsLong()))
+                    .toListJava(UserGroupMembership.class, "UserGroupId")
                     .forEach(g -> groups.add(g.getId()));
             email = user.getEmail();
             title = user.getTitle();

@@ -31,7 +31,7 @@ class MigratorImpl(connectionString: String) extends Migrator {
 
   private val dialect: Option[DatabaseLanguageDialect] =
     if (connection.isDefined)
-      Option(DatabaseLanguageDialectFactory.createDialect(connection.get))
+      Option(DatabaseLanguageDialectFactory.createDialect(connection))
     else
       None
 
