@@ -13,7 +13,6 @@ import com.lessmarkup.interfaces.exceptions.CommonException
 import com.lessmarkup.interfaces.module.{Implements, ModuleConfiguration, ModuleInitializer, ModuleProvider}
 import com.lessmarkup.interfaces.structure.{Tuple, NodeHandler}
 
-import scala.collection.JavaConverters._
 import scala.collection.JavaConversions._
 import scala.util.Try
 
@@ -133,7 +132,7 @@ class ModuleProviderImpl extends ModuleProvider {
 
     moduleInitializer.initialize()
 
-    val moduleConfiguration = new ModuleConfigurationImpl(moduleUrl, isSystem, moduleInitializer.getModuleType, elements.asJava, classLoader, moduleInitializer)
+    val moduleConfiguration = new ModuleConfigurationImpl(moduleUrl, isSystem, moduleInitializer.getModuleType, elements, classLoader, moduleInitializer)
 
     Option(moduleConfiguration)
   }
@@ -181,7 +180,7 @@ class ModuleProviderImpl extends ModuleProvider {
     try {
 
       val query = domainModel.query.from(classOf[Module]).where("removed = $", new java.lang.Boolean(false))
-      val databaseModules = query.toList(classOf[Module]).toList
+      val databaseModules = query.toList(classOf[Module])
       val existingModules = modules.map(m => m.getUrl.toString -> m).toMap
 
       databaseModules.filter(m => !existingModules.contains(m.getPath)).foreach(m => {
