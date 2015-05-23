@@ -132,7 +132,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         recordModel = formCache.getDefinition(modelType);
 
         if (recordModel == null) {
-            throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.MISSING_PARAMETER, modelType.getName()));
+            throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.MISSING_PARAMETER, modelType.getName()));
         }
 
         this.allProperties = TypeHelper.getProperties(modelType);
@@ -141,13 +141,13 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     protected void addEditActions() {
         if (editableModelCollection != null) {
             if (editableModelCollection.isDeleteOnly()) {
-                addRecordAction("removeRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
+                addRecordAction("removeRecord", Constants.ModuleTypeMain(), TextIds.REMOVE_RECORD, null);
             }
             else
             {
-                addCreateAction("addRecord", Constants.ModuleType.MAIN, TextIds.ADD_RECORD, modelType);
-                addRecordAction("modifyRecord", Constants.ModuleType.MAIN, TextIds.MODIFY_RECORD, null);
-                addRecordAction("removeRecord", Constants.ModuleType.MAIN, TextIds.REMOVE_RECORD, null);
+                addCreateAction("addRecord", Constants.ModuleTypeMain(), TextIds.ADD_RECORD, modelType);
+                addRecordAction("modifyRecord", Constants.ModuleTypeMain(), TextIds.MODIFY_RECORD, null);
+                addRecordAction("removeRecord", Constants.ModuleTypeMain(), TextIds.REMOVE_RECORD, null);
             }
         }
     }
@@ -217,7 +217,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         modelCollection.initialize(getObjectId(), getAccessType());
 
         if (modelCollection == null) {
-            throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.MISSING_PARAMETER));
+            throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.MISSING_PARAMETER));
         }
     }
 
@@ -295,7 +295,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
             data.addProperty("recordsPerPage", recordsPerPage);
             data.addProperty("type", recordModel.getId());
             data.addProperty("extensionScript", getExtensionScript());
-            data.addProperty("recordId", StringHelper.toJsonCase(Constants.Data.ID_PROPERTY_NAME));
+            data.addProperty("recordId", StringHelper.toJsonCase(Constants.DataIdPropertyName()));
             data.addProperty("liveUpdates", isSupportsLiveUpdates());
             data.addProperty("manualRefresh", isSupportsManualRefresh());
             boolean hasSearch = false;

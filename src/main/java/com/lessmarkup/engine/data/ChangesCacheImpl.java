@@ -128,7 +128,7 @@ class ChangesCacheImpl extends AbstractCacheHandler implements ChangesCache {
                 if (!lastUpdateId.isPresent()) {
                     query = query.where("created >= $", dateFrame);
                 } else {
-                    query = query.where("created >= $ AND " + Constants.Data.ID_PROPERTY_NAME + " > $", dateFrame, lastUpdateId.getAsLong());
+                    query = query.where("created >= $ AND " + Constants.DataIdPropertyName() + " > $", dateFrame, lastUpdateId.getAsLong());
                 }
                 
                 query.toList(EntityChangeHistory.class).forEach(history -> {

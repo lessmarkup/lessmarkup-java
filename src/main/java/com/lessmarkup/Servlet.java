@@ -29,9 +29,9 @@ public class Servlet extends HttpServlet {
     private boolean processRequestInContext(String path, RequestContext requestContext) throws ServletException, IOException {
         LoggingHelper.getLogger(getClass()).info(String.format("Request to '%s'", path));
         
-        if (path.startsWith(Constants.NodePath.SYSTEM_ACTION + "/")) {
+        if (path.startsWith(Constants.NodePathSystemAction() + "/")) {
             
-            String actionPath = path.substring(Constants.NodePath.SYSTEM_ACTION.length()+1);
+            String actionPath = path.substring(Constants.NodePathSystemAction().length()+1);
             
             int pos = actionPath.indexOf('/');
             

@@ -71,7 +71,7 @@ public class NodeEntryPointModel {
         }
         
         public String getNoScriptBlock() {
-            return Constants.Engine.NO_SCRIPT_BLOCK;
+            return Constants.EngineNoScriptBlock();
         }
 
         public String getGoogleAnalytics() {
@@ -150,11 +150,11 @@ public class NodeEntryPointModel {
         }
         serverConfiguration.addProperty("hasLogin", siteConfiguration.getHasUsers() || adminLoginPage == null || adminLoginPage.length() == 0);
         serverConfiguration.addProperty("hasSearch", siteConfiguration.getHasSearch());
-        serverConfiguration.addProperty("configurationPath", "/" + Constants.NodePath.CONFIGURATION);
+        serverConfiguration.addProperty("configurationPath", "/" + Constants.NodePathConfiguration());
         serverConfiguration.addProperty("rootPath", requestContext.getRootPath());
         serverConfiguration.addProperty("rootTitle", siteConfiguration.getSiteName());
-        serverConfiguration.addProperty("profilePath", "/" + Constants.NodePath.PROFILE);
-        serverConfiguration.addProperty("forgotPasswordPath", "/" + Constants.NodePath.FORGOT_PASSWORD);
+        serverConfiguration.addProperty("profilePath", "/" + Constants.NodePathProfile());
+        serverConfiguration.addProperty("forgotPasswordPath", "/" + Constants.NodePathForgotPassword());
 
         UserInterfaceElementsModel notificationsModel = DependencyResolver.resolve(UserInterfaceElementsModel.class);
         notificationsModel.handle(serverConfiguration, this.versionId);

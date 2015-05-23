@@ -45,7 +45,7 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
     protected abstract String saveObject(T changedObject);
 
     protected String getApplyCaption() {
-        return LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.APPLY_BUTTON);
+        return LanguageHelper.getFullTextId(Constants.ModuleTypeMain(), TextIds.APPLY_BUTTON);
     }
 
     @Override
@@ -68,7 +68,7 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
         model.validateInput(changedObject, false);
         String message = saveObject(JsonSerializer.deserializePojo(modelType, changedObject));
         if (message == null) {
-            message = LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.SUCCESSFULLY_SAVED);
+            message = LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.SUCCESSFULLY_SAVED);
         }
         JsonObject ret = new JsonObject();
         ret.addProperty("message", message);

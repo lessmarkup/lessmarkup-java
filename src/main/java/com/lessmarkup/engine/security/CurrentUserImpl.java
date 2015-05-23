@@ -146,7 +146,7 @@ public class CurrentUserImpl implements CurrentUser {
         User user = model.query()
                 .from(User.class)
                 .where("administrator = $ AND removed = $ AND (blocked = $ OR unblockTime < $)", true, false, false, OffsetDateTime.now())
-                .firstOrDefault(User.class, Constants.Data.ID_PROPERTY_NAME);
+                .firstOrDefault(User.class, Constants.DataIdPropertyName());
         return user == null;
     }
     
@@ -270,25 +270,22 @@ public class CurrentUserImpl implements CurrentUser {
 
     @Override
     public boolean isAdministrator() {
-        if (userData == null) {
-            return false;
-        }
-        return userData.isAdministrator();
+        return userData != null && userData.isAdministrator();
     }
 
     @Override
     public boolean isApproved() {
-        return userData == null ? false : userData.isApproved();
+        return userData != null && userData.isApproved();
     }
 
     @Override
     public boolean isFakeUser() {
-        return userData == null ? false : userData.isFakeUser();
+        return userData != null && userData.isFakeUser();
     }
 
     @Override
     public boolean emailConfirmed() {
-        return userData == null ? false : userData.isEmailConfirmed();
+        return userData != null && userData.isEmailConfirmed();
     }
 
     @Override
@@ -512,14 +509,14 @@ public class CurrentUserImpl implements CurrentUser {
         }
 
         try (DomainModel model = domainModelProvider.create()) {
-            User user = model.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $ AND removed = $", userData.getUserId(), false).firstOrDefault(User.class);
+            User user = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $ AND removed = $", userData.getUserId(), false).firstOrDefault(User.class);
 
             if (user == null) {
                 throw new Exception("Cannot find user");
             }
 
             if (!checkPassword(OptionalLong.of(user.getId()), user.getPassword(), user.getSalt(), false, false, null, password, null)) {
-                throw new Exception(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.INVALID_PASSWORD));
+                throw new Exception(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.INVALID_PASSWORD));
             }
 
             user.setRemoved(true);
@@ -535,14 +532,19 @@ public class CurrentUserImpl implements CurrentUser {
             return false;
         }
 
-        User user = domainModel.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $ AND removed = $", userData.getUserId(), false).firstOrDefault(User.class);
+        User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $ AND removed = $",
+                userData.getUserId(), false).firstOrDefault(User.class);
 
-        if (user == null) {
-            return false;
-        }
+        return user != null &&
+                checkPassword(OptionalLong.of(user.getId()),
+                        user.getPassword(),
+                        user.getSalt(),
+                        user.isBlocked(),
+                        user.isRemoved(),
+                        user.getRegistrationExpires(),
+                        password,
+                        null);
 
-        return checkPassword(OptionalLong.of(user.getId()), user.getPassword(), user.getSalt(), user.isBlocked(), 
-                user.isRemoved(), user.getRegistrationExpires(), password, null);
     }
 
     private static String generateFakeSalt(MessageDigest hashAlgorithm, String email) {
@@ -582,7 +584,7 @@ public class CurrentUserImpl implements CurrentUser {
             }
         }
         
-        MessageDigest digest = MessageDigest.getInstance(Constants.Encrypt.HASH_PROVIDER);
+        MessageDigest digest = MessageDigest.getInstance(Constants.EncryptHashProvider());
         
         if (hash1.length() == 0) {
             hash1 = generateFakeSalt(digest, email);
@@ -635,7 +637,7 @@ public class CurrentUserImpl implements CurrentUser {
 
             if (registrationExpires != null && registrationExpires.isBefore(OffsetDateTime.now())) {
                 LoggingHelper.getLogger(getClass()).info("User registration is expired, removing the user from users list");
-                User u = model.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userId.getAsLong()).first(User.class);
+                User u = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).first(User.class);
                 u.setRemoved(true);
                 model.update(u);
                 return false;
@@ -658,10 +660,9 @@ public class CurrentUserImpl implements CurrentUser {
             if (!passwordValid)
             {
                 if (encodedPassword != null && encodedPassword.length() > 0) {
-                    String pass1 = userPassword;
                     String[] split = encodedPassword.split(";");
                     if (split.length == 2 && split[0].trim().length() > 0  && split[1].trim().length() > 0) {
-                        String pass2 = UserSecurityImpl.encodePassword(pass1, split[0]);
+                        String pass2 = UserSecurityImpl.encodePassword(userPassword, split[0]);
                         passwordValid = pass2.equals(split[1]);
                     }
                 }
@@ -683,7 +684,7 @@ public class CurrentUserImpl implements CurrentUser {
                 }
 
                 if (registrationExpires != null) {
-                    User u = model.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userId.getAsLong()).first(User.class);
+                    User u = model.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).first(User.class);
                     u.setRegistrationExpires(null);
                     model.update(u);
                 }

@@ -163,7 +163,7 @@ public class RecordModelDefinitionImpl implements RecordModelDefinition {
                 continue;
             }
             
-            String errorText = LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.PROPERTY_MUST_BE_SPECIFIED);
+            String errorText = LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PROPERTY_MUST_BE_SPECIFIED);
             String fieldText = field.getTextId() == null ? "" : LanguageHelper.getText(moduleType, field.getTextId());
             
             throw new RecordValidationException(String.format(errorText, fieldText));

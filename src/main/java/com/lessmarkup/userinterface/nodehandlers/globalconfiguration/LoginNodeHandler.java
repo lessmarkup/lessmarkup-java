@@ -36,7 +36,7 @@ public class LoginNodeHandler extends DialogNodeHandler<LoginModel> {
         String adminLoginPage = siteConfiguration.getAdminLoginPage();
 
         JsonObject ret = super.getViewData();
-        ret.addProperty("administratorKey", StringHelper.isNullOrEmpty(adminLoginPage) ? Constants.NodePath.ADMIN_LOGIN_DEFAULT_PAGE : adminLoginPage);
+        ret.addProperty("administratorKey", StringHelper.isNullOrEmpty(adminLoginPage) ? Constants.NodePathAdminLoginDefaultPage() : adminLoginPage);
         return ret;
     }
 

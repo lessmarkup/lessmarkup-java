@@ -43,7 +43,7 @@ public class LoginModel extends RecordModel<LoginModel> {
             throw new CommonException(e);
         }
 
-        Tuple<String, String> loginHash = null;
+        Tuple<String, String> loginHash;
 
         try {
             loginHash = RequestContextHolder.getContext().getCurrentUser().getLoginHash(data.get("user").getAsString());
@@ -74,7 +74,7 @@ public class LoginModel extends RecordModel<LoginModel> {
         SiteConfiguration siteConfiguration = dataCache.get(SiteConfiguration.class);
         String adminLoginPage = siteConfiguration.getAdminLoginPage();
         if (StringHelper.isNullOrEmpty(adminLoginPage)) {
-            adminLoginPage = Constants.NodePath.ADMIN_LOGIN_DEFAULT_PAGE;
+            adminLoginPage = Constants.NodePathAdminLoginDefaultPage();
         }
 
         boolean allowAdministrator = Objects.equals(administratorKey, adminLoginPage);
@@ -82,7 +82,7 @@ public class LoginModel extends RecordModel<LoginModel> {
         boolean allowUser = StringHelper.isNullOrWhitespace(administratorKey);
 
         if (!RequestContextHolder.getContext().getCurrentUser().loginWithPassword(email, "", savePassword, allowAdministrator, allowUser, passwordHash)) {
-            throw new UnauthorizedAccessException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_NOT_FOUND));
+            throw new UnauthorizedAccessException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.USER_NOT_FOUND));
         }
 
         JsonObject ret = new JsonObject();

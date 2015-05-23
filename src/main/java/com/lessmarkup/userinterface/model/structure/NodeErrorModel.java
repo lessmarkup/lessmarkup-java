@@ -10,12 +10,11 @@ import java.io.IOException;
 
 public class NodeErrorModel {
     public void initialize() {
-
     }
 
     public void handleRequest() throws IOException {
         RequestContext requestContext = RequestContextHolder.getContext();
         requestContext.addHeader("Content-Type", "text/plain");
-        requestContext.getOutputStream().write(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.UNKNOWN_ERROR).getBytes());
+        requestContext.getOutputStream().write(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.UNKNOWN_ERROR).getBytes());
     }
 }

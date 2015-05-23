@@ -75,7 +75,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
         List<TM> ret = new ArrayList<>();
         ids.forEach(s -> idsString.add(s.toString()));
         try (DomainModel domainModel = domainModelProvider.create()) {
-            for (TD record : domainModel.query().from(dataType).where(String.format(Constants.Data.ID_PROPERTY_NAME + " in (%s)", String.join(",", idsString))).toList(dataType)) {
+            for (TD record : domainModel.query().from(dataType).where(String.format(Constants.DataIdPropertyName() + " in (%s)", String.join(",", idsString))).toList(dataType)) {
                 TM model = DependencyResolver.resolve(modelType);
                 updateModel(model, record);
                 ret.add(model);

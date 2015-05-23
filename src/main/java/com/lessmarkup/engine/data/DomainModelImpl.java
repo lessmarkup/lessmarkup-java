@@ -185,7 +185,7 @@ class DomainModelImpl implements DomainModel {
         boolean first = true;
         
         for (PropertyDescriptor column : metadata.getColumns().values()) {
-            if (Constants.Data.ID_PROPERTY_NAME.equals(column.getName())) {
+            if (Constants.DataIdPropertyName().equals(column.getName())) {
                 continue;
             }
             
@@ -198,12 +198,12 @@ class DomainModelImpl implements DomainModel {
             command.append(String.format("%s = ?", this.dialect.decorateName(column.getName())));
         }
         
-        command.append(String.format(" WHERE %s = ?", this.dialect.decorateName(Constants.Data.ID_PROPERTY_NAME)));
+        command.append(String.format(" WHERE %s = ?", this.dialect.decorateName(Constants.DataIdPropertyName())));
         
         try (PreparedStatement statement = this.connection.prepareStatement(command.toString())) {
             int columnIndex = 1;
             for (PropertyDescriptor column : metadata.getColumns().values()) {
-                if (Constants.Data.ID_PROPERTY_NAME.equals(column.getName())) {
+                if (Constants.DataIdPropertyName().equals(column.getName())) {
                     continue;
                 }
                 updateDataValue(column, column.getValue(dataObject), statement, columnIndex++);
@@ -229,7 +229,7 @@ class DomainModelImpl implements DomainModel {
         boolean first = true;
         
         for (PropertyDescriptor column : metadata.getColumns().values()) {
-            if (Constants.Data.ID_PROPERTY_NAME.equals(column.getName())) {
+            if (Constants.DataIdPropertyName().equals(column.getName())) {
                 continue;
             }
             
@@ -244,12 +244,15 @@ class DomainModelImpl implements DomainModel {
             values.append("?");
         }
 
-        String command = String.format("INSERT INTO %s (%s) VALUES (%s)", this.dialect.decorateName(metadata.getName()), names.toString(), values.toString());
+        String command = String.format("INSERT INTO %s (%s) VALUES (%s)",
+                this.dialect.decorateName(metadata.getName()),
+                names.toString(),
+                values.toString());
         
         try (PreparedStatement statement = this.connection.prepareStatement(command, Statement.RETURN_GENERATED_KEYS)) {
             int columnIndex = 1;
             for (PropertyDescriptor column : metadata.getColumns().values()) {
-                if (Constants.Data.ID_PROPERTY_NAME.equals(column.getName())) {
+                if (Constants.DataIdPropertyName().equals(column.getName())) {
                     continue;
                 }
                 updateDataValue(column, column.getValue(dataObject), statement, columnIndex++);
@@ -283,7 +286,9 @@ class DomainModelImpl implements DomainModel {
         TableMetadata metadata = getMetadata(type);
         
         try (Statement statement = this.connection.createStatement()) {
-            return statement.execute(String.format("DELETE FROM %s WHERE %s=%d", this.dialect.decorateName(metadata.getName()), this.dialect.decorateName(Constants.Data.ID_PROPERTY_NAME), id));
+            return statement.execute(String.format("DELETE FROM %s WHERE %s=%d",
+                    this.dialect.decorateName(metadata.getName()),
+                    this.dialect.decorateName(Constants.DataIdPropertyName()), id));
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }

@@ -87,7 +87,8 @@ class QueryBuilderImpl implements QueryBuilder {
             
             if (isTableName) {
                 int pos1 = pos+2;
-                for (;pos1 < sql.length() && Character.isAlphabetic(sql.charAt(pos1)); pos1++) {
+                while (pos1 < sql.length() && Character.isAlphabetic(sql.charAt(pos1))) {
+                    pos1++;
                 }
                 String tableName = sql.substring(pos+2, pos1);
                 tableName = DomainModelImpl.getMetadata(tableName).getName();
@@ -99,7 +100,8 @@ class QueryBuilderImpl implements QueryBuilder {
             if (pos + 1 < sql.length() && Character.isDigit(sql.charAt(pos+1))) {
                 int start = pos+1;
                 pos += 2;
-                for (; pos < sql.length() && Character.isDigit(sql.charAt(pos)); pos++) {
+                while (pos < sql.length() && Character.isDigit(sql.charAt(pos))) {
+                    pos++;
                 }
                 int parameterIndex = Integer.decode(sql.substring(start, pos));
                 ret.append('?');
@@ -148,12 +150,16 @@ class QueryBuilderImpl implements QueryBuilder {
             throw new IllegalArgumentException();
         }
         List<String> idsText = new ArrayList<>();
-        ids.stream().map(id -> id.toString()).forEach(idsText::add);
+        ids.stream().map(Object::toString).forEach(idsText::add);
         if (this.where.length() > 0) {
             this.where.append(" AND ");
         }
-        this.where.append(String.format("%s IN (%s)", this.dialect.decorateName(Constants.Data.ID_PROPERTY_NAME), String.join(",", idsText)));
+        this.where.append(String.format("%s IN (%s)", this.dialect.decorateName(Constants.DataIdPropertyName()), String.join(",", idsText)));
         return this;
+    }
+
+    public @Override QueryBuilder whereId(Long id) {
+        return where(Constants.DataIdPropertyName()+ " = $", id);
     }
 
     @Override
@@ -194,7 +200,7 @@ class QueryBuilderImpl implements QueryBuilder {
             from(type);
         }
         
-        return where(this.dialect.decorateName(Constants.Data.ID_PROPERTY_NAME) + " = $", id).first(type);
+        return where(this.dialect.decorateName(Constants.DataIdPropertyName()) + " = $", id).first(type);
     }
 
     @Override
@@ -203,7 +209,7 @@ class QueryBuilderImpl implements QueryBuilder {
             from(type);
         }
         
-        return where(this.dialect.decorateName(Constants.Data.ID_PROPERTY_NAME) + " = $", id).firstOrDefault(type);
+        return where(this.dialect.decorateName(Constants.DataIdPropertyName()) + " = $", id).firstOrDefault(type);
     }
     
     private String getSql() {
@@ -415,7 +421,7 @@ class QueryBuilderImpl implements QueryBuilder {
         try (PreparedStatement statement = prepareStatement(getSql())) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    ret.add(resultSet.getLong(Constants.Data.ID_PROPERTY_NAME));
+                    ret.add(resultSet.getLong(Constants.DataIdPropertyName()));
                 }
             }
         } catch (SQLException e) {

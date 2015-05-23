@@ -48,10 +48,10 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
     public Collection<NodeAccessModel> read(QueryBuilder query, List<Long> ids) {
         List<String> idsString = new LinkedList<>();
         ids.forEach(s -> idsString.add(s.toString()));
-        return query.from(NodeAccess.class, "na").where(String.format("na.nodeId = $ AND na." + Constants.Data.ID_PROPERTY_NAME + " IN (%s)", String.join(",", idsString)), nodeId)
-            .leftJoin(User.class, "u", "u." + Constants.Data.ID_PROPERTY_NAME + " = na.userId")
-            .leftJoin(UserGroup.class, "g", "g." + Constants.Data.ID_PROPERTY_NAME + " = na.groupId")
-            .toList(NodeAccessModel.class, "na.accessType, u.email, g.name, na." + Constants.Data.ID_PROPERTY_NAME + " AccessId");
+        return query.from(NodeAccess.class, "na").where(String.format("na.nodeId = $ AND na." + Constants.DataIdPropertyName() + " IN (%s)", String.join(",", idsString)), nodeId)
+            .leftJoin(User.class, "u", "u." + Constants.DataIdPropertyName() + " = na.userId")
+            .leftJoin(UserGroup.class, "g", "g." + Constants.DataIdPropertyName() + " = na.groupId")
+            .toList(NodeAccessModel.class, "na.accessType, u.email, g.name, na." + Constants.DataIdPropertyName() + " AccessId");
     }
 
     public boolean isFiltered() { return false; }

@@ -46,10 +46,10 @@ public class DatabaseConfigurationModel extends RecordModel<DatabaseConfiguratio
             engineConfiguration.setConnectionString(this.database);
 
         } catch (Exception e) {
-            String errorMessage = LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.DATABASE_CHANGE_ERROR, StringHelper.getMessage(e));
+            String errorMessage = LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.DATABASE_CHANGE_ERROR, StringHelper.getMessage(e));
             throw new CommonException(errorMessage);
         }
 
-        return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.DATABASE_CHANGE_SUCCESS);
+        return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.DATABASE_CHANGE_SUCCESS);
     }
 }

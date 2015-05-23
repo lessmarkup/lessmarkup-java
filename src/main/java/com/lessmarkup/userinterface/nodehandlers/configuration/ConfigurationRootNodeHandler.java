@@ -96,23 +96,21 @@ class ConfigurationHandlerData {
 
 public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
 
-    private final ModuleProvider moduleProvider;
     private final DataCache dataCache;
     private final List<ConfigurationGroupData> configurationGroups = new ArrayList<>();
     private final HashMap<String, ConfigurationHandlerData> configurationHandlers = new HashMap<>();
 
     @Inject
     public ConfigurationRootNodeHandler(ModuleProvider moduleProvider, DataCache dataCache) {
-        this.moduleProvider = moduleProvider;
         this.dataCache = dataCache;
         
         addScript("scripts/controllers/ConfigurationController");
         
         long idCounter = 1;
         
-        ConfigurationGroupData normalGroup = new ConfigurationGroupData(LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.SITE_CONFIGURATION));
+        ConfigurationGroupData normalGroup = new ConfigurationGroupData(LanguageHelper.getFullTextId(Constants.ModuleTypeMain(), TextIds.SITE_CONFIGURATION));
         
-        for (ModuleConfiguration module : this.moduleProvider.getModules()) {
+        for (ModuleConfiguration module : moduleProvider.getModules()) {
             for (Class<? extends NodeHandler> nodeHandlerType : module.getInitializer().getNodeHandlerTypes()) {
                 ConfigurationHandler configurationHandler = nodeHandlerType.getAnnotation(ConfigurationHandler.class);
                 if (configurationHandler == null) {
@@ -183,7 +181,7 @@ public class ConfigurationRootNodeHandler extends AbstractNodeHandler {
     @Override
     public ChildHandlerSettings getChildHandler(String path) {
         List<String> parts = new ArrayList<>();
-        Arrays.stream(path.split("/")).map(p -> p.trim()).forEach(parts::add);
+        Arrays.stream(path.split("/")).map(String::trim).forEach(parts::add);
         if (parts.isEmpty()) {
             return null;
         }

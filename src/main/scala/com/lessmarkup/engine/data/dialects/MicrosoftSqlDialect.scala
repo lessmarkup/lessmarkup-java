@@ -3,14 +3,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.lessmarkup.engine.data.dialects
 
-import java.util.OptionalInt
+package com.lessmarkup.engine.data.dialects
 
 import com.lessmarkup.engine.data.dialects.DatabaseDataType._
 
 class MicrosoftSqlDialect extends DatabaseLanguageDialect {
-  def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: OptionalInt, required: Boolean, characterSet: String): String = {
+
+  def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: Option[Int], required: Boolean, characterSet: Option[String]): String = {
     val nullable: String = if (required) " NOT NULL" else " NULL"
     dataType match {
       case INT => "[INT]" + nullable
@@ -20,8 +20,8 @@ class MicrosoftSqlDialect extends DatabaseLanguageDialect {
       case BOOLEAN => "[BIT]" + nullable
       case FLOAT => "[FLOAT]" + nullable
       case DOUBLE => "[DOUBLE]" + nullable
-      case STRING => String.format("[NVARCHAR](%s)%s", if (sizeLimit.isPresent) Integer.toString(sizeLimit.getAsInt) else "max", nullable)
-      case BINARY => String.format("[VARBINARY](%s)%s", if (sizeLimit.isPresent) Integer.toString(sizeLimit.getAsInt) else "max", nullable)
+      case STRING => String.format("[NVARCHAR](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
+      case BINARY => String.format("[VARBINARY](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
       case _ => throw new IllegalArgumentException
     }
   }

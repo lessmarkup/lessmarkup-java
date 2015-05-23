@@ -79,7 +79,7 @@ public class UserSecurityImpl implements UserSecurity {
     
     public static String encodePassword(String password, String salt) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(Constants.Encrypt.HASH_PROVIDER);
+            MessageDigest digest = MessageDigest.getInstance(Constants.EncryptHashProvider());
             digest.update((salt+password).getBytes(StandardCharsets.UTF_8));
             return toHexString(digest.digest());
         } catch (NoSuchAlgorithmException ex) {
@@ -96,15 +96,15 @@ public class UserSecurityImpl implements UserSecurity {
     
     private static void validateNewUserProperties(String username, String password, String email, boolean generatePassword) {
         if (!TextValidator.checkUsername(username)) {
-            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.INVALID_USERNAME));
+            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.INVALID_USERNAME));
         }
 
         if (!generatePassword && !TextValidator.checkPassword(password)) {
-            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.INVALID_PASSWORD));
+            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.INVALID_PASSWORD));
         }
 
         if (!generatePassword && !TextValidator.checkNewPassword(password)) {
-            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.PASSWORD_TOO_SIMPLE));
+            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_TOO_SIMPLE));
         }
 
         while (email != null && email.length() > 0) {
@@ -116,7 +116,7 @@ public class UserSecurityImpl implements UserSecurity {
         }
 
         if (!TextValidator.checkTextField(email) || !EmailCheck.isValidEmail(email)) {
-            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.INVALID_EMAIL, email));
+            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.INVALID_EMAIL, email));
         }
     }
 
@@ -126,7 +126,7 @@ public class UserSecurityImpl implements UserSecurity {
 
         if (user != null) {
             LoggingHelper.getLogger(getClass()).info(String.format("User with e-mail '%s' already exists", email));
-            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.INVALID_EMAIL, email));
+            throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.INVALID_EMAIL, email));
         }
     }
     
@@ -192,7 +192,7 @@ public class UserSecurityImpl implements UserSecurity {
         notificationModel.setSiteLink("");
         notificationModel.setSiteName(dataCache.get(SiteConfiguration.class).getSiteName());
 
-        mailSender.sendMail(GeneratedPasswordModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplates.PASSWORD_GENERATED_NOTIFICATION, notificationModel);
+        mailSender.sendMail(GeneratedPasswordModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplatesPasswordGeneratedNotification(), notificationModel);
     }
     
     @Override
@@ -210,7 +210,7 @@ public class UserSecurityImpl implements UserSecurity {
             if (generatePassword)
             {
                 if (!RequestContextHolder.getContext().getEngineConfiguration().isSmtpConfigured()) {
-                    throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.SMTP_NOT_CONFIGURED));
+                    throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.SMTP_NOT_CONFIGURED));
                 }
 
                 user.setPassword(generatePassword());
@@ -227,7 +227,7 @@ public class UserSecurityImpl implements UserSecurity {
                 SQLException e = (SQLException) ex.getCause();
                 if (e.getErrorCode() == 2627 || e.getErrorCode() == 2601 || e.getErrorCode() == 2512) {
                     LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, e);
-                    throw new UserValidationException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.NAME_OR_EMAIL_EXISTS));
+                    throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.NAME_OR_EMAIL_EXISTS));
                 }
 
                 throw ex;
@@ -277,7 +277,7 @@ public class UserSecurityImpl implements UserSecurity {
         LoggingHelper.getLogger(getClass()).log(Level.INFO, "Creating password validation token for {0}", userId);
         
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userId).firstOrDefault(User.class);
+            User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId).firstOrDefault(User.class);
             if (user == null) {
                 return null;
             }
@@ -325,16 +325,16 @@ public class UserSecurityImpl implements UserSecurity {
             SecretKey secretKey;
             
             if (secretKeyText == null || secretKeyText.length() == 0) {
-                KeyGenerator keyGenerator = KeyGenerator.getInstance(Constants.Encrypt.SYMMETRIC_CIPHER);
-                keyGenerator.init(Constants.Encrypt.SYMMETIC_KEY_SIZE);
+                KeyGenerator keyGenerator = KeyGenerator.getInstance(Constants.EncryptSymmetricCipher());
+                keyGenerator.init(Constants.EncryptSymmetricKeySize());
                 secretKey = keyGenerator.generateKey();
                 secretKeyText = Base64.encodeBase64String(secretKey.getEncoded(), false);
                 engineConfiguration.setSessionKey(secretKeyText);
             } else {
-                secretKey = new SecretKeySpec(Base64.decodeBase64(secretKeyText), Constants.Encrypt.SYMMETRIC_CIPHER);
+                secretKey = new SecretKeySpec(Base64.decodeBase64(secretKeyText), Constants.EncryptSymmetricCipher());
             }
             
-            Cipher ret = Cipher.getInstance(Constants.Encrypt.SYMMETRIC_CIPHER);
+            Cipher ret = Cipher.getInstance(Constants.EncryptSymmetricCipher());
             ret.init(mode, secretKey);
             return ret;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
@@ -534,13 +534,13 @@ public class UserSecurityImpl implements UserSecurity {
         
         try (ByteArrayInputStream memoryStream = new ByteArrayInputStream(Base64.decodeBase64(token));
                 ObjectInputStream objectStream = new ObjectInputStream(memoryStream)) {
-            
+
             int tokenCollectionId = objectStream.readInt();
             long tokenEntityId = objectStream.readLong();
             int tokenAccessType = objectStream.readInt();
             long tokenUserId = objectStream.readLong();
             long tokenExpirationTicks = objectStream.readLong();
-            
+
             switch (tokenAccessType) {
                 case EntityAccessType.READ:
                     if ((accessType != EntityAccessType.READ && accessType != EntityAccessType.EVERYONE) || !userId.isPresent() || userId.getAsLong() != tokenUserId) {
@@ -557,16 +557,11 @@ public class UserSecurityImpl implements UserSecurity {
                 default:
                     return false;
             }
-            
-            if (collectionId != tokenCollectionId) {
-                return false;
-            }
-            
-            if (entityId != tokenEntityId) {
-                return false;
-            }
-            
-            return !(tokenExpirationTicks != 0 && OffsetDateTime.now().toInstant().toEpochMilli() > tokenExpirationTicks);
+
+            return collectionId == tokenCollectionId
+                    && entityId == tokenEntityId
+                    && !(tokenExpirationTicks != 0 && OffsetDateTime.now().toInstant().toEpochMilli() > tokenExpirationTicks);
+
         } catch (IOException e) {
             LoggingHelper.getLogger(getClass()).log(Level.SEVERE, null, e);
             return false;
@@ -575,7 +570,7 @@ public class UserSecurityImpl implements UserSecurity {
     
     private static byte[] generateSaltBytes() {
         SecureRandom secureRandom = new SecureRandom();
-        byte[] bytes = new byte[Constants.Encrypt.SALT_LENGTH];
+        byte[] bytes = new byte[Constants.EncryptSaltLength()];
         secureRandom.nextBytes(bytes);
         return bytes;
     }
@@ -594,8 +589,8 @@ public class UserSecurityImpl implements UserSecurity {
     public static String toHexString(byte[] values)
     {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            appendHex(values[i], sb);
+        for (byte value : values) {
+            appendHex(value, sb);
         }
         return sb.toString();
     }
@@ -620,14 +615,14 @@ public class UserSecurityImpl implements UserSecurity {
         model.setPassword(password);
         model.setSiteName(dataCache.get(SiteConfiguration.class).getSiteName());
 
-        mailSender.sendMail(NewUserCreatedModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplates.USER_NEW_USER_CREATED, model);
+        mailSender.sendMail(NewUserCreatedModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplatesUserNewUserCreated(), model);
     }
     
     private void sendConfirmationLink(User user) {
-        String path = String.format("%s/%s/%s", RequestContextHolder.getContext().getBasePath(), Constants.ModuleActions.VALIDATE_ACCOUNT, user.getValidateSecret());
+        String path = String.format("%s/%s/%s", RequestContextHolder.getContext().getBasePath(), Constants.ModuleActionsValidateAccount(), user.getValidateSecret());
         UserConfirmationMailTemplateModel confirmationModel = new UserConfirmationMailTemplateModel();
         confirmationModel.setLink(path);
-        mailSender.sendMail(UserConfirmationMailTemplateModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplates.VALIDATE_USER, confirmationModel);
+        mailSender.sendMail(UserConfirmationMailTemplateModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), null, Constants.MailTemplatesValidateUser(), confirmationModel);
     }
 
     @Override
@@ -664,9 +659,9 @@ public class UserSecurityImpl implements UserSecurity {
         domainModel.query()
                 .from(User.class)
                 .where("isAdministrator = $ AND isRemoved = $ AND isBlocked = $", true, false, false)
-                .toList(User.class, Constants.Data.ID_PROPERTY_NAME)
+                .toList(User.class, Constants.DataIdPropertyName())
                 .forEach(admin -> mailSender.sendMail(NewUserCreatedModel.class, OptionalLong.empty(), OptionalLong.of(admin.getId()),
-                        null, Constants.MailTemplates.ADMIN_NEW_USER_CREATED, model));
+                        null, Constants.MailTemplatesAdminNewUserCreated(), model));
     }
     
     @Override

@@ -5,14 +5,12 @@
  */
 package com.lessmarkup.mainmodule.initialization;
 
-import com.google.inject.Inject;
 import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.*;
 import com.lessmarkup.dataobjects.migrations.Initial;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.data.Migration;
 import com.lessmarkup.interfaces.module.ModuleInitializer;
-import com.lessmarkup.interfaces.module.ModuleIntegration;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.userinterface.model.common.FlatPageSettingsModel;
@@ -39,13 +37,6 @@ import java.util.Collection;
 
 public class MainModuleInitializer implements ModuleInitializer {
 
-    private final ModuleIntegration moduleIntegration;
-
-    @Inject
-    public MainModuleInitializer(ModuleIntegration moduleIntegration) {
-        this.moduleIntegration = moduleIntegration;
-    }
-
     @Override
     public String getName() {
         return "Main Module";
@@ -53,7 +44,7 @@ public class MainModuleInitializer implements ModuleInitializer {
 
     @Override
     public String getModuleType() {
-        return Constants.ModuleType.MAIN;
+        return Constants.ModuleTypeMain();
     }
 
     @Override

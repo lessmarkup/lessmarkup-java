@@ -42,7 +42,7 @@ public class RegisterModel extends RecordModel<RegisterModel> {
         SiteConfiguration siteProperties = dataCache.get(SiteConfiguration.class);
 
         if (!siteProperties.getHasUsers()) {
-            throw new CommonException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.CANNOT_REGISTER_NEW_USER));
+            throw new CommonException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.CANNOT_REGISTER_NEW_USER));
         }
 
         userAgreement = siteProperties.getUserAgreement();
@@ -61,7 +61,7 @@ public class RegisterModel extends RecordModel<RegisterModel> {
         SiteConfiguration siteProperties = dataCache.get(SiteConfiguration.class);
 
         if (!siteProperties.getHasUsers()) {
-            throw new CommonException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.CANNOT_REGISTER_NEW_USER));
+            throw new CommonException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.CANNOT_REGISTER_NEW_USER));
         }
 
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);

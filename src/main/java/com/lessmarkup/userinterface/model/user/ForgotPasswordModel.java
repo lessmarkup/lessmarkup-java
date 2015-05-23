@@ -38,7 +38,7 @@ public class ForgotPasswordModel extends RecordModel<ForgotPasswordModel> {
         this.dataCache = dataCache;
         this.domainModelProvider = domainModelProvider;
         this.mailSender = mailSender;
-        message = LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.FORGOT_PASSWORD_MESSAGE);
+        message = LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.FORGOT_PASSWORD_MESSAGE);
     }
 
     @InputField(type = InputFieldType.LABEL)
@@ -68,12 +68,12 @@ public class ForgotPasswordModel extends RecordModel<ForgotPasswordModel> {
                 }
             }
 
-            String resetUrl = String.format("%s/%s/%s", RequestContextHolder.getContext().getBasePath(), Constants.ModuleActions.CHANGE_PASSWORD, userSecurity.createPasswordChangeToken(user.getId()));
+            String resetUrl = String.format("%s/%s/%s", RequestContextHolder.getContext().getBasePath(), Constants.ModuleActionsChangePassword(), userSecurity.createPasswordChangeToken(user.getId()));
 
             ResetPasswordEmailModel model = new ResetPasswordEmailModel();
             model.setSiteName(siteName);
             model.setResetUrl(resetUrl);
-            mailSender.sendMail(ResetPasswordEmailModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), email, Constants.MailTemplates.RESET_PASSWORD, model);
+            mailSender.sendMail(ResetPasswordEmailModel.class, OptionalLong.empty(), OptionalLong.of(user.getId()), email, Constants.MailTemplatesResetPassword(), model);
         }
     }
 }

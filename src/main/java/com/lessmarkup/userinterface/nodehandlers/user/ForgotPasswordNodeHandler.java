@@ -11,6 +11,8 @@ import com.lessmarkup.interfaces.structure.NodeAccessType;
 import com.lessmarkup.userinterface.model.user.ForgotPasswordModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
 
+import java.util.Objects;
+
 public class ForgotPasswordNodeHandler extends DialogNodeHandler<ForgotPasswordModel> {
 
     @Inject
@@ -20,13 +22,12 @@ public class ForgotPasswordNodeHandler extends DialogNodeHandler<ForgotPasswordM
 
     @Override
     protected String getApplyCaption() {
-        return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.RESTORE_PASSWORD);
+        return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.RESTORE_PASSWORD);
     }
 
     @Override
     protected ForgotPasswordModel loadObject() {
-        ForgotPasswordModel ret = DependencyResolver.resolve(ForgotPasswordModel.class);
-        return ret;
+        return DependencyResolver.resolve(ForgotPasswordModel.class);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ForgotPasswordNodeHandler extends DialogNodeHandler<ForgotPasswordM
 
         String[] parts = path.split("/");
 
-        if (parts.length != 3 || parts[0] != "ticket") {
+        if (parts.length != 3 || !Objects.equals(parts[0], "ticket")) {
             return null;
         }
 

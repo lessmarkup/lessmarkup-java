@@ -57,7 +57,7 @@ public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
     private void initializeUser() {
         try (DomainModel domainModel = domainModelProvider.create()) {
             
-            User user = domainModel.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userId.getAsLong()).firstOrDefault(User.class);
+            User user = domainModel.query().from(User.class).where(Constants.DataIdPropertyName() + " = $", userId.getAsLong()).firstOrDefault(User.class);
 
             if (user == null) {
                 userId = OptionalLong.empty();
@@ -70,7 +70,7 @@ public class UserCacheImpl extends AbstractCacheHandler implements UserCache {
                     .from(UserGroupMembership.class)
                     .where("userId = $", userId.getAsLong())
                     .toList(UserGroupMembership.class, "UserGroupId")
-                    .forEach(g -> { groups.add(g.getId()); });
+                    .forEach(g -> groups.add(g.getId()));
             email = user.getEmail();
             title = user.getTitle();
             emailConfirmed = user.isEmailConfirmed();

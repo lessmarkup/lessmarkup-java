@@ -34,6 +34,11 @@ class QueryBuilderStubImpl implements QueryBuilder {
     }
 
     @Override
+    public QueryBuilder whereId(Long id) {
+        return null;
+    }
+
+    @Override
     public QueryBuilder whereIds(Collection<Long> ids) {
         return this;
     }

@@ -12,6 +12,7 @@ public interface QueryBuilder {
     <T extends DataObject> QueryBuilder leftJoin(Class<T> type, String name, String on);
     <T extends DataObject> QueryBuilder rightJoin(Class<T> type, String name, String on);
     QueryBuilder where(String filter, Object ... args);
+    QueryBuilder whereId(Long id);
     QueryBuilder whereIds(Collection<Long> ids);
     QueryBuilder orderBy(String column);
     QueryBuilder orderByDescending(String column);

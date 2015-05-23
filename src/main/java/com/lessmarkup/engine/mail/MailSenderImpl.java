@@ -3,10 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package com.lessmarkup.engine.mail;
 
 import com.google.inject.Inject;
-import com.lessmarkup.Constants;
 import com.lessmarkup.dataobjects.TestMail;
 import com.lessmarkup.dataobjects.User;
 import com.lessmarkup.framework.system.RequestContextHolder;
@@ -90,10 +90,10 @@ public class MailSenderImpl implements MailSender {
             User userTo = null;
             try (DomainModel domainModel = domainModelProvider.create()) {
                 if (userIdTo.isPresent()) {
-                    userTo = domainModel.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userIdTo.getAsLong()).first(User.class);
+                    userTo = domainModel.query().from(User.class).whereId(userIdTo.getAsLong()).first(User.class);
                 }
                 if (userIdFrom.isPresent()) {
-                    userFrom = domainModel.query().from(User.class).where(Constants.Data.ID_PROPERTY_NAME + " = $", userIdFrom.getAsLong()).first(User.class);
+                    userFrom = domainModel.query().from(User.class).whereId(userIdFrom.getAsLong()).first(User.class);
                 }
             }
             

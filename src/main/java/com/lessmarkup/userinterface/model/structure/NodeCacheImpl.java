@@ -78,9 +78,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
             
             HashMap<Long, CachedNodeInformation> nodeMap = new HashMap<>();
             
-            cachedNodesImpl.forEach(n -> {
-                nodeMap.put(n.getNodeId(), n);
-            });
+            cachedNodesImpl.forEach(n -> nodeMap.put(n.getNodeId(), n));
             
             domainModel.query()
                     .from(NodeAccess.class)
@@ -121,9 +119,9 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         rootImpl.setRoot(this.rootNode);
         
         addVirtualNode(ConfigurationRootNodeHandler.class, 
-                Constants.NodePath.CONFIGURATION, 
-                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.CONFIGURATION),
-                Constants.ModuleType.MAIN,
+                Constants.NodePathConfiguration(),
+                LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.CONFIGURATION),
+                Constants.ModuleTypeMain(),
                 NodeAccessType.NO_ACCESS);
         
         SiteConfiguration siteConfiguration = this.dataCache.get(SiteConfiguration.class);
@@ -134,33 +132,33 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
         }
         
         if (StringHelper.isNullOrEmpty(adminLoginPage)) {
-            adminLoginPage = Constants.NodePath.ADMIN_LOGIN_DEFAULT_PAGE;
+            adminLoginPage = Constants.NodePathAdminLoginDefaultPage();
         }
         
         addVirtualNode(LoginNodeHandler.class,
                 adminLoginPage,
-                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.ADMINISTRATOR_LOGIN),
-                Constants.ModuleType.MAIN,
+                LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.ADMINISTRATOR_LOGIN),
+                Constants.ModuleTypeMain(),
                 NodeAccessType.READ);
         
         CachedNodeInformationImpl node = addVirtualNode(UserProfileNodeHandler.class,
-                Constants.NodePath.PROFILE,
-                LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_PROFILE),
-                Constants.ModuleType.MAIN,
+                Constants.NodePathProfile(),
+                LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.USER_PROFILE),
+                Constants.ModuleTypeMain(),
                 NodeAccessType.READ);
         
         node.setLoggedIn(true);
         
         if (siteConfiguration.getHasUsers()) {
             addVirtualNode(UserCardRecordsNodeHandler.class,
-                    Constants.NodePath.USER_CARDS,
-                    LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.USER_CARDS),
-                    Constants.ModuleType.MAIN,
+                    Constants.NodePathUserCards(),
+                    LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.USER_CARDS),
+                    Constants.ModuleTypeMain(),
                     NodeAccessType.READ);
             addVirtualNode(ForgotPasswordNodeHandler.class,
-                    Constants.NodePath.FORGOT_PASSWORD,
-                    LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.FORGOT_PASSWORD),
-                    Constants.ModuleType.MAIN,
+                    Constants.NodePathForgotPassword(),
+                    LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.FORGOT_PASSWORD),
+                    Constants.ModuleTypeMain(),
                     NodeAccessType.READ);
         }
     }
@@ -239,7 +237,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
     public Tuple<CachedNodeInformation, String> getNode(String path) {
         List<String> nodeParts = new ArrayList<>();
         if (path != null) {
-            Arrays.stream(path.split("/")).map(p -> p.trim()).filter(p -> p.length() > 0).forEach(nodeParts::add);
+            Arrays.stream(path.split("/")).map(String::trim).filter(p -> p.length() > 0).forEach(nodeParts::add);
         }
         
         if (nodeParts.isEmpty()) {

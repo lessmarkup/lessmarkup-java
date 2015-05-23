@@ -141,7 +141,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
         ChildHandlerSettings ret = new ChildHandlerSettings();
         ret.setHandler(handler);
         ret.setPath(path);
-        ret.setTitle(LanguageHelper.getFullTextId(Constants.ModuleType.MAIN, TextIds.NODE_ACCESS));
+        ret.setTitle(LanguageHelper.getFullTextId(Constants.ModuleTypeMain(), TextIds.NODE_ACCESS));
         ret.setId(OptionalLong.of(nodeId));
         return ret;
     }

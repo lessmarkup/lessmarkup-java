@@ -375,7 +375,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 }
 
                 if (!newRootNode.getParentId().isPresent()) {
-                    throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.CANNOT_HAVE_TWO_ROOT_NODES));
+                    throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.CANNOT_HAVE_TWO_ROOT_NODES));
                 }
 
                 for (Node neighbor : domainModel.query()
@@ -393,7 +393,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                 for (Node neighbor : domainModel.query()
                         .from(Node.class)
-                        .where("parentId = $ AND " + Constants.Data.ID_PROPERTY_NAME + " != $ AND position > 0", newRootNode.getId(), nodeId)
+                        .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > 0", newRootNode.getId(), nodeId)
                         .toList(Node.class)) {
                     neighbor.setPosition(neighbor.getPosition() + 1);
                     domainModel.update(neighbor);
@@ -409,7 +409,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                     if (position > node.getPosition()) {
                         for (Node neighbor : domainModel.query()
                                 .from(Node.class)
-                                .where("parentId = $ AND " + Constants.Data.ID_PROPERTY_NAME + " != $ AND position > $ AND position <= $", parentId, nodeId, node.getPosition(), position)
+                                .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position > $ AND position <= $", parentId, nodeId, node.getPosition(), position)
                                 .toList(Node.class)) {
                             neighbor.setPosition(neighbor.getPosition() - 1);
                             domainModel.update(neighbor);
@@ -419,7 +419,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                     else if (position < node.getPosition()) {
                         for (Node neighbor : domainModel.query()
                                 .from(Node.class)
-                                .where("parentId = $ AND " + Constants.Data.ID_PROPERTY_NAME + " != $ AND position >= $ AND position < $", parentId, nodeId, position, node.getPosition())
+                                .where("parentId = $ AND " + Constants.DataIdPropertyName() + " != $ AND position >= $ AND position < $", parentId, nodeId, position, node.getPosition())
                                 .toList(Node.class)) {
                             neighbor.setPosition(neighbor.getPosition() + 1);
                             domainModel.update(neighbor);
@@ -430,7 +430,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 else {
                     for (Node neighbor : domainModel.query()
                             .from(Node.class)
-                            .where("parentId = $ AND position > $ AND " + Constants.Data.ID_PROPERTY_NAME + " != $", node.getParentId(), node.getPosition(), nodeId)
+                            .where("parentId = $ AND position > $ AND " + Constants.DataIdPropertyName() + " != $", node.getParentId(), node.getPosition(), nodeId)
                             .toList(Node.class)) {
                         neighbor.setPosition(neighbor.getPosition() - 1);
                         domainModel.update(neighbor);
@@ -439,7 +439,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
                     for (Node neighbor : domainModel.query()
                             .from(Node.class)
-                            .where("parentId = $ AND position >= $ AND " + Constants.Data.ID_PROPERTY_NAME + " != $", parentId, position, nodeId)
+                            .where("parentId = $ AND position >= $ AND " + Constants.DataIdPropertyName() + " != $", parentId, position, nodeId)
                             .toList(Node.class)) {
                         neighbor.setPosition(neighbor.getPosition() + 1);
                         domainModel.update(neighbor);

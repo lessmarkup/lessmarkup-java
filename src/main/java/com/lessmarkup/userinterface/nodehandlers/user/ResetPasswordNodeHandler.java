@@ -46,7 +46,7 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
 
         if (!userId.isPresent()) {
             LoggingHelper.getLogger(getClass()).info("Cannot change password: cannot get valid user id");
-            return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.PASSWORD_CHANGE_ERROR);
+            return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_CHANGE_ERROR);
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
@@ -54,7 +54,7 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
 
             if (user == null) {
                 LoggingHelper.getLogger(getClass()).info("Cannot change password: user id=" + userId.getAsLong() + " does not exist");
-                return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.PASSWORD_CHANGE_ERROR);
+                return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_CHANGE_ERROR);
             }
 
             Tuple<String, String> result = userSecurity.changePassword(changedObject.getPassword());
@@ -69,7 +69,7 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
 
             domainModel.update(user);
 
-            return LanguageHelper.getText(Constants.ModuleType.MAIN, TextIds.PASSWORD_CHANGED);
+            return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_CHANGED);
         }
     }
 

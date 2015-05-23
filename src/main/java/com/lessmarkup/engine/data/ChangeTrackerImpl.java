@@ -53,9 +53,12 @@ class ChangeTrackerImpl implements ChangeTracker {
                     break;
                 }
             }
-            listeners.stream().forEach(listener -> {
-                listener.onChange(change.getId(), change.getUserId(), change.getEntityId(), change.getCollectionId(), EntityChangeType.of(change.getChangeType()));
-            });
+            listeners.stream().forEach(listener -> listener.onChange(
+                    change.getId(),
+                    change.getUserId(),
+                    change.getEntityId(),
+                    change.getCollectionId(),
+                    EntityChangeType.of(change.getChangeType())));
         }
     }
     
@@ -75,7 +78,10 @@ class ChangeTrackerImpl implements ChangeTracker {
             changeTrackingInitialized = true;
             
             try (DomainModel domainModel = domainModelProvider.create()) {
-                EntityChangeHistory history = domainModel.query().from(EntityChangeHistory.class).orderByDescending(Constants.Data.ID_PROPERTY_NAME).firstOrDefault(EntityChangeHistory.class);
+                EntityChangeHistory history = domainModel.query()
+                        .from(EntityChangeHistory.class)
+                        .orderByDescending(Constants.DataIdPropertyName())
+                        .firstOrDefault(EntityChangeHistory.class);
                 if (history != null) {
                     lastUpdateId = history.getId();
                 }

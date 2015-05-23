@@ -33,7 +33,7 @@ public class TemplateContext {
     public TemplateContext(DataCache dataCache) {
         this.text = (frag, out) -> {
             String key = frag.execute();
-            out.write(LanguageHelper.getText(Constants.ModuleType.MAIN, key));
+            out.write(LanguageHelper.getText(Constants.ModuleTypeMain(), key));
         };
         this.property = (frag, out) -> {
             String key = StringHelper.toJsonCase(frag.execute());

@@ -6,13 +6,11 @@
 
 package com.lessmarkup.engine.data.dialects
 
-import java.util.OptionalInt
-
 trait DatabaseLanguageDialect {
-  def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: OptionalInt, required: Boolean, characterSet: String): String
+  def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: Option[Int], required: Boolean, characterSet: Option[String]): String
 
   def getTypeDeclaration(dataType: DatabaseDataType, required: Boolean): String = {
-    getTypeDeclaration(dataType, OptionalInt.empty, required, null)
+    getTypeDeclaration(dataType, None, required, None)
   }
 
   def decorateName(name: String): String
