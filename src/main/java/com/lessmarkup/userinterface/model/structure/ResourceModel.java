@@ -104,10 +104,10 @@ public class ResourceModel {
         
         switch (this.extension) {
             case "html":
-                resourceBytes = resourceCache.parseText(this.path).getBytes(StandardCharsets.UTF_8);
+                resourceBytes = resourceCache.parseTextJava(this.path).getBytes(StandardCharsets.UTF_8);
                 break;
             default:
-                resourceBytes = resourceCache.readBytes(this.path);
+                resourceBytes = resourceCache.readBytesJava(this.path);
                 break;
         }
         

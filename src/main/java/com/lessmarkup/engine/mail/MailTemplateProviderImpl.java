@@ -30,7 +30,7 @@ class MailTemplateProviderImpl implements MailTemplateProvider {
         ResourceCache resourceCache = dataCache.get(ResourceCache.class);
 
         Mustache.Compiler compiler = Mustache.compiler();
-        Template template = compiler.compile(resourceCache.readText(viewPath));
+        Template template = compiler.compile(resourceCache.readTextJava(viewPath));
         return template.execute(model);
     }
 }

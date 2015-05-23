@@ -167,7 +167,7 @@ public class LoadNodeViewModel {
     public static String getViewTemplate(NodeHandler handler, DataCache dataCache) {
         String viewPath = getViewPath(handler.getViewType());
         ResourceCache resourceCache = dataCache.get(ResourceCache.class);
-        String template = resourceCache.parseText(viewPath + ".html");
+        String template = resourceCache.parseTextJava(viewPath + ".html");
         List<String> stylesheets = handler.getStylesheets();
         if (stylesheets != null && stylesheets.size() > 0) {
             StringBuilder sb = new StringBuilder();

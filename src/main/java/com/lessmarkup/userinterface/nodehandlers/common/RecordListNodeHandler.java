@@ -333,7 +333,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
             data.add("links", linksArray);
 
-            data.addProperty("optionsTemplate", resourceCache.parseText("views/recordOptions.html"));
+            data.addProperty("optionsTemplate", resourceCache.parseTextJava("views/recordOptions.html"));
 
             JsonArray columns = new JsonArray();
 

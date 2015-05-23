@@ -81,7 +81,7 @@ public class NodeEntryPointModel {
             if (StringHelper.isNullOrWhitespace(resourceId)) {
                 return "";
             }
-            return String.format(this.dataCache.get(ResourceCache.class).readText("/views/googleAnalytics.html"), resourceId);
+            return String.format(this.dataCache.get(ResourceCache.class).readTextJava("/views/googleAnalytics.html"), resourceId);
         }
     }
 
@@ -281,7 +281,7 @@ public class NodeEntryPointModel {
         RequestContext requestContext = RequestContextHolder.getContext();
         ResourceCache resourceCache = dataCache.get(ResourceCache.class);
         Mustache.Compiler compiler = TemplateContext.createCompiler(resourceCache);
-        Template template = compiler.compile(resourceCache.readText("views/entrypoint.html"));
+        Template template = compiler.compile(resourceCache.readTextJava("views/entrypoint.html"));
         String html = template.execute(context);
         try (Writer writer = new OutputStreamWriter(requestContext.getOutputStream())) {
             writer.write(html);
