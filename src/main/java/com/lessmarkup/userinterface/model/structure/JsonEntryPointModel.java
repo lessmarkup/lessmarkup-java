@@ -118,23 +118,24 @@ public class JsonEntryPointModel {
             this.changeTracker.invalidate();
         }
         ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
-        OptionalLong newVersionId = changesCache.getLastChangeId();
+        scala.Option<Object> newVersionId = changesCache.getLastChangeId();
+        OptionalLong newVersionIdJava = newVersionId.isDefined() ? OptionalLong.of((Long) newVersionId.get()) : OptionalLong.empty();
         
-        if (newVersionId.isPresent() && !newVersionId.equals(versionId)) {
-            response.add("versionId", new JsonPrimitive(newVersionId.getAsLong()));
+        if (newVersionIdJava.isPresent() && !newVersionIdJava.equals(versionId)) {
+            response.add("versionId", new JsonPrimitive(newVersionIdJava.getAsLong()));
         }
         
         if (userChanged) {
             UserInterfaceElementsModel notificationsModel = DependencyResolver.resolve(UserInterfaceElementsModel.class);
-            notificationsModel.handle(response, newVersionId);
+            notificationsModel.handle(response, newVersionIdJava);
         }
         
-        if (newVersionId.equals(versionId) && !this.nodeId.isPresent()) {
+        if (newVersionId.get().equals(versionId) && !this.nodeId.isPresent()) {
             return;
         }
         
         LoadUpdatesModel model = DependencyResolver.resolve(LoadUpdatesModel.class);
-        model.handle(versionId, newVersionId, path, request, response, this.nodeId);
+        model.handle(versionId, newVersionIdJava, path, request, response, this.nodeId);
     }
     
     public void handleRequest() throws IOException {

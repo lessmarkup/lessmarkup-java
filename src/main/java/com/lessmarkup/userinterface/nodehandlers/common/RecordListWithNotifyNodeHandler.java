@@ -10,11 +10,9 @@ import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.NotificationProvider;
+import scala.Function1;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.OptionalLong;
-import java.util.Set;
+import java.util.*;
 
 public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> extends RecordListNodeHandler<T> implements NotificationProvider {
 
@@ -41,12 +39,16 @@ public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> ext
 
         ModelCollection<T> collection = getCollection();
 
-        List<DataChange> changes = changesCache.getCollectionChanges(collection.getCollectionId(), fromVersion, toVersion, change -> {
-            if (userId.isPresent() && change.getUserId() == userId) {
-                return false;
-            }
-            return change.getType() != EntityChangeType.REMOVED;
-        });
+        Collection<DataChange> changes = changesCache.getCollectionChanges(
+                collection.getCollectionId(),
+                fromVersion.isPresent() ? scala.Option.apply(fromVersion.getAsLong()) : scala.Option.empty(),
+                toVersion.isPresent() ? scala.Option.apply(toVersion.getAsLong()) : scala.Option.empty(),
+                scala.Option.apply(change -> {
+                    return !(userId.isPresent()
+                            && change.getUserId().isDefined()
+                            && (Long) change.getUserId().get() == userId.getAsLong())
+                            && change.getType() != EntityChangeType.REMOVED;
+                }));
 
         if (changes == null) {
             return 0;

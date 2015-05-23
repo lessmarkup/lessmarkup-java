@@ -107,7 +107,10 @@ public class NodeEntryPointModel {
         JsonObject initialData = new JsonObject();
 
         ChangesCache changesCache = this.dataCache.get(ChangesCache.class);
-        this.versionId = changesCache.getLastChangeId();
+
+        scala.Option<Object> versionId = changesCache.getLastChangeId();
+
+        this.versionId = versionId.isDefined() ? OptionalLong.of((Long)versionId.get()) : OptionalLong.empty();
 
         CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
 
@@ -120,8 +123,8 @@ public class NodeEntryPointModel {
         }
         initialData.addProperty("showConfiguration", currentUser.isAdministrator());
 
-        if (versionId.isPresent()) {
-            initialData.addProperty("versionId", versionId.getAsLong());
+        if (this.versionId.isPresent()) {
+            initialData.addProperty("versionId", this.versionId.getAsLong());
         } else {
             initialData.add("versionId", JsonNull.INSTANCE);
         }

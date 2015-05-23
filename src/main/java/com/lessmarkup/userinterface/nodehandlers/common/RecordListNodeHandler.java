@@ -450,7 +450,11 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
     public boolean processUpdates(OptionalLong fromVersion, long toVersion, JsonObject returnValues, DomainModel domainModel, JsonObject arguments) {
         ModelCollection<T> collection = getCollection();
         ChangesCache changesCache = dataCache.get(ChangesCache.class);
-        List<DataChange> changes = changesCache.getCollectionChanges(collection.getCollectionId(), fromVersion, OptionalLong.of(toVersion), null);
+        Collection<DataChange> changes = changesCache.getCollectionChanges(
+                collection.getCollectionId(),
+                fromVersion.isPresent() ? scala.Option.apply(fromVersion.getAsLong()) : scala.Option.empty(),
+                scala.Option.apply(toVersion),
+                scala.Option.empty());
 
         if (changes == null) {
             return false;
