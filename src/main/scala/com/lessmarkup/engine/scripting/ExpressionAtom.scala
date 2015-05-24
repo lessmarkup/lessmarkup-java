@@ -3,19 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.lessmarkup.engine.scripting;
+package com.lessmarkup.engine.scripting
 
-enum AtomType {
-    OBJECT,
-    EQUAL,
-    NOT_EQUAL,
-    INVERSE,
-    OPEN,
-    CLOSE,
-    PARAMETER,
-    AND,
-    OR,
-    PLUS,
-    MINUS,
-    NULL,
-}
+import com.google.gson.JsonElement
+
+class ExpressionAtom(val atomType: AtomType, val value: Option[JsonElement] = None)
