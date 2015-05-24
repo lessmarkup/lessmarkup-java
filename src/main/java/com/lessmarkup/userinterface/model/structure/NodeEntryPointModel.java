@@ -184,7 +184,7 @@ public class NodeEntryPointModel {
         serverConfiguration.addProperty("useGoogleAnalytics", siteConfiguration.getGoogleAnalyticsResource() != null);
 
         RecordModelCache recordModelCache = this.dataCache.get(RecordModelCache.class);
-        serverConfiguration.addProperty("loginModelId", recordModelCache.getDefinition(LoginModel.class).getId());
+        serverConfiguration.addProperty("loginModelId", recordModelCache.getDefinition(LoginModel.class).get().getId());
 
         serverConfiguration.addProperty("pageSize", engineConfiguration.getRecordsPerPage());
 

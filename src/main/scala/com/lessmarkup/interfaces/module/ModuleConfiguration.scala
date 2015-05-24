@@ -23,13 +23,11 @@ trait ModuleConfiguration {
 
   @throws(classOf[IOException])
   def getResourceAsBytes(path: String): Array[Byte] = {
+    val stream: InputStream = getResourceAsStream(path)
     try {
-      val stream: InputStream = getResourceAsStream(path)
-      try {
-        IOUtils.toByteArray(stream)
-      } finally {
-        if (stream != null) stream.close()
-      }
+      IOUtils.toByteArray(stream)
+    } finally {
+      if (stream != null) stream.close()
     }
   }
 }

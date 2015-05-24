@@ -35,13 +35,13 @@ public class InputFormDefinitionModel {
     
     public void initialize(String id) {
         RecordModelCache recordModelCache = this.dataCache.get(RecordModelCache.class);
-        RecordModelDefinition definition = recordModelCache.getDefinition(id);
+        RecordModelDefinition definition = recordModelCache.getDefinition(id).get();
         initialize(definition);
     }
     
     public void initialize(Class<?> type) {
         RecordModelCache recordModelCache = this.dataCache.get(RecordModelCache.class);
-        RecordModelDefinition definition = recordModelCache.getDefinition(type);
+        RecordModelDefinition definition = recordModelCache.getDefinition(type).get();
         initialize(definition);
     }
 
@@ -67,7 +67,7 @@ public class InputFormDefinitionModel {
         
         InputSource inputSource = null;
         
-        for (InputFieldDefinition source : definition.getFields()) {
+        for (InputFieldDefinition source : definition.getFieldsJava()) {
             InputFieldModel target = new InputFieldModel(source, definition);
             
             if (source.getEnumValues() != null && source.getEnumValues().size() > 0) {

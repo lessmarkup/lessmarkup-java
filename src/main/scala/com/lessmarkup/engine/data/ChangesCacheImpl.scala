@@ -1,7 +1,6 @@
 package com.lessmarkup.engine.data
 
 import java.time.OffsetDateTime
-import java.util.OptionalLong
 import java.util.concurrent.locks.{ReadWriteLock, ReentrantReadWriteLock}
 import java.util.function.Predicate
 import java.util.logging.{Level, Logger}
@@ -129,8 +128,5 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
     } finally {
       lock.readLock.unlock()
     }
-  }
-
-  def initialize(objectId: OptionalLong) {
   }
 }

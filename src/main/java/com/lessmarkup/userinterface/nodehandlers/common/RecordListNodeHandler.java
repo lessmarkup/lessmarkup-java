@@ -129,7 +129,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
         this.modelType = modelType;
 
         RecordModelCache formCache = dataCache.get(RecordModelCache.class);
-        recordModel = formCache.getDefinition(modelType);
+        recordModel = formCache.getDefinition(modelType).get();
 
         if (recordModel == null) {
             throw new IllegalArgumentException(LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.MISSING_PARAMETER, modelType.getName()));
@@ -189,7 +189,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
             if (!actionAttribute.createType().equals(Object.class)) {
                 action.setType(actionAttribute.initialize() ? ActionType.RECORD_INITIALIZE_CREATE : ActionType.RECORD_CREATE);
-                action.setParameter(modelCache.getDefinition(actionAttribute.createType()).getId());
+                action.setParameter(modelCache.getDefinition(actionAttribute.createType()).get().getId());
             }
 
             actions.add(action);
@@ -265,7 +265,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
     protected void addCreateAction(String name, String moduleType, String text, Class<T> type)
     {
-        String typeId = type == null ? null : dataCache.get(RecordModelCache.class).getDefinition(type).getId();
+        String typeId = type == null ? null : dataCache.get(RecordModelCache.class).getDefinition(type).get().getId();
         Action action = new Action();
         action.setName(name);
         action.setText(LanguageHelper.getFullTextId(moduleType, text));
@@ -337,7 +337,7 @@ public abstract class RecordListNodeHandler<T extends RecordModel> extends Abstr
 
             JsonArray columns = new JsonArray();
 
-            for (RecordColumnDefinition c : recordModel.getColumns()) {
+            for (RecordColumnDefinition c : recordModel.getColumnsJava()) {
                 JsonObject o = new JsonObject();
 
                 o.addProperty("width", getColumnWidth(c));

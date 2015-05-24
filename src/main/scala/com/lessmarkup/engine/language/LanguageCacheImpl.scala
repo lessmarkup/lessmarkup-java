@@ -3,9 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.lessmarkup.engine.language
 
-import java.util.OptionalLong
+package com.lessmarkup.engine.language
 
 import com.google.inject.Inject
 import com.lessmarkup.Constants
@@ -67,9 +66,6 @@ class LanguageCacheImpl @Inject() (domainModelProvider: DomainModelProvider, mod
       shortName = file.getShortName.toLowerCase,
       translations = translations
     ))
-  }
-
-  def initialize(objectId: OptionalLong) {
   }
 
   def loadLanguages: Map[String, CachedLanguage] = {

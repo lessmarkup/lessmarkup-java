@@ -2,13 +2,10 @@ package com.lessmarkup.engine.cache
 
 import java.util.OptionalLong
 import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
-
 import com.google.inject.Inject
 import com.lessmarkup.dataobjects.Currency
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
-
-import scala.collection.JavaConversions._
 
 class CurrencyCacheItem(val currencyId: Long, val name: String, val code: String, val rate: Double, val isBase: Boolean)
 
@@ -23,18 +20,12 @@ class CurrencyCache @Inject() (domainModelProvider: DomainModelProvider) extends
   def readCurrencies = {
     val domainModel: DomainModel = this.domainModelProvider.create
     try {
-      domainModel.query.from(classOf[Currency]).where("Enabled = $", new java.lang.Boolean(true)).toList(classOf[Currency]).toList.map(c => {
+      domainModel.query.from(classOf[Currency]).where("Enabled = $", new java.lang.Boolean(true)).toList(classOf[Currency]).map(c => {
         val item: CurrencyCacheItem = new CurrencyCacheItem(c.getId, c.getName, c.getCode, c.getRate, c.getIsBase)
         (c.getId, item)
       }).toMap
     } finally {
       if (domainModel != null) domainModel.close()
-    }
-  }
-
-  def initialize(objectId: OptionalLong) {
-    if (objectId.isPresent) {
-      throw new IllegalArgumentException
     }
   }
 

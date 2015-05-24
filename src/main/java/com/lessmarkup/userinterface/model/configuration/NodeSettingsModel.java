@@ -130,7 +130,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
     public Object createNode() {
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
-        RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class);
+        RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class).get();
         try {
             definition.validateInput(JsonSerializer.serializePojoToTree(this), true);
         } catch (RecordValidationException ex) {
@@ -161,7 +161,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
         customizable = handler.getSettingsModel() != null;
 
         if (customizable) {
-            settingsModelId = modelCache.getDefinition(handler.getSettingsModel()).getId();
+            settingsModelId = modelCache.getDefinition(handler.getSettingsModel()).get().getId();
         }
 
         return this;
@@ -169,7 +169,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
     
     public Object updateNode() {
         RecordModelCache modelCache = dataCache.get(RecordModelCache.class);
-        RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class);
+        RecordModelDefinition definition = modelCache.getDefinition(NodeSettingsModel.class).get();
         try {
             definition.validateInput(JsonSerializer.serializePojoToTree(this), false);
         } catch (RecordValidationException ex) {
@@ -292,7 +292,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                     if (source.getSettings() != null) {
                         node.setSettings(JsonSerializer.deserializeToTree(source.getSettings()));
                     }
-                    node.setSettingsModelId(modelCache.getDefinition(handler.getSettingsModel()).getId());
+                    node.setSettingsModelId(modelCache.getDefinition(handler.getSettingsModel()).get().getId());
                 }
                 node.setTitle(source.getTitle());
                 node.setPath(source.getPath());

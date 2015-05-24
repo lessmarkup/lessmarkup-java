@@ -7,7 +7,6 @@
 package com.lessmarkup.engine.filesystem
 
 import java.io.IOException
-import java.util.OptionalLong
 import java.util.logging.Level
 
 import com.google.inject.Inject
@@ -58,12 +57,6 @@ class ResourceCacheImpl @Inject() (moduleProvider: ModuleProvider, domainModelPr
   private val resources = loadDatabaseResources
 
   private val compiler: Mustache.Compiler = TemplateContext.createCompiler(this)
-
-  def initialize(objectId: OptionalLong): Unit = {
-    if (objectId.isPresent) {
-      throw new IllegalArgumentException
-    }
-  }
 
   private def loadModulesResources: Map[String, ResourceReference] = {
 

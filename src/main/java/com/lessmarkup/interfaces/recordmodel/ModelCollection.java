@@ -7,12 +7,11 @@ package com.lessmarkup.interfaces.recordmodel;
 
 import com.lessmarkup.interfaces.data.QueryBuilder;
 import com.lessmarkup.interfaces.structure.NodeAccessType;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.OptionalLong;
 
-public interface ModelCollection<T extends RecordModel> {
+public interface ModelCollection<T> {
     List<Long> readIds(QueryBuilder query, boolean ignoreOrder);
     int getCollectionId();
     Collection<T> read(QueryBuilder queryBuilder, List<Long> ids);

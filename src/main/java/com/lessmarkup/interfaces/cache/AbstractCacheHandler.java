@@ -18,7 +18,11 @@ public abstract class AbstractCacheHandler implements CacheHandler {
     }
     
     @Override
-    public abstract void initialize(OptionalLong objectId);
+    public void initialize(OptionalLong objectId) {
+        if (objectId.isPresent()) {
+            throw new IllegalArgumentException();
+        }
+    }
 
     @Override
     public boolean expires(int collectionId, long entityId, EntityChangeType changeType) {

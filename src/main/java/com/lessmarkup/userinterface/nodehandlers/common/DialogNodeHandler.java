@@ -64,7 +64,7 @@ public abstract class DialogNodeHandler<T> extends AbstractNodeHandler {
 
     @ActionAccess
     public JsonObject save(@Parameter("changedObject") JsonObject changedObject) {
-        RecordModelDefinition model = dataCache.get(RecordModelCache.class).getDefinition(modelType);
+        RecordModelDefinition model = dataCache.get(RecordModelCache.class).getDefinition(modelType).get();
         model.validateInput(changedObject, false);
         String message = saveObject(JsonSerializer.deserializePojo(modelType, changedObject));
         if (message == null) {

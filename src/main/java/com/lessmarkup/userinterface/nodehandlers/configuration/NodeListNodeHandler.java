@@ -74,7 +74,7 @@ public class NodeListNodeHandler extends AbstractNodeHandler {
         NodeSettingsModel rootNode = node.getRootNode();
 
         ret.add("root", rootNode != null ? JsonSerializer.serializePojoToTree(node.getRootNode()) : JsonNull.INSTANCE);
-        ret.addProperty("nodeSettingsModelId", modelCache.getDefinition(NodeSettingsModel.class).getId());
+        ret.addProperty("nodeSettingsModelId", modelCache.getDefinition(NodeSettingsModel.class).get().getId());
 
         JsonArray handlers = new JsonArray();
         moduleProvider.getNodeHandlers().forEach(id -> {
