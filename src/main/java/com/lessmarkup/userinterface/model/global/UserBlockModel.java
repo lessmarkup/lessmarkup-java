@@ -32,7 +32,7 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
     }
 
     public void blockUser(long userId) {
-        OptionalLong currentUserId = RequestContextHolder.getContext().getCurrentUser().getUserId();
+        OptionalLong currentUserId = RequestContextHolder.getContext().getCurrentUser().getUserIdJava();
         if (!currentUserId.isPresent()) {
             throw new IllegalArgumentException();
         }

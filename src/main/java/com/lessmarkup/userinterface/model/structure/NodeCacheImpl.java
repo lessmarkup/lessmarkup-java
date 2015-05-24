@@ -317,7 +317,7 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
 
         CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
 
-        if (node.isLoggedIn() && !currentUser.getUserId().isPresent()) {
+        if (node.isLoggedIn() && !currentUser.getUserId().isDefined()) {
             LoggingHelper.getLogger(getClass()).info("This node requires user to be logged in");
             return null;
         }

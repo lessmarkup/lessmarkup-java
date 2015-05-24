@@ -1,6 +1,6 @@
 package com.lessmarkup.engine.cache
 
-import java.util.{Optional, OptionalLong, Random}
+import java.util.{OptionalLong, Random}
 
 import com.google.inject.{Inject, Singleton}
 import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
@@ -61,7 +61,7 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
     hashedCollectionIds ++= getHashedCollectionIds(cacheItem, domainModelProvider)
   }
 
-  private def get[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], create: Boolean): Option[T] = {
+  def get[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], create: Boolean): Option[T] = {
 
     val key: (Class[_], Option[Long]) = (itemType, objectId)
 
@@ -111,25 +111,8 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       None
   }
 
-  def get[T <: CacheHandler](itemType: Class[T], objectId: OptionalLong, create: Boolean): Optional[T] = {
-    val localObjectId = if (objectId.isPresent) Option(objectId.getAsLong) else None
-    val ret = get(itemType, localObjectId, create)
-    if (ret.isDefined)
-      Optional.of(ret.get)
-    else
-      Optional.empty()
-  }
-
-  def get[T <: CacheHandler](itemType: Class[T], objectId: OptionalLong): T = {
-    get(itemType, objectId, create = true).get()
-  }
-
-  def get[T <: CacheHandler](itemType: Class[T]): T = {
-    get(itemType, OptionalLong.empty)
-  }
-
-  def expired[T <: CacheHandler](itemType: Class[T], objectId: OptionalLong) {
-    remove(itemType, if (objectId.isPresent) Option(objectId.getAsLong) else None)
+  def expired[T <: CacheHandler](itemType: Class[T], objectId: Option[Long]) {
+    remove(itemType, objectId)
   }
 
   def createWithUniqueId[T <: CacheHandler](itemType: Class[T]): T = {

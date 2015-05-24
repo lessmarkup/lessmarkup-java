@@ -92,7 +92,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
     val record: EntityChangeHistory = new EntityChangeHistory
     record.setEntityId(objectId)
     record.setChangeType(changeType.ordinal)
-    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserId)
+    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserIdJava)
     record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
     record.setCreated(OffsetDateTime.now)
     domainModel.create(record)
@@ -103,7 +103,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
     val record: EntityChangeHistory = new EntityChangeHistory
     record.setEntityId(dataObject.getId)
     record.setChangeType(changeType.ordinal)
-    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserId)
+    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserIdJava)
     record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
     record.setCreated(OffsetDateTime.now)
     domainModel.create(record)

@@ -14,11 +14,8 @@ import com.lessmarkup.interfaces.exceptions.UnauthorizedAccessException;
 import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
-import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
 
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Random;
 
@@ -43,17 +40,11 @@ public class LoginModel extends RecordModel<LoginModel> {
             throw new CommonException(e);
         }
 
-        Tuple<String, String> loginHash;
-
-        try {
-            loginHash = RequestContextHolder.getContext().getCurrentUser().getLoginHash(data.get("user").getAsString());
-        } catch (NoSuchAlgorithmException | SQLException e) {
-            throw new CommonException(e);
-        }
+        scala.Tuple2<String, String> loginHash = RequestContextHolder.getContext().getCurrentUser().getLoginHash(data.get("user").getAsString());
 
         JsonObject ret = new JsonObject();
-        ret.addProperty("pass1", loginHash.getValue1());
-        ret.addProperty("pass2", loginHash.getValue2());
+        ret.addProperty("pass1", loginHash._1());
+        ret.addProperty("pass2", loginHash._2());
 
         return ret;
     }

@@ -10,7 +10,6 @@ import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.recordmodel.ModelCollection;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.NotificationProvider;
-import scala.Function1;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> ext
     @Override
     public int getValueChange(OptionalLong fromVersion, OptionalLong toVersion, DomainModel domainModel) {
         ChangesCache changesCache = dataCache.get(ChangesCache.class);
-        OptionalLong userId = RequestContextHolder.getContext().getCurrentUser().getUserId();
+        OptionalLong userId = RequestContextHolder.getContext().getCurrentUser().getUserIdJava();
 
         ModelCollection<T> collection = getCollection();
 

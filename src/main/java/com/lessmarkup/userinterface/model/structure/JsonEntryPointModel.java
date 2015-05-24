@@ -157,7 +157,7 @@ public class JsonEntryPointModel {
 
         CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
 
-        OptionalLong userId = currentUser.getUserId();
+        OptionalLong userId = currentUser.getUserIdJava();
         boolean userVerified = isUserVerified();
         boolean administrator = currentUser.isAdministrator();
         
@@ -167,7 +167,7 @@ public class JsonEntryPointModel {
                 JsonObject resultObject = resultData.getAsJsonObject();
                 if (resultObject.has("versionId")) {
                     JsonElement versionId = resultObject.get("versionId");
-                    handleUpdates(versionId != null ? OptionalLong.of(versionId.getAsLong()) : OptionalLong.empty(), path.getAsString(), requestData, userId != currentUser.getUserId(), response);
+                    handleUpdates(versionId != null ? OptionalLong.of(versionId.getAsLong()) : OptionalLong.empty(), path.getAsString(), requestData, userId != currentUser.getUserIdJava(), response);
                 }
             }
             response.add("data", resultData);
@@ -182,11 +182,11 @@ public class JsonEntryPointModel {
         JsonObject userState = new JsonObject();
         response.add("user", userState);
 
-        userId = currentUser.getUserId();
+        userId = currentUser.getUserIdJava();
         userState.addProperty("loggedIn", userId.isPresent());
 
         if (userId.isPresent()) {
-            userState.addProperty("userName", currentUser.getUserName());
+            userState.addProperty("userName", currentUser.getUserName().get());
         }
 
         if (userVerified != isUserVerified()) {

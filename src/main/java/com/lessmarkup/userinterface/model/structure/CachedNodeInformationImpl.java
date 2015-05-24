@@ -9,7 +9,6 @@ import com.lessmarkup.interfaces.structure.NodeHandler;
 import com.lessmarkup.interfaces.system.UserCache;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalLong;
 
 public class CachedNodeInformationImpl implements CachedNodeInformation {
@@ -251,7 +250,7 @@ public class CachedNodeInformationImpl implements CachedNodeInformation {
             return NodeAccessType.MANAGE;
         }
         
-        NodeAccessType accessType = checkRights(currentUser.getUserId(), currentUser.getGroups(), defaultAccessType);
+        NodeAccessType accessType = checkRights(currentUser.getUserIdJava(), currentUser.getGroupsJava(), defaultAccessType);
         
         if (accessType != null && accessType != NodeAccessType.NO_ACCESS && (!currentUser.isApproved() || !currentUser.emailConfirmed())) {
             accessType = NodeAccessType.READ;

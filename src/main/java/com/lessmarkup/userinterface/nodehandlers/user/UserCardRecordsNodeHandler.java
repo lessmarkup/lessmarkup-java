@@ -48,7 +48,7 @@ public class UserCardRecordsNodeHandler extends RecordListNodeHandler<UserCardMo
 
         handler.initialize(null, null, parts[0], "", getAccessType());
 
-        UserCache userCache = dataCache.get(UserCache.class, OptionalLong.of(userId));
+        UserCache userCache = dataCache.getJava(UserCache.class, OptionalLong.of(userId));
 
         ChildHandlerSettings ret = new ChildHandlerSettings();
         ret.setHandler(handler);

@@ -115,10 +115,10 @@ public class NodeEntryPointModel {
 
         CurrentUser currentUser = RequestContextHolder.getContext().getCurrentUser();
 
-        initialData.addProperty("loggedIn", currentUser.getUserId().isPresent());
+        initialData.addProperty("loggedIn", currentUser.getUserId().isDefined());
         initialData.addProperty("userNotVerified", !currentUser.isApproved() || !currentUser.emailConfirmed());
-        if (currentUser.getUserName() != null) {
-            initialData.addProperty("userName", currentUser.getUserName());
+        if (currentUser.getUserName().isDefined()) {
+            initialData.addProperty("userName", currentUser.getUserName().get());
         } else {
             initialData.add("userName", JsonNull.INSTANCE);
         }
