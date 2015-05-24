@@ -28,8 +28,6 @@ import com.lessmarkup.interfaces.security.{CurrentUser, LoginTicket, UserSecurit
 import com.lessmarkup.interfaces.system.{EngineConfiguration, RequestContext, SiteConfiguration, UserCache}
 import org.apache.commons.net.util.Base64
 
-import scala.collection.JavaConversions._
-
 class CookieUserModel(val userId: Long, val email: String, val name: String, val properties: Option[String],
                       val groups: List[Long], val administrator: Boolean, val approved: Boolean,
                       val fakeUser: Boolean, val emailConfirmed: Boolean)
@@ -141,7 +139,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       LoggingHelper.getLogger(getClass).info("Cannot find user " + ticket.getUserId + " for current user")
     }
     if (currentUser.isBlocked) {
-      if (currentUser.getUnblockTime == null || currentUser.getUnblockTime.isAfter(OffsetDateTime.now)) {
+      if (currentUser.getUnblockTime.isEmpty || currentUser.getUnblockTime.get.isAfter(OffsetDateTime.now)) {
         LoggingHelper.getLogger(getClass).info("User is blocked")
         return None
       }
@@ -163,7 +161,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     Option(new CookieUserModel(
       email = ticket.getEmail,
       name = ticket.getName,
-      groups = currentUser.getGroups.map(g => g.toLong).toList,
+      groups = currentUser.getGroups,
       administrator = currentUser.isAdministrator,
       approved = currentUser.isApproved,
       emailConfirmed = currentUser.isEmailConfirmed,

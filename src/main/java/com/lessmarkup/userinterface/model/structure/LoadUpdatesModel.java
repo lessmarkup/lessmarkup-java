@@ -37,28 +37,28 @@ public class LoadUpdatesModel {
 
         NotificationProvider currentProvider = null;
 
-        for (Tuple<CachedNodeInformation, NodeAccessType> node : userCache.getNodes()) {
-            if (!node.getValue1().getHandlerType().isAssignableFrom(NotificationProvider.class)) {
+        for (scala.Tuple2<CachedNodeInformation, NodeAccessType> node : userCache.getNodesJava()) {
+            if (!node._1().getHandlerType().isAssignableFrom(NotificationProvider.class)) {
                 continue;
             }
-            NodeHandler handler = DependencyResolver.resolve(node.getValue1().getHandlerType());
+            NodeHandler handler = DependencyResolver.resolve(node._1().getHandlerType());
             NotificationProvider notificationProvider = (NotificationProvider) handler;
             if (notificationProvider == null) {
                 continue;
             }
 
-            if (currentNodeId.isPresent() && currentProvider == null && node.getValue1().getNodeId() == currentNodeId.getAsLong()) {
+            if (currentNodeId.isPresent() && currentProvider == null && node._1().getNodeId() == currentNodeId.getAsLong()) {
                 currentProvider = notificationProvider;
             }
 
             JsonElement settings = null;
-            if (node.getValue1().getSettings() != null && node.getValue1().getSettings().length() > 0) {
-                settings = JsonSerializer.deserializeToTree(node.getValue1().getSettings());
+            if (node._1().getSettings() != null && node._1().getSettings().length() > 0) {
+                settings = JsonSerializer.deserializeToTree(node._1().getSettings());
             }
 
-            handler.initialize(OptionalLong.of(node.getValue1().getNodeId()), 
-                    settings != null && settings.isJsonObject() ? settings.getAsJsonObject() : null, node.getValue1().getPath(), node.getValue1().getFullPath(), node.getValue2());
-            handlers.add(new Tuple<>(node.getValue1().getNodeId(), notificationProvider));
+            handler.initialize(OptionalLong.of(node._1().getNodeId()),
+                    settings != null && settings.isJsonObject() ? settings.getAsJsonObject() : null, node._1().getPath(), node._1().getFullPath(), node._2());
+            handlers.add(new Tuple<>(node._1().getNodeId(), notificationProvider));
         }
 
         if ((!newVersionId.isPresent() || newVersionId == versionId) && currentProvider == null) {

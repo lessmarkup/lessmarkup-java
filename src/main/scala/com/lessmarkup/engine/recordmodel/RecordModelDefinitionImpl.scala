@@ -7,6 +7,7 @@ import com.google.gson.{JsonElement, JsonObject}
 import com.lessmarkup.engine.scripting.ScriptHelper
 import com.lessmarkup.framework.helpers.{DependencyResolver, LanguageHelper, StringHelper, TypeHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.InputField
 import com.lessmarkup.interfaces.data.DataObject
 import com.lessmarkup.interfaces.exceptions.RecordValidationException
 import com.lessmarkup.interfaces.recordmodel._

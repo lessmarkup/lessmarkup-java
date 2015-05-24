@@ -87,7 +87,7 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
             }
 
             domainModel.create(access);
-            changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED(), domainModel);
             domainModel.completeTransaction();
 
             record.setAccessId(access.getId());
@@ -123,7 +123,7 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
             }
 
             domainModel.update(access);
-            changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED(), domainModel);
             domainModel.completeTransaction();
         }
     }
@@ -139,7 +139,7 @@ public class NodeAccessModelCollectionManager implements EditableModelCollection
             }
 
             if (hasChanges) {
-                changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED, domainModel);
+                changeTracker.addChange(Node.class, nodeId, EntityChangeType.UPDATED(), domainModel);
                 domainModel.completeTransaction();
             }
 

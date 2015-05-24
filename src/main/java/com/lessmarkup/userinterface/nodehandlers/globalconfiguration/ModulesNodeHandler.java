@@ -47,7 +47,7 @@ public class ModulesNodeHandler extends RecordListNodeHandler<ModuleModel> {
 
             siteModule.setEnabled(enable);
             domainModel.update(siteModule);
-            changeTracker.addChange(Module.class, siteModule, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(Module.class, siteModule, EntityChangeType.UPDATED(), domainModel);
 
             ModuleModel.ModuleModelCollection collection = DependencyResolver.resolve(ModuleModel.ModuleModelCollection.class);
             collection.initialize(getObjectId(), getAccessType());

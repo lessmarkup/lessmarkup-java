@@ -241,7 +241,7 @@ public class UserSecurityImpl implements UserSecurity {
                 throw ex;
             }
 
-            changeTracker.addChange(User.class, user.getId(), EntityChangeType.ADDED, domainModel);
+            changeTracker.addChange(User.class, user.getId(), EntityChangeType.ADDED(), domainModel);
 
             addToDefaultGroup(domainModel, user);
 
@@ -659,7 +659,7 @@ public class UserSecurityImpl implements UserSecurity {
                 user.setApproved(true);
             }
 
-            changeTracker.addChange(User.class, user.getId(), EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(User.class, user.getId(), EntityChangeType.UPDATED(), domainModel);
             domainModel.update(user);
             domainModel.completeTransaction();
             

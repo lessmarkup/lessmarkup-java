@@ -59,7 +59,7 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
             blockHistory.setCreated(OffsetDateTime.now());
 
             domainModel.create(blockHistory);
-            changeTracker.addChange(User.class, user, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(User.class, user, EntityChangeType.UPDATED(), domainModel);
         }
     }
 
@@ -80,7 +80,7 @@ public class UserBlockModel extends RecordModel<UserBlockModel> {
                 domainModel.update(history);
             }
 
-            changeTracker.addChange(User.class, user, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(User.class, user, EntityChangeType.UPDATED(), domainModel);
 
         }
     }

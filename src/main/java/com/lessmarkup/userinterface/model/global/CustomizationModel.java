@@ -8,7 +8,7 @@ package com.lessmarkup.userinterface.model.global;
 import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.SiteCustomization;
 import com.lessmarkup.framework.data.RecordModelWithEditableCollection;
-import com.lessmarkup.interfaces.recordmodel.InputField;
+import com.lessmarkup.interfaces.annotations.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.InputFile;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;

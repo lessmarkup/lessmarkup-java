@@ -265,7 +265,7 @@ public class CachedNodeInformationImpl implements CachedNodeInformation {
             return NodeAccessType.MANAGE;
         }
         
-        NodeAccessType accessType = checkRights(userId, userCache.getGroups(), defaultAccessType);
+        NodeAccessType accessType = checkRights(userId, userCache.getGroupsJava(), defaultAccessType);
         
         if (accessType != null && accessType != NodeAccessType.NO_ACCESS && (!userCache.isApproved() || !userCache.isEmailConfirmed())) {
             accessType = NodeAccessType.READ;

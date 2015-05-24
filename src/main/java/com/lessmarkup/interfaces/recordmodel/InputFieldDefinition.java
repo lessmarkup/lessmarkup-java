@@ -2,6 +2,7 @@ package com.lessmarkup.interfaces.recordmodel;
 
 import com.lessmarkup.framework.helpers.PropertyDescriptor;
 import com.lessmarkup.framework.helpers.StringHelper;
+import com.lessmarkup.interfaces.annotations.InputField;
 
 import java.util.ArrayList;
 import java.util.Arrays;

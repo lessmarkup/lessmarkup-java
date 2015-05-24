@@ -9,7 +9,6 @@ import com.lessmarkup.interfaces.cache.AbstractCacheHandler;
 import com.lessmarkup.interfaces.data.DataObject;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
 import com.lessmarkup.interfaces.structure.Tuple;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.OptionalLong;
 
 public class EditableCollectionCache extends AbstractCacheHandler {
 
@@ -25,13 +23,6 @@ public class EditableCollectionCache extends AbstractCacheHandler {
     
     public EditableCollectionCache() {
         super(null);
-    }
-    
-    @Override
-    public void initialize(OptionalLong objectId) {
-        if (objectId.isPresent()) {
-            throw new IllegalArgumentException();
-        }
     }
     
     private static Map<String, Method> getTypeMethods(Class<?> type) {

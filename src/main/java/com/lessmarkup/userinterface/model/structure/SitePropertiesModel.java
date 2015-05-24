@@ -11,16 +11,15 @@ import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.PropertyDescriptor;
 import com.lessmarkup.framework.helpers.StringHelper;
 import com.lessmarkup.framework.helpers.TypeHelper;
+import com.lessmarkup.interfaces.annotations.InputField;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
-import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.system.SiteConfiguration;
-
+import scala.Option;
+import scala.collection.immutable.List;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.OptionalLong;
 
 public class SitePropertiesModel implements SiteConfiguration {
 
@@ -141,45 +140,6 @@ public class SitePropertiesModel implements SiteConfiguration {
     @Override public void setEngineOverride(String param) { this.engineOverride = param; }
     @Override public String getEngineOverride() { return this.engineOverride; }
 
-    @Override
-    public void initialize(OptionalLong objectId) {
-        try (DomainModel domainModel = domainModelProvider.create()) {
-            SiteProperties propertiesDataObject = domainModel.query()
-                    .from(SiteProperties.class)
-                    .firstOrDefaultJava(SiteProperties.class);
-            if (propertiesDataObject == null || StringHelper.isNullOrEmpty(propertiesDataObject.getProperties())) {
-                return;
-            }
-
-            JsonElement propertiesElement = JsonSerializer.deserializeToTree(propertiesDataObject.getProperties());
-            
-            if (!propertiesElement.isJsonObject()) {
-                return;
-            }
-            
-            JsonObject propertiesObject = propertiesElement.getAsJsonObject();
-            for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
-                JsonPrimitive element = propertiesObject.getAsJsonPrimitive(property.getName());
-                if (element == null) {
-                    continue;
-                }
-                if (property.getType().equals(String.class)) {
-                    if (element.isString()) {
-                        property.setValue(this, element.getAsString());
-                    }
-                } else if (property.getType().equals(int.class)) {
-                    if (element.isNumber()) {
-                        property.setValue(this, element.getAsInt());
-                    }
-                } else if (property.getType().equals(boolean.class)) {
-                    if (element.isBoolean()) {
-                        property.setValue(this, element.getAsBoolean());
-                    }
-                }
-            }
-        }
-    }
-
     public void save() {
         JsonObject propertiesObject = new JsonObject();
         for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
@@ -211,13 +171,52 @@ public class SitePropertiesModel implements SiteConfiguration {
     }
 
     @Override
+    public void initialize(Option<Object> objectId) {
+        try (DomainModel domainModel = domainModelProvider.create()) {
+            SiteProperties propertiesDataObject = domainModel.query()
+                    .from(SiteProperties.class)
+                    .firstOrDefaultJava(SiteProperties.class);
+            if (propertiesDataObject == null || StringHelper.isNullOrEmpty(propertiesDataObject.getProperties())) {
+                return;
+            }
+
+            JsonElement propertiesElement = JsonSerializer.deserializeToTree(propertiesDataObject.getProperties());
+
+            if (!propertiesElement.isJsonObject()) {
+                return;
+            }
+
+            JsonObject propertiesObject = propertiesElement.getAsJsonObject();
+            for (PropertyDescriptor property : TypeHelper.getProperties(getClass())) {
+                JsonPrimitive element = propertiesObject.getAsJsonPrimitive(property.getName());
+                if (element == null) {
+                    continue;
+                }
+                if (property.getType().equals(String.class)) {
+                    if (element.isString()) {
+                        property.setValue(this, element.getAsString());
+                    }
+                } else if (property.getType().equals(int.class)) {
+                    if (element.isNumber()) {
+                        property.setValue(this, element.getAsInt());
+                    }
+                } else if (property.getType().equals(boolean.class)) {
+                    if (element.isBoolean()) {
+                        property.setValue(this, element.getAsBoolean());
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean expires(int collectionId, long entityId, EntityChangeType changeType) {
         return false;
     }
 
     @Override
-    public Collection<Class<?>> getHandledCollectionTypes() {
-        return null;
+    public Option<List<Class<?>>> getHandledCollectionTypes() {
+        return Option.empty();
     }
 
     @Override

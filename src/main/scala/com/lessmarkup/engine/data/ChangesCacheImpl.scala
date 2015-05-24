@@ -78,7 +78,7 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
             parameter1 = history.getParameter1,
             parameter2 = history.getParameter2,
             parameter3 = history.getParameter3,
-            changeType = EntityChangeType.of(history.getChangeType)
+            changeType = EntityChangeType(history.getChangeType)
           )
 
           collection.get.add(change)

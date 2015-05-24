@@ -11,6 +11,7 @@ import com.lessmarkup.framework.helpers.JsonSerializer;
 import com.lessmarkup.framework.helpers.LanguageHelper;
 import com.lessmarkup.framework.helpers.LoggingHelper;
 import com.lessmarkup.framework.helpers.StringHelper;
+import com.lessmarkup.interfaces.annotations.InputField;
 import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.cache.EntityChangeType;
 import com.lessmarkup.interfaces.data.ChangeTracker;
@@ -20,7 +21,6 @@ import com.lessmarkup.interfaces.exceptions.RecordValidationException;
 import com.lessmarkup.interfaces.module.ModuleConfiguration;
 import com.lessmarkup.interfaces.module.ModuleProvider;
 import com.lessmarkup.interfaces.recordmodel.EnumSource;
-import com.lessmarkup.interfaces.recordmodel.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.InputSource;
 import com.lessmarkup.interfaces.recordmodel.RecordModel;
@@ -150,7 +150,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
 
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
             domainModel.create(target);
-            changeTracker.addChange(Node.class, target, EntityChangeType.ADDED, domainModel);
+            changeTracker.addChange(Node.class, target, EntityChangeType.ADDED(), domainModel);
             domainModel.completeTransaction();
         }
 
@@ -187,7 +187,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             record.setAddToMenu(addToMenu);
 
             domainModel.update(record);
-            changeTracker.addChange(Node.class, record, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(Node.class, record, EntityChangeType.UPDATED(), domainModel);
 
             domainModel.completeTransaction();
         }
@@ -200,7 +200,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             Node node = domainModel.query().findJava(Node.class, nodeId);
             OptionalLong nodeParentId = node.getParentId();
             domainModel.delete(Node.class, node.getId());
-            changeTracker.addChange(Node.class, node, EntityChangeType.REMOVED, domainModel);
+            changeTracker.addChange(Node.class, node, EntityChangeType.REMOVED(), domainModel);
 
             List<Node> nodes = domainModel.query()
                     .from(Node.class)
@@ -211,7 +211,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
                 if (nodes.get(i).getPosition() != i) {
                     nodes.get(i).setPosition(i);
                     domainModel.update(nodes.get(i));
-                    changeTracker.addChange(Node.class, nodes.get(i), EntityChangeType.UPDATED, domainModel);
+                    changeTracker.addChange(Node.class, nodes.get(i), EntityChangeType.UPDATED(), domainModel);
                 }
             }
 
@@ -328,7 +328,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             normalizeTree(nodes, rootNode, domainModel, changedNodes);
 
             if (changedNodes.size() > 0) {
-                changedNodes.stream().forEach(id -> changeTracker.addChange(Node.class, id, EntityChangeType.UPDATED, domainModel));
+                changedNodes.stream().forEach(id -> changeTracker.addChange(Node.class, id, EntityChangeType.UPDATED(), domainModel));
             }
         }
 
@@ -343,7 +343,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             node.setSettings(settings != null ? settings.toString() : null);
 
             domainModel.update(node);
-            changeTracker.addChange(Node.class, node, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(Node.class, node, EntityChangeType.UPDATED(), domainModel);
 
             domainModel.completeTransaction();
         }
@@ -452,7 +452,7 @@ public class NodeSettingsModel extends RecordModel<NodeSettingsModel> implements
             changedNodes.add(nodeId);
 
             for (long id : changedNodes) {
-                changeTracker.addChange(Node.class, id, EntityChangeType.UPDATED, domainModel);
+                changeTracker.addChange(Node.class, id, EntityChangeType.UPDATED(), domainModel);
             }
 
             domainModel.completeTransaction();

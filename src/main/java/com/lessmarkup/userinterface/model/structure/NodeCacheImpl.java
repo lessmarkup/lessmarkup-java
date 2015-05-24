@@ -30,6 +30,7 @@ import com.lessmarkup.userinterface.nodehandlers.globalconfiguration.DatabaseCon
 import com.lessmarkup.userinterface.nodehandlers.user.ForgotPasswordNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.user.UserCardRecordsNodeHandler;
 import com.lessmarkup.userinterface.nodehandlers.user.UserProfileNodeHandler;
+import scala.Option;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -59,8 +60,8 @@ public class NodeCacheImpl extends AbstractCacheHandler implements NodeCache {
     }
     
     @Override
-    public void initialize(OptionalLong objectId) {
-        if (objectId.isPresent()) {
+    public void initialize(Option<Object> objectId) {
+        if (objectId.isDefined()) {
             throw new IllegalArgumentException();
         }
         

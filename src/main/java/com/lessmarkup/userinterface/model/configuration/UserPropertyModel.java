@@ -9,7 +9,7 @@ import com.lessmarkup.TextIds;
 import com.lessmarkup.dataobjects.UserPropertyDefinition;
 import com.lessmarkup.dataobjects.UserPropertyType;
 import com.lessmarkup.framework.data.RecordModelWithEditableCollection;
-import com.lessmarkup.interfaces.recordmodel.InputField;
+import com.lessmarkup.interfaces.annotations.InputField;
 import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 import com.lessmarkup.interfaces.recordmodel.RecordColumn;
 

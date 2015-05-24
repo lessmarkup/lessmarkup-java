@@ -1,4 +1,6 @@
-package com.lessmarkup.interfaces.recordmodel;
+package com.lessmarkup.interfaces.annotations;
+
+import com.lessmarkup.interfaces.recordmodel.InputFieldType;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

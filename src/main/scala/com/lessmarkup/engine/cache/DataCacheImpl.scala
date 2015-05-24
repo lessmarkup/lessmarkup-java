@@ -4,7 +4,8 @@ import java.util.{OptionalLong, Random}
 
 import com.google.inject.{Inject, Singleton}
 import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
-import com.lessmarkup.interfaces.cache.{CacheHandler, DataCache, EntityChangeType}
+import com.lessmarkup.interfaces.annotations.CacheHandlerWithFactory
+import com.lessmarkup.interfaces.cache._
 import com.lessmarkup.interfaces.data.{ChangeListener, ChangeTracker, DomainModelProvider}
 import com.lessmarkup.interfaces.module.Implements
 import scala.collection.JavaConversions._
@@ -21,11 +22,11 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
   changeTracker.subscribe(this)
 
   private def getHandlerCollectionIds(cacheHandler: CacheHandler, domainModelProvider: DomainModelProvider): List[Int] = {
-    val collectionTypes = Option(cacheHandler.getHandledCollectionTypes)
+    val collectionTypes = cacheHandler.getHandledCollectionTypes
     if (collectionTypes.isEmpty) {
       return List[Int]()
     }
-    collectionTypes.get.toList.map(collectionType => {
+    collectionTypes.get.map(collectionType => {
       val collectionId = domainModelProvider.getCollectionId(collectionType)
       if (collectionId.isPresent) {
         Option(collectionId.getAsInt)
@@ -61,6 +62,37 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
     hashedCollectionIds ++= getHashedCollectionIds(cacheItem, domainModelProvider)
   }
 
+  def createInstance[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], key: (Class[_], Option[Long])): Unit = {
+
+    val implements = itemType.getAnnotation(classOf[Implements])
+
+    val actualType = if (implements != null) implements.value() else itemType
+    val factoryAnnotation = actualType.getAnnotation(classOf[CacheHandlerWithFactory])
+
+    if (factoryAnnotation != null && objectId.isDefined) {
+
+      val factory: CacheHandlerFactory = DependencyResolver.resolve(factoryAnnotation.value)
+      val newInstance = factory.createHandler(objectId.get).asInstanceOf
+      set(itemType, newInstance, objectId)
+
+    } else {
+
+      val newInstance = DependencyResolver.resolve(itemType)
+
+      set(itemType, newInstance, objectId)
+
+      try {
+        newInstance.initialize(objectId)
+      }
+      catch {
+        case e: Exception =>
+          LoggingHelper.logException(getClass, e)
+          remove(key)
+          throw e
+      }
+    }
+  }
+
   def get[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], create: Boolean): Option[T] = {
 
     val key: (Class[_], Option[Long]) = (itemType, objectId)
@@ -89,19 +121,8 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       return None
     }
 
-    val newObject: T = DependencyResolver.resolve(itemType)
+    createInstance(itemType, objectId, key)
 
-    set(itemType, newObject, objectId)
-
-    try {
-      newObject.initialize(if (objectId.isDefined) OptionalLong.of(objectId.get) else OptionalLong.empty())
-    }
-    catch {
-      case e: Exception =>
-        LoggingHelper.logException(getClass, e)
-        remove(key)
-        throw e
-    }
     ret = items.get(key)
     val obj = ret.get.cacheHandler
 

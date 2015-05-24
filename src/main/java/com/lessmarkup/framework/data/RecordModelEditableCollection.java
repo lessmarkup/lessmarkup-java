@@ -105,7 +105,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
             }
             updateData(data, record);
             domainModel.create(data);
-            changeTracker.addChange(dataType, data, EntityChangeType.ADDED, domainModel);
+            changeTracker.addChange(dataType, data, EntityChangeType.ADDED(), domainModel);
             domainModel.completeTransaction();
             record.setId(data.getId());
         }
@@ -117,7 +117,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
             TD data = domainModel.query().from(dataType).findJava(dataType, record.getId());
             updateData(data, record);
             domainModel.update(data);
-            changeTracker.addChange(dataType, data, EntityChangeType.UPDATED, domainModel);
+            changeTracker.addChange(dataType, data, EntityChangeType.UPDATED(), domainModel);
             domainModel.completeTransaction();
         }
     }
@@ -127,7 +127,7 @@ public class RecordModelEditableCollection<TM extends RecordModel, TD extends Da
         try (DomainModel domainModel = domainModelProvider.createWithTransaction()) {
             for (long id : recordIds) {
                 domainModel.delete(dataType, id);
-                changeTracker.addChange(dataType, id, EntityChangeType.REMOVED, domainModel);
+                changeTracker.addChange(dataType, id, EntityChangeType.REMOVED(), domainModel);
             }
             domainModel.completeTransaction();
         }

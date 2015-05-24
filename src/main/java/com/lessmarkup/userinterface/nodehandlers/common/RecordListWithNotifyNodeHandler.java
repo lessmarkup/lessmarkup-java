@@ -46,7 +46,7 @@ public abstract class RecordListWithNotifyNodeHandler<T extends RecordModel> ext
                     return !(userId.isPresent()
                             && change.getUserId().isDefined()
                             && (Long) change.getUserId().get() == userId.getAsLong())
-                            && change.getType() != EntityChangeType.REMOVED;
+                            && change.getType() != EntityChangeType.REMOVED();
                 }));
 
         if (changes == null) {
