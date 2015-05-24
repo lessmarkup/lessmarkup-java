@@ -12,13 +12,13 @@ import com.lessmarkup.interfaces.cache.DataCache;
 import com.lessmarkup.interfaces.data.DomainModel;
 import com.lessmarkup.interfaces.data.DomainModelProvider;
 import com.lessmarkup.interfaces.security.UserSecurity;
-import com.lessmarkup.interfaces.structure.Tuple;
 import com.lessmarkup.interfaces.system.RequestContext;
 import com.lessmarkup.userinterface.model.user.ChangePasswordModel;
 import com.lessmarkup.userinterface.nodehandlers.common.DialogNodeHandler;
+import scala.Option;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import java.util.OptionalLong;
 
 public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordModel> {
 
@@ -42,28 +42,28 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
 
     @Override
     protected String saveObject(ChangePasswordModel changedObject) {
-        OptionalLong userId = userSecurity.validatePasswordChangeToken(email, ticket);
+        Option<Object> userId = userSecurity.validatePasswordChangeToken(email, ticket);
 
-        if (!userId.isPresent()) {
+        if (!userId.isDefined()) {
             LoggingHelper.getLogger(getClass()).info("Cannot change password: cannot get valid user id");
             return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_CHANGE_ERROR);
         }
 
         try (DomainModel domainModel = domainModelProvider.create()) {
-            User user = domainModel.query().findOrDefaultJava(User.class, userId.getAsLong());
+            User user = domainModel.query().findOrDefaultJava(User.class, (Long)userId.get());
 
             if (user == null) {
-                LoggingHelper.getLogger(getClass()).info("Cannot change password: user id=" + userId.getAsLong() + " does not exist");
+                LoggingHelper.getLogger(getClass()).info("Cannot change password: user id=" + userId.get() + " does not exist");
                 return LanguageHelper.getText(Constants.ModuleTypeMain(), TextIds.PASSWORD_CHANGE_ERROR);
             }
 
-            Tuple<String, String> result = userSecurity.changePassword(changedObject.getPassword());
+            scala.Tuple2<String, String> result = userSecurity.changePassword(changedObject.getPassword());
 
             user.setPasswordChangeToken(null);
             user.setPasswordChangeTokenExpires(null);
-            user.setPassword(result.getValue2());
+            user.setPassword(result._2());
             user.setEmailConfirmed(true);
-            user.setSalt(result.getValue1());
+            user.setSalt(result._1());
             user.setLastPasswordChanged(OffsetDateTime.now());
             user.setEmailConfirmed(true);
 
@@ -84,11 +84,11 @@ public class ResetPasswordNodeHandler extends DialogNodeHandler<ChangePasswordMo
             return false;
         }
 
-        OptionalLong userId = userSecurity.validatePasswordChangeToken(email, ticket);
+        Option<Object> userId = userSecurity.validatePasswordChangeToken(email, ticket);
 
         RequestContext requestContext = RequestContextHolder.getContext();
 
-        if (!userId.isPresent()) {
+        if (!userId.isDefined()) {
             requestContext.sendError(404);
             return true;
         }

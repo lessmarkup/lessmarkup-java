@@ -93,7 +93,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       return None
     }
     val cookieValue: String = cookie.getValue.replace('_', '/').replace('-', '+')
-    val ticket: LoginTicket = userSecurity.decryptLoginTicket(cookieValue)
+    val ticket: LoginTicket = userSecurity.decryptLoginTicket(cookieValue).get
     loadCurrentUser(ticket)
   }
 
