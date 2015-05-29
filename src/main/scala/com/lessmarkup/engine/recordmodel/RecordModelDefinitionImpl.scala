@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.recordmodel
 
 import java.security.MessageDigest
@@ -7,15 +13,13 @@ import com.google.gson.{JsonElement, JsonObject}
 import com.lessmarkup.engine.scripting.ScriptHelper
 import com.lessmarkup.framework.helpers.{DependencyResolver, LanguageHelper, StringHelper, TypeHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
-import com.lessmarkup.interfaces.annotations.InputField
+import com.lessmarkup.interfaces.annotations.{InputField, InputFieldType, RecordColumn}
 import com.lessmarkup.interfaces.data.DataObject
 import com.lessmarkup.interfaces.exceptions.RecordValidationException
 import com.lessmarkup.interfaces.recordmodel._
 import com.lessmarkup.interfaces.system.EngineConfiguration
 import com.lessmarkup.{Constants, TextIds}
 import net.tanesha.recaptcha.{ReCaptcha, ReCaptchaFactory, ReCaptchaResponse}
-
-import scala.collection.JavaConversions._
 
 object RecordModelDefinitionImpl {
   private val ChallengeFieldKey: String = "-RecaptchaChallenge-"
@@ -36,14 +40,7 @@ class RecordModelDefinitionImpl(modelType: Class[_ <: RecordModel[_]], moduleTyp
   private val columns = properties
     .map(p => (p, p.getAnnotation(classOf[RecordColumn])))
     .filter(_._2 != null)
-    .map { case (p, c) =>
-      val definition: RecordColumnDefinition = new RecordColumnDefinition
-      definition.initialize(c, p)
-      if (c.cellTemplate != null) {
-        definition.setCellTemplate(c.cellTemplate)
-      }
-      definition
-    }
+    .map { case (p, c) => new RecordColumnDefinition(c, p) }
     .toList
 
   private def createDefinitionId: String = {

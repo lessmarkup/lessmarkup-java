@@ -1,9 +1,16 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.recordmodel
 
 import com.google.inject.Inject
 import com.lessmarkup.dataobjects.Language
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler
-import com.lessmarkup.interfaces.module.{Implements, ModuleProvider}
+import com.lessmarkup.interfaces.module.ModuleProvider
 import com.lessmarkup.interfaces.recordmodel.{RecordModelCache, RecordModelDefinition}
 
 import scala.collection.JavaConversions._

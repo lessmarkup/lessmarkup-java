@@ -3,19 +3,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package com.lessmarkup.engine.mail
 
 import java.io.Writer
 import java.time.OffsetDateTime
-import java.util.OptionalLong
 import java.util.logging.{Level, Logger}
 
 import com.google.inject.Inject
 import com.lessmarkup.dataobjects.{TestMail, User}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.DataCache
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
-import com.lessmarkup.interfaces.module.Implements
 import com.lessmarkup.interfaces.system.{EngineConfiguration, MailSender, MailTemplateModel, MailTemplateProvider, SiteConfiguration}
 import org.apache.commons.net.smtp.{AuthenticatingSMTPClient, SimpleSMTPHeader}
 
@@ -24,23 +24,27 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
 
   private def getNoReplyEmail: String = {
     val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
-    var ret: String = siteConfiguration.getNoReplyEmail
+    val ret: String = siteConfiguration.noReplyEmail
     if (ret == null || ret.length == 0) {
-      ret = RequestContextHolder.getContext.getEngineConfiguration.getNoReplyEmail
+      val ret = RequestContextHolder.getContext.getEngineConfiguration.getNoReplyEmail
       if (ret == null || ret.length == 0) {
-        ret = "no@reply.email"
+        "no@reply.email"
+      } else {
+        ret
       }
+    } else {
+      ret
     }
-    ret
   }
 
   private def getNoReplyName: String = {
     val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
-    var ret: String = siteConfiguration.getNoReplyName
+    val ret: String = siteConfiguration.noReplyName
     if (ret == null || ret.length == 0) {
-      ret = RequestContextHolder.getContext.getEngineConfiguration.getNoReplyName
+      RequestContextHolder.getContext.getEngineConfiguration.getNoReplyName
+    } else {
+      ret
     }
-    ret
   }
 
   private def composeAddress(email: String, name: String): String = {
@@ -48,11 +52,9 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
   }
 
   def sendMail[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T) {
-    var body: String = null
-    var subject: String = null
     parameters.setUserEmail(emailTo)
-    body = mailTemplateProvider.executeTemplate(modelType, viewPath, parameters)
-    subject = parameters.getSubject
+    val body = mailTemplateProvider.executeTemplate(modelType, viewPath, parameters)
+    val subject = parameters.getSubject
     sendMail("", emailFrom, parameters.getUserName, emailTo, subject, body, viewPath, smtpServer, smtpUser, smtpPassword, smtpSsl)
   }
 
@@ -61,34 +63,26 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
     sendMail(modelType, engineConfiguration.getSmtpServer, engineConfiguration.getSmtpUsername, engineConfiguration.getSmtpPassword, engineConfiguration.isSmtpSsl, emailFrom, emailTo, viewPath, parameters)
   }
 
-  def sendMail[T <: MailTemplateModel](`type`: Class[T], userIdFrom: OptionalLong, userIdTo: OptionalLong, userEmailTo: String, viewPath: String, parameters: T) {
+  def sendMail[T <: MailTemplateModel](`type`: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T) {
     try {
-      var userFrom: User = null
-      var userTo: User = null
+      var userFrom: Option[User] = None
+      var userTo: Option[User] = None
       val domainModel: DomainModel = domainModelProvider.create
       try {
-        if (userIdTo.isPresent) {
-          userTo = domainModel.query.from(classOf[User]).whereId(userIdTo.getAsLong).firstJava(classOf[User])
+        if (userIdTo.isDefined) {
+          userTo = domainModel.query.from(classOf[User]).whereId(userIdTo.get).first(classOf[User], None)
         }
-        if (userIdFrom.isPresent) {
-          userFrom = domainModel.query.from(classOf[User]).whereId(userIdFrom.getAsLong).firstJava(classOf[User])
+        if (userIdFrom.isDefined) {
+          userFrom = domainModel.query.from(classOf[User]).whereId(userIdFrom.get).first(classOf[User], None)
         }
       } finally {
         if (domainModel != null) domainModel.close()
       }
-      var fromName: String = null
-      var fromEmail: String = null
-      if (userFrom != null) {
-        fromEmail = if (userFrom.isShowEmail) userFrom.getEmail else getNoReplyEmail
-        fromName = userFrom.getName
-      }
-      else {
-        fromEmail = getNoReplyEmail
-        fromName = getNoReplyName
-      }
-      if (userTo != null) {
-        parameters.setUserEmail(userTo.getEmail)
-        parameters.setUserName(userTo.getName)
+      val fromName: String = if (userFrom.isDefined) userFrom.get.name else getNoReplyName
+      val fromEmail: String = if (userFrom.isDefined) if (userFrom.get.showEmail) userFrom.get.email else getNoReplyEmail else getNoReplyEmail
+      if (userTo.isDefined) {
+        parameters.setUserEmail(userTo.get.email)
+        parameters.setUserName(userTo.get.name)
       }
       else if (userEmailTo != null && userEmailTo.length > 0) {
         parameters.setUserEmail(userEmailTo)
@@ -117,14 +111,14 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
     if (RequestContextHolder.getContext.getEngineConfiguration.isUseTestMail) {
       val domainModel: DomainModel = domainModelProvider.create
       try {
-        val testMail: TestMail = new TestMail
-        testMail.setBody(body)
-        testMail.setFrom(composeAddress(fromAddress, fromName))
-        testMail.setTemplate(viewPath)
-        testMail.setSent(OffsetDateTime.now)
-        testMail.setSubject(subject)
-        testMail.setTo(composeAddress(toAddress, toName))
-        testMail.setViews(0)
+        val testMail: TestMail = new TestMail(
+          body = body,
+          from = composeAddress(fromAddress, fromName),
+          template = viewPath,
+          sent = OffsetDateTime.now,
+          subject = subject,
+          to = composeAddress(toAddress, toName)
+        )
         domainModel.create(testMail)
       }
       catch {
@@ -138,14 +132,13 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
     if (server == null || server.length == 0) {
       throw new IllegalArgumentException
     }
-    var client: AuthenticatingSMTPClient = null
     try {
-      if (useSsl) {
-        client = new AuthenticatingSMTPClient("TLS", true)
-      }
-      else {
-        client = new AuthenticatingSMTPClient
-      }
+      val client = if (useSsl) {
+          new AuthenticatingSMTPClient("TLS", true)
+        }
+        else {
+          new AuthenticatingSMTPClient
+        }
       client.connect(server)
       client.ehlo("localhost")
       client.auth(AuthenticatingSMTPClient.AUTH_METHOD.LOGIN, username, password)

@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import java.time.OffsetDateTime
@@ -7,9 +13,9 @@ import com.google.inject.Inject
 import com.lessmarkup.Constants
 import com.lessmarkup.dataobjects.EntityChangeHistory
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.EntityChangeType
 import com.lessmarkup.interfaces.data.{ChangeListener, ChangeTracker, DataObject, DomainModel, DomainModelProvider}
-import com.lessmarkup.interfaces.module.Implements
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -43,11 +49,11 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
       }
       if (change.isDefined) {
         listeners.foreach(listener => listener.onChange(
-          change.get.getId,
-          change.get.getUserId,
-          change.get.getEntityId,
-          change.get.getCollectionId,
-          EntityChangeType(change.get.getChangeType)))
+          change.get.id,
+          change.get.userId,
+          change.get.entityId,
+          change.get.collectionId,
+          EntityChangeType(change.get.changeType)))
       }
     }
   }
@@ -71,7 +77,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
           .orderByDescending(Constants.DataIdPropertyName)
           .first(classOf[EntityChangeHistory], None)
         if (history.isDefined) {
-          lastUpdateId = history.get.getId
+          lastUpdateId = history.get.id
         }
       }
       catch {
@@ -89,23 +95,25 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
   }
 
   def addChange[T <: DataObject](`type`: Class[T], objectId: Long, changeType: EntityChangeType, domainModel: DomainModel) {
-    val record: EntityChangeHistory = new EntityChangeHistory
-    record.setEntityId(objectId)
-    record.setChangeType(changeType.value)
-    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserIdJava)
-    record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
-    record.setCreated(OffsetDateTime.now)
+    val record: EntityChangeHistory = new EntityChangeHistory(
+      entityId = objectId,
+      changeType = changeType.value,
+      userId = RequestContextHolder.getContext.getCurrentUser.getUserId,
+      collectionId = MetadataStorage.getCollectionId(`type`).get,
+      created = OffsetDateTime.now
+    )
     domainModel.create(record)
   }
 
   def addChange[T <: DataObject](`type`: Class[T], dataObject: T, changeType: EntityChangeType, domainModel: DomainModel) {
     initializeChangeTracker()
-    val record: EntityChangeHistory = new EntityChangeHistory
-    record.setEntityId(dataObject.getId)
-    record.setChangeType(changeType.value)
-    record.setUserId(RequestContextHolder.getContext.getCurrentUser.getUserIdJava)
-    record.setCollectionId(MetadataStorage.getCollectionId(`type`).get)
-    record.setCreated(OffsetDateTime.now)
+    val record = new EntityChangeHistory(
+      entityId = dataObject.id,
+      changeType = changeType.value,
+      userId = RequestContextHolder.getContext.getCurrentUser.getUserId,
+      collectionId = MetadataStorage.getCollectionId(`type`).get,
+      created = OffsetDateTime.now
+    )
     domainModel.create(record)
   }
 
@@ -127,7 +135,7 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
         .where("id > " + lastUpdateId).orderBy("id")
         .toList(classOf[EntityChangeHistory])
         .foreach(h => {
-        lastUpdateId = h.getId
+        lastUpdateId = h.id
         syncObject synchronized {
           changeQueue.add(h)
         }

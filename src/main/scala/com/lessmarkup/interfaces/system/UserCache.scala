@@ -1,9 +1,16 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.interfaces.system
 
 import java.time.OffsetDateTime
+
+import com.lessmarkup.interfaces.annotations.NodeAccessType
 import com.lessmarkup.interfaces.cache.CacheHandler
-import com.lessmarkup.interfaces.structure.{CachedNodeInformation, NodeAccessType}
-import scala.collection.JavaConverters._
+import com.lessmarkup.interfaces.structure.CachedNodeInformation
 
 trait UserCache extends CacheHandler {
   def getName: String
@@ -16,10 +23,7 @@ trait UserCache extends CacheHandler {
 
   def isEmailConfirmed: Boolean
 
-  def getGroups: List[Long]
-
-  @Deprecated
-  def getGroupsJava = getGroups.map(g => g.asInstanceOf[java.lang.Long]).asJava
+  def getGroups: Seq[Long]
 
   def getEmail: String
 
@@ -35,8 +39,5 @@ trait UserCache extends CacheHandler {
 
   def getUserImageId: Option[Long]
 
-  def getNodes: List[(CachedNodeInformation, NodeAccessType)]
-
-  @Deprecated
-  def getNodesJava = getNodes.asJava
+  def getNodes: Seq[(CachedNodeInformation, NodeAccessType)]
 }

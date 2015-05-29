@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import com.lessmarkup.interfaces.data.DataObject
@@ -26,7 +32,7 @@ class QueryBuilderStubImpl extends QueryBuilder {
 
   override def executeNonQuery(sql: String, args: Any*): Boolean = false
 
-  override def whereIds(ids: Iterator[Long]): QueryBuilder = this
+  override def whereIds(ids: Seq[Long]): QueryBuilder = this
 
   override def execute[T <: DataObject](dataType: Class[T], sql: String, args: Any*): List[T] = List()
 

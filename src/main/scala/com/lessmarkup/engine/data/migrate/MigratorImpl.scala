@@ -8,15 +8,13 @@ package com.lessmarkup.engine.data.migrate
 
 import java.sql.{Connection, ResultSet, SQLException, Statement}
 import java.time.OffsetDateTime
-import java.util.{OptionalDouble, OptionalInt, OptionalLong}
-
 import com.lessmarkup.Constants
 import com.lessmarkup.engine.data.ConnectionManager
 import com.lessmarkup.engine.data.dialects.{DatabaseDataType, DatabaseLanguageDialect, DatabaseLanguageDialectFactory}
 import com.lessmarkup.framework.helpers.{LoggingHelper, PropertyDescriptor, StringHelper, TypeHelper}
-import com.lessmarkup.interfaces.data.{DataObject, Migrator, OptionalBoolean}
+import com.lessmarkup.interfaces.annotations.{RequiredField, MaxLength}
+import com.lessmarkup.interfaces.data._
 import com.lessmarkup.interfaces.exceptions.DatabaseException
-import com.lessmarkup.interfaces.recordmodel.{MaxLength, RequiredField}
 import org.atteo.evo.inflector.English
 
 import scala.collection.JavaConversions._
@@ -89,16 +87,16 @@ class MigratorImpl(connectionString: String) extends Migrator {
     }
 
     val propertyType: Class[_] = property.getType
-    if (propertyType == classOf[OptionalLong]) {
+    if (propertyType == classOf[OptionLong]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.LONG, required = false)
     }
-    if (propertyType == classOf[OptionalInt]) {
+    if (propertyType == classOf[OptionInt]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.INT, required = false)
     }
-    if (propertyType == classOf[OptionalBoolean]) {
+    if (propertyType == classOf[OptionBool]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.BOOLEAN, required = false)
     }
-    if (propertyType == classOf[OptionalDouble]) {
+    if (propertyType == classOf[OptionDouble]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.DOUBLE, required = false)
     }
     val required: Boolean = property.getAnnotation(classOf[RequiredField]) != null

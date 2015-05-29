@@ -1,9 +1,13 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import com.lessmarkup.framework.helpers.TypeHelper
 import org.atteo.evo.inflector.English
-
-import scala.collection.JavaConversions._
 
 class TableMetadata(sourceType: Class[_]) {
 

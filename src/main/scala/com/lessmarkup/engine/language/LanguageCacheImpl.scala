@@ -10,9 +10,10 @@ import com.google.inject.Inject
 import com.lessmarkup.Constants
 import com.lessmarkup.framework.helpers.{LanguageHelper, StringHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
-import com.lessmarkup.interfaces.module.{Implements, ModuleProvider}
+import com.lessmarkup.interfaces.module.ModuleProvider
 import com.lessmarkup.interfaces.system.{Language, LanguageCache}
 import com.thoughtworks.xstream.XStream
 
@@ -88,26 +89,26 @@ class LanguageCacheImpl @Inject() (domainModelProvider: DomainModelProvider, mod
 
         val translations = domainModel.query
           .from(classOf[com.lessmarkup.dataobjects.Translation])
-          .where("LanguageId = $", lang.getId)
+          .where("LanguageId = $", lang.id)
           .toList(classOf[com.lessmarkup.dataobjects.Translation])
-          .map(t => (t.getKey, t.getText))
+          .map(t => (t.key, t.text))
           .toMap
 
-        val shortName: String = lang.getShortName.toLowerCase
+        val shortName: String = lang.shortName.toLowerCase
         val existingLanguage = languageFiles.get(shortName)
 
         if (existingLanguage.isDefined) {
           new CachedLanguage(
-            name = lang.getName,
-            shortName = lang.getShortName,
+            name = lang.name,
+            shortName = lang.shortName,
             translations = translations ++ existingLanguage.get.getTranslations
           )
         } else {
           new CachedLanguage(
-            name = lang.getName,
-            shortName = lang.getShortName,
+            name = lang.name,
+            shortName = lang.shortName,
             translations = translations,
-            id = Option(lang.getId)
+            id = Option(lang.id)
           )
         }
       }).map(l => (l.getShortName.toLowerCase, l))
@@ -120,16 +121,16 @@ class LanguageCacheImpl @Inject() (domainModelProvider: DomainModelProvider, mod
   }
 
   def getCurrentLanguageId: Option[String] = {
-    val languageId: String = RequestContextHolder.getContext.getLanguageId
-    if (languageId == null) {
+    val languageId = RequestContextHolder.getContext.getLanguageId
+    if (languageId.isEmpty) {
       return defaultLanguageId
     }
-    val language: Option[CachedLanguage] = languagesMap.get(languageId)
+    val language: Option[CachedLanguage] = languagesMap.get(languageId.get)
     if (language.isEmpty) {
       return defaultLanguageId
     }
 
-    Option(languageId)
+    languageId
   }
 
   def getTranslation(languageId: Option[String], id: String, moduleType: Option[String], throwIfNotFound: Boolean): Option[String] = {

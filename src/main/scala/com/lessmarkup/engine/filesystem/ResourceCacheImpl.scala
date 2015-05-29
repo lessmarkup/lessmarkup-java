@@ -13,9 +13,10 @@ import com.google.inject.Inject
 import com.lessmarkup.dataobjects.SiteCustomization
 import com.lessmarkup.framework.helpers.{LoggingHelper, StringHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.{AbstractCacheHandler, DataCache}
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
-import com.lessmarkup.interfaces.module.{Implements, ModuleConfiguration, ModuleProvider}
+import com.lessmarkup.interfaces.module.{ModuleConfiguration, ModuleProvider}
 import com.lessmarkup.interfaces.system.ResourceCache
 import com.samskivert.mustache.{Mustache, Template}
 
@@ -78,22 +79,22 @@ class ResourceCacheImpl @Inject() (moduleProvider: ModuleProvider, domainModelPr
     try {
 
       domainModel.query.from(classOf[SiteCustomization]).toList(classOf[SiteCustomization]).map(record => {
-        val recordPath: String = record.getPath
-        val reference: Option[ResourceReference] = if (record.isAppend) modulesResources.get(recordPath) else None
-        if (record.isAppend && reference.isDefined) {
+        val recordPath: String = record.path
+        val reference: Option[ResourceReference] = if (record.append) modulesResources.get(recordPath) else None
+        if (record.append && reference.isDefined) {
           val binaryLength = if (reference.get.binary.isDefined) reference.get.binary.get.length else 0
-          val binary: Array[Byte] = new Array[Byte](binaryLength + record.getBody.length)
+          val binary: Array[Byte] = new Array[Byte](binaryLength + record.body.length)
           if (reference.get.binary.isDefined) {
             System.arraycopy(reference.get.binary.get, 0, binary, 0, binaryLength)
           }
-          System.arraycopy(record.getBody, 0, binary, binaryLength, record.getBody.length)
+          System.arraycopy(record.body, 0, binary, binaryLength, record.body.length)
           reference.get.binary = Option(binary)
           None
         } else {
           Option(new ResourceReference(
-            path = record.getPath,
-            recordId = record.getId,
-            binary = Option(record.getBody)
+            path = record.path,
+            recordId = record.id,
+            binary = Option(record.body)
           ))
         }
       }).filter(_.isDefined)

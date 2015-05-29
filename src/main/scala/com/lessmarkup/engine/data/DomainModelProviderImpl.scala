@@ -1,6 +1,10 @@
-package com.lessmarkup.engine.data
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
 
-import java.util.OptionalInt
+package com.lessmarkup.engine.data
 
 import com.google.inject.Inject
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
@@ -9,9 +13,7 @@ import com.lessmarkup.interfaces.module.ModuleProvider
 class DomainModelProviderImpl @Inject() (moduleProvider: ModuleProvider) extends DomainModelProvider {
 
   def initialize() {
-    import scala.collection.JavaConversions._
     for (module <- moduleProvider.getModules) {
-      import scala.collection.JavaConversions._
       for (dataObject <- module.getInitializer.getDataObjectTypes) {
         MetadataStorage.registerDataType(dataObject)
       }
@@ -30,8 +32,7 @@ class DomainModelProviderImpl @Inject() (moduleProvider: ModuleProvider) extends
     new DomainModelImpl(scala.Option.empty, true)
   }
 
-  def getCollectionId(collectionType: Class[_]): OptionalInt = {
-    val ret: Option[Int] = MetadataStorage.getCollectionId(collectionType)
-    if (ret.isDefined) OptionalInt.of(ret.get) else OptionalInt.empty
+  def getCollectionId(collectionType: Class[_]): Option[Int] = {
+    MetadataStorage.getCollectionId(collectionType)
   }
 }

@@ -1,6 +1,12 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.interfaces.cache
 
-abstract class AbstractCacheHandler(handledCollectionTypes: Array[Class[_]]) extends CacheHandler {
+abstract class AbstractCacheHandler(val handledCollectionTypes: Seq[Class[_]] = Nil) extends CacheHandler {
 
   def initialize(objectId: Option[Long]) {
     if (objectId.isDefined) {
@@ -8,11 +14,7 @@ abstract class AbstractCacheHandler(handledCollectionTypes: Array[Class[_]]) ext
     }
   }
 
-  def expires(collectionId: Int, entityId: Long, changeType: EntityChangeType): Boolean = {
-    true
-  }
-
-  def getHandledCollectionTypes: Option[List[Class[_]]] = Option(handledCollectionTypes.toList)
+  def expires(collectionId: Int, entityId: Long, changeType: EntityChangeType) = true
 
   def isExpired: Boolean = false
 }

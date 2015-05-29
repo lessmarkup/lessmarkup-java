@@ -17,7 +17,6 @@ import scala.collection.JavaConversions._
 
 class CustomizationFile {
   private var entries: java.util.List[CustomizationFileEntry] = null
-
   def getEntries: java.util.List[CustomizationFileEntry] = entries
   def setEntries(entries: java.util.List[CustomizationFileEntry]): Unit = this.entries = entries
 }

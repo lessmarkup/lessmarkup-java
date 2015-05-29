@@ -1,13 +1,11 @@
 package com.lessmarkup.interfaces.annotations;
 
-import com.lessmarkup.interfaces.recordmodel.InputFieldType;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InputField {
-    InputFieldType type();
+    InputFieldType fieldType();
     boolean readOnly() default false;
     String id() default "";
     String textId() default "";

@@ -9,27 +9,26 @@ package com.lessmarkup.engine.security
 import java.security.MessageDigest
 import java.sql.SQLException
 import java.time.OffsetDateTime
-import java.util.OptionalLong
 import java.util.logging.Level
 import javax.crypto.Cipher
 import javax.servlet.http.Cookie
 
 import com.google.gson.{JsonElement, JsonObject, JsonParser}
 import com.google.inject.Inject
-import com.lessmarkup.{Constants, TextIds}
 import com.lessmarkup.dataobjects.{FailedLoginHistory, SuccessfulLoginHistory, User, UserLoginIpAddress}
 import com.lessmarkup.framework.helpers.{DependencyResolver, LanguageHelper, LoggingHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.{DataCache, EntityChangeType}
 import com.lessmarkup.interfaces.data.{ChangeTracker, DomainModel, DomainModelProvider}
 import com.lessmarkup.interfaces.exceptions.DatabaseException
-import com.lessmarkup.interfaces.module.Implements
 import com.lessmarkup.interfaces.security.{CurrentUser, LoginTicket, UserSecurity}
 import com.lessmarkup.interfaces.system.{EngineConfiguration, RequestContext, SiteConfiguration, UserCache}
+import com.lessmarkup.{Constants, TextIds}
 import org.apache.commons.net.util.Base64
 
 class CookieUserModel(val userId: Long, val email: String, val name: String, val properties: Option[String],
-                      val groups: List[Long], val administrator: Boolean, val approved: Boolean,
+                      val groups: Seq[Long], val administrator: Boolean, val approved: Boolean,
                       val fakeUser: Boolean, val emailConfirmed: Boolean)
 
 object CurrentUserImpl {
@@ -58,15 +57,17 @@ object CurrentUserImpl {
   private def addSuccessfulLoginHistory(domainModel: DomainModel, userId: Long) {
 
     val requestContext: RequestContext = RequestContextHolder.getContext
-    val history: SuccessfulLoginHistory = new SuccessfulLoginHistory
-    history.setAddress(requestContext.getRemoteAddress)
-    history.setTime(OffsetDateTime.now)
-    history.setUserId(userId)
+    val history: SuccessfulLoginHistory = new SuccessfulLoginHistory(
+      address = requestContext.getRemoteAddress,
+      time = OffsetDateTime.now,
+      userId = userId
+    )
     domainModel.create(history)
-    val loginIpaddress: UserLoginIpAddress = new UserLoginIpAddress
-    loginIpaddress.setUserId(userId)
-    loginIpaddress.setCreated(OffsetDateTime.now)
-    loginIpaddress.setAddress(requestContext.getRemoteAddress)
+    val loginIpaddress: UserLoginIpAddress = new UserLoginIpAddress(
+      userId = userId,
+      created = OffsetDateTime.now,
+      address = requestContext.getRemoteAddress
+    )
     domainModel.create(loginIpaddress)
   }
 }
@@ -88,11 +89,11 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
     val context: RequestContext = RequestContextHolder.getContext
     val engineConfiguration: EngineConfiguration = context.getEngineConfiguration
-    val cookie: Cookie = context.getCookie(engineConfiguration.getAuthCookieName)
-    if (cookie == null) {
+    val cookie = context.getCookie(engineConfiguration.getAuthCookieName)
+    if (cookie.isEmpty) {
       return None
     }
-    val cookieValue: String = cookie.getValue.replace('_', '/').replace('-', '+')
+    val cookieValue: String = cookie.get.getValue.replace('_', '/').replace('-', '+')
     val ticket: LoginTicket = userSecurity.decryptLoginTicket(cookieValue).get
     loadCurrentUser(ticket)
   }
@@ -106,13 +107,13 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     val context: RequestContext = RequestContextHolder.getContext
     val engineConfiguration: EngineConfiguration = context.getEngineConfiguration
 
-    if (ticket.getUserId == -1 && (ticket.getEmail == engineConfiguration.getNoAdminName)) {
+    if (ticket.userId == -1 && (ticket.email == engineConfiguration.getNoAdminName)) {
       val domainModel: DomainModel = domainModelProvider.create
       try {
         if (noGlobalAdminUser(domainModel)) {
           val model: CookieUserModel = new CookieUserModel(
-            email = ticket.getEmail,
-            name = ticket.getName,
+            email = ticket.email,
+            name = ticket.name,
             administrator = true,
             fakeUser = true,
             approved = true,
@@ -134,9 +135,9 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     }
 
     val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
-    val currentUser: UserCache = dataCache.get(classOf[UserCache], Option(ticket.getUserId))
+    val currentUser: UserCache = dataCache.get(classOf[UserCache], Option(ticket.userId))
     if (currentUser.isRemoved) {
-      LoggingHelper.getLogger(getClass).info("Cannot find user " + ticket.getUserId + " for current user")
+      LoggingHelper.getLogger(getClass).info("Cannot find user " + ticket.userId + " for current user")
     }
     if (currentUser.isBlocked) {
       if (currentUser.getUnblockTime.isEmpty || currentUser.getUnblockTime.get.isAfter(OffsetDateTime.now)) {
@@ -144,12 +145,12 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         return None
       }
     }
-    if (!currentUser.isAdministrator && !dataCache.get(classOf[SiteConfiguration]).getHasUsers) {
+    if (!currentUser.isAdministrator && !dataCache.get(classOf[SiteConfiguration]).hasUsers) {
       LoggingHelper.getLogger(getClass).info("User functionality is disabled by configuration")
       return None
     }
 
-    if (!ticket.isPersistent) {
+    if (!ticket.persistent) {
       val encryptedTicket: String = userSecurity.encryptLoginTicket(ticket)
       val cookie: Cookie = new Cookie(engineConfiguration.getAuthCookieName, encryptedTicket)
       cookie.setPath(engineConfiguration.getAuthCookiePath)
@@ -159,13 +160,13 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     }
 
     Option(new CookieUserModel(
-      email = ticket.getEmail,
-      name = ticket.getName,
+      email = ticket.email,
+      name = ticket.name,
       groups = currentUser.getGroups,
       administrator = currentUser.isAdministrator,
       approved = currentUser.isApproved,
       emailConfirmed = currentUser.isEmailConfirmed,
-      userId = ticket.getUserId,
+      userId = ticket.userId,
       properties = Option(currentUser.getProperties),
       fakeUser = false
     ))
@@ -173,7 +174,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
   def getUserId: Option[Long] = if (userData.isDefined) Option(userData.get.userId) else None
 
-  def getGroups: Option[List[Long]] = if (userData.isDefined) Option(userData.get.groups) else None
+  def getGroups: Option[Seq[Long]] = if (userData.isDefined) Option(userData.get.groups) else None
 
   def getProperties: Option[JsonObject] = {
     if (userData.isEmpty || userData.get.properties.isEmpty) {
@@ -220,11 +221,12 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
     LoggingHelper.getLogger(getClass).info("Logging in user " + email)
 
-    val ticket: LoginTicket = new LoginTicket
-    ticket.setEmail(email)
-    ticket.setName(name)
-    ticket.setUserId(userId)
-    ticket.setPersistent(savePassword)
+    val ticket: LoginTicket = new LoginTicket(
+      email = email,
+      name = name,
+      userId = userId,
+      persistent = savePassword
+    )
 
     var encryptedTicket: String = userSecurity.encryptLoginTicket(ticket)
     encryptedTicket = encryptedTicket.trim.replace('+', '-').replace('/', '_')
@@ -247,7 +249,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     LoggingHelper.getLogger(getClass).info("Validating user '" + email + "'")
 
     val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
-    if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).getHasUsers) {
+    if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).hasUsers) {
       LoggingHelper.getLogger(getClass).info("Users functionality is disabled")
       return false
     }
@@ -270,10 +272,11 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         if (!loginUser(email, email, -1, savePassword)) {
           return false
         }
-        val history: SuccessfulLoginHistory = new SuccessfulLoginHistory
-        history.setAddress(requestContext.getRemoteAddress)
-        history.setUserId(-2)
-        history.setTime(OffsetDateTime.now)
+        val history: SuccessfulLoginHistory = new SuccessfulLoginHistory(
+          address = requestContext.getRemoteAddress,
+          userId = -2,
+          time = OffsetDateTime.now
+        )
         model.create(history)
         return true
       }
@@ -283,17 +286,17 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         .where("email = $", email)
         .first(classOf[User], None)
 
-      if (optionUser.isDefined && optionUser.get.isBlocked) {
+      if (optionUser.isDefined && optionUser.get.blocked) {
         LoggingHelper.getLogger(getClass).info("User is blocked")
-        if (optionUser.get.getUnblockTime == null || optionUser.get.getUnblockTime.isAfter(OffsetDateTime.now)) {
+        if (optionUser.get.unblockTime.isEmpty || optionUser.get.unblockTime.get.isAfter(OffsetDateTime.now)) {
           return false
         }
         LoggingHelper.getLogger(getClass).info("Unblock time is arrived, unblocking the user")
-        optionUser.get.setBlocked(false)
-        optionUser.get.setBlockReason(null)
-        optionUser.get.setUnblockTime(null)
+        optionUser.get.blocked = false
+        optionUser.get.blockReason = None
+        optionUser.get.unblockTime = None
         model.update(optionUser.get)
-        DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], optionUser.get.getId, EntityChangeType.UPDATED, model)
+        DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], optionUser.get.id, EntityChangeType.UPDATED, model)
       }
 
       if (optionUser.isEmpty) {
@@ -303,13 +306,13 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
       val user = optionUser.get
 
-      if (!checkPassword(Option(user.getId), user.getPassword, user.getSalt, user.isBlocked, user.isRemoved, user.getRegistrationExpires,
+      if (!checkPassword(Option(user.id), user.password, user.salt, user.blocked, user.removed, user.registrationExpires,
           password, encodedPassword)) {
         LoggingHelper.getLogger(getClass).info("User '" + email + "' failed password check")
         return false
       }
 
-      if (user.isAdministrator) {
+      if (user.administrator) {
         if (!allowAdmin) {
           LoggingHelper.getLogger(getClass).info("Expected admin but the user is not admin")
           return false
@@ -321,10 +324,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
           return false
         }
       }
-      if (!loginUser(email, user.getName, user.getId, savePassword)) {
+      if (!loginUser(email, user.name, user.id, savePassword)) {
         return false
       }
-      CurrentUserImpl.addSuccessfulLoginHistory(model, user.getId)
+      CurrentUserImpl.addSuccessfulLoginHistory(model, user.id)
       model.update(user)
       true
     }
@@ -341,7 +344,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
     LoggingHelper.getLogger(getClass).info("Validating OAuth user")
     val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
-    if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).getHasUsers) {
+    if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).hasUsers) {
       LoggingHelper.getLogger(getClass).info("Users functionality is disabled")
       return false
     }
@@ -351,13 +354,13 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         .from(classOf[User])
         .where("authProvider = $ AND authProviderUserId = $", provider, providerUserId)
         .first(classOf[User], None)
-      if (user.isDefined && user.get.isBlocked) {
-        if (user.get.getUnblockTime != null && user.get.getUnblockTime.isBefore(OffsetDateTime.now)) {
-          user.get.setBlocked(false)
-          user.get.setBlockReason(null)
-          user.get.setUnblockTime(null)
+      if (user.isDefined && user.get.blocked) {
+        if (user.get.unblockTime.isDefined && user.get.unblockTime.get.isBefore(OffsetDateTime.now)) {
+          user.get.blocked = false
+          user.get.blockReason = None
+          user.get.unblockTime = None
           model.update(user.get)
-          DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], user.get.getId, EntityChangeType.UPDATED, model)
+          DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], user.get.id, EntityChangeType.UPDATED, model)
         }
         else {
           user = None
@@ -369,7 +372,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         return false
       }
 
-      if (user.get.isAdministrator) {
+      if (user.get.administrator) {
         if (!allowAdmin) {
           LoggingHelper.getLogger(getClass).info("User not administrator, cancelling login")
           return false
@@ -381,10 +384,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
           return false
         }
       }
-      if (!loginUser(user.get.getEmail, user.get.getName, user.get.getId, savePassword)) {
+      if (!loginUser(user.get.email, user.get.name, user.get.id, savePassword)) {
         return false
       }
-      CurrentUserImpl.addSuccessfulLoginHistory(model, user.get.getId)
+      CurrentUserImpl.addSuccessfulLoginHistory(model, user.get.id)
       true
     }
     catch {
@@ -411,10 +414,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       if (user.isEmpty) {
         throw new Exception("Cannot find user")
       }
-      if (!checkPassword(Option(user.get.getId), user.get.getPassword, user.get.getSalt, isBlocked = false, isRemoved = false, null, password, null)) {
+      if (!checkPassword(Option(user.get.id), user.get.password, user.get.salt, isBlocked = false, isRemoved = false, null, password, null)) {
         throw new Exception(LanguageHelper.getText(Constants.ModuleTypeMain, TextIds.INVALID_PASSWORD))
       }
-      user.get.setRemoved(true)
+      user.get.removed = true
       model.update(user.get)
       logout()
     } finally {
@@ -434,7 +437,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       .first(classOf[User], None)
 
     user.isDefined &&
-      checkPassword(Option(user.get.getId), user.get.getPassword, user.get.getSalt, user.get.isBlocked, user.get.isRemoved, user.get.getRegistrationExpires, password, null)
+      checkPassword(Option(user.get.id), user.get.password, user.get.salt, user.get.blocked, user.get.removed, user.get.registrationExpires, password, null)
   }
 
   def getLoginHash(email: String): (String, String) = {
@@ -452,7 +455,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
           .where("email = $ AND removed = $", emailTrimmed, false)
           .first(classOf[User], Option("salt"))
         if (user.isDefined) {
-          hash1 = user.get.getSalt
+          hash1 = user.get.salt
         }
       } finally {
         if (domainModel != null) domainModel.close()
@@ -467,7 +470,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     (hash1, hash2)
   }
 
-  def checkPassword(userId: Option[Long], userPassword: String, userSalt: String, isBlocked: Boolean, isRemoved: Boolean, registrationExpires: OffsetDateTime, password: String, encodedPassword: String): Boolean = {
+  def checkPassword(userId: Option[Long], userPassword: String, userSalt: String, isBlocked: Boolean, isRemoved: Boolean, registrationExpires: Option[OffsetDateTime], password: String, encodedPassword: String): Boolean = {
 
     if (userId.isDefined && (isBlocked || isRemoved)) {
       LoggingHelper.getLogger(getClass).info("User is null or blocked or removed")
@@ -488,9 +491,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     try {
       if (userId.isEmpty) {
         LoggingHelper.getLogger(getClass).info("User is not found, logging failed attempt from address '" + remoteAddress + "'")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory
-        failedAttempt.setCreated(OffsetDateTime.now)
-        failedAttempt.setAddress(remoteAddress)
+        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
+          created = OffsetDateTime.now,
+          address = remoteAddress
+        )
         model.create(failedAttempt)
         return false
       }
@@ -502,17 +506,18 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
       if (attemptCount >= maxAttemptCount) {
         LoggingHelper.getLogger(getClass).info("User is exceeded failed attempt limit for remote address '" + remoteAddress + "'")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory
-        failedAttempt.setCreated(OffsetDateTime.now)
-        failedAttempt.setAddress(remoteAddress)
+        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
+          created = OffsetDateTime.now,
+          address = remoteAddress
+        )
         model.create(failedAttempt)
         return false
       }
 
-      if (registrationExpires != null && registrationExpires.isBefore(OffsetDateTime.now)) {
+      if (registrationExpires.isDefined && registrationExpires.get.isBefore(OffsetDateTime.now)) {
         LoggingHelper.getLogger(getClass).info("User registration is expired, removing the user from users list")
         val u: User = model.query.from(classOf[User]).where(Constants.DataIdPropertyName + " = $", userId.get).first(classOf[User], None).get
-        u.setRemoved(true)
+        u.removed = true
         model.update(u)
         return false
       }
@@ -520,10 +525,11 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       attemptCount = model.query.from(classOf[FailedLoginHistory]).where("userId = $ AND created > $", userId.get, timeLimit).count
       if (attemptCount >= maxAttemptCount) {
         LoggingHelper.getLogger(getClass).info("Found failed attempts for specified user which exceed maximum attempt count")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory
-        failedAttempt.setCreated(OffsetDateTime.now)
-        failedAttempt.setAddress(remoteAddress)
-        failedAttempt.setUserId(if (userId.isDefined) OptionalLong.of(userId.get) else OptionalLong.empty())
+        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
+          created = OffsetDateTime.now,
+          address = remoteAddress,
+          userId = userId
+        )
         model.create(failedAttempt)
         return false
       }
@@ -551,17 +557,18 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         }
         if (registrationExpires != null) {
           val u = model.query.from(classOf[User]).where(Constants.DataIdPropertyName + " = $", userId.get).first(classOf[User], None).get
-          u.setRegistrationExpires(null)
+          u.registrationExpires = None
           model.update(u)
         }
         return true
       }
 
       LoggingHelper.getLogger(getClass).info("Password is invalid, logging new failed attempt for the user")
-      val failedAttempt: FailedLoginHistory = new FailedLoginHistory
-      failedAttempt.setAddress(remoteAddress)
-      failedAttempt.setUserId(if (userId.isDefined) OptionalLong.of(userId.get) else OptionalLong.empty())
-      failedAttempt.setCreated(OffsetDateTime.now)
+      val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
+        address = remoteAddress,
+        userId = userId,
+        created = OffsetDateTime.now
+      )
       model.create(failedAttempt)
 
       false

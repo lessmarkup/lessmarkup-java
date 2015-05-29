@@ -16,8 +16,6 @@ import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider, Migrati
 import com.lessmarkup.interfaces.exceptions.CommonException
 import com.lessmarkup.interfaces.module.ModuleProvider
 
-import scala.collection.JavaConversions._
-
 class MigrateEngine @Inject() (moduleProvider: ModuleProvider, domainModelProvider: DomainModelProvider) {
 
   def execute() {
@@ -41,7 +39,7 @@ class MigrateEngine @Inject() (moduleProvider: ModuleProvider, domainModelProvid
       val existingMigrations = domainModel.query
         .from(classOf[MigrationHistory])
         .toList(classOf[MigrationHistory], Option("uniqueId"))
-        .map(_.getUniqueId)
+        .map(_.uniqueId)
         .toSet
       for (module <- moduleProvider.getModules) {
         for (migrationType <- module.getInitializer.getMigrations) {
@@ -50,10 +48,12 @@ class MigrateEngine @Inject() (moduleProvider: ModuleProvider, domainModelProvid
             val uniqueId = migration.getId + "_" + migrationType.getName
             if (!existingMigrations.contains(uniqueId)) {
               migration.migrate(migrator)
-              val history: MigrationHistory = new MigrationHistory
-              history.setCreated(OffsetDateTime.now)
-              history.setUniqueId(uniqueId)
-              history.setModuleType(module.getModuleType)
+              val history: MigrationHistory = new MigrationHistory(
+                created = OffsetDateTime.now,
+                uniqueId = uniqueId,
+                moduleType = module.getModuleType,
+                id = 0
+              )
               domainModel.create(history)
             }
           }

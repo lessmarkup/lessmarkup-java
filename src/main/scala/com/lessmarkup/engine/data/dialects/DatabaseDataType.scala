@@ -13,4 +13,4 @@ object DatabaseDataType {
   final val BINARY = DatabaseDataType(8)
 }
 
-class DatabaseDataType(value: Int)
+class DatabaseDataType(val value: Int)

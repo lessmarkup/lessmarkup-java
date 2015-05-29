@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package com.lessmarkup.engine.system
 
 import java.io.{InputStream, OutputStream}
@@ -14,23 +15,24 @@ import com.lessmarkup.interfaces.security.CurrentUser
 import com.lessmarkup.interfaces.system.{EngineConfiguration, RequestContext}
 
 object RequestContextImpl {
-  private val COOKIE_LANGUAGE: String = "lang"
+  private val LanguageCookieName: String = "lang"
 }
 
 class RequestContextImpl(request: HttpServletRequest, response: HttpServletResponse, servletConfig: ServletConfig) extends RequestContext {
   private final val responseCookies: java.util.Map[String, Cookie] = new java.util.HashMap[String, Cookie]
   private var currentUser: CurrentUser = null
 
-  def getLanguageId: String = {
-    val languageCookie: Cookie = getCookie(RequestContextImpl.COOKIE_LANGUAGE)
-    if (languageCookie == null) {
-      return null
+  def getLanguageId: Option[String] = {
+    val languageCookie = getCookie(RequestContextImpl.LanguageCookieName)
+    if (languageCookie.isEmpty) {
+      None
+    } else {
+      Option(languageCookie.get.getValue)
     }
-    languageCookie.getValue
   }
 
   def setLanguageId(languageId: Long) {
-    val cookie: Cookie = new Cookie(RequestContextImpl.COOKIE_LANGUAGE, languageId.asInstanceOf[Long].toString)
+    val cookie: Cookie = new Cookie(RequestContextImpl.LanguageCookieName, languageId.asInstanceOf[Long].toString)
     response.addCookie(cookie)
   }
 
@@ -69,18 +71,18 @@ class RequestContextImpl(request: HttpServletRequest, response: HttpServletRespo
     request.getRemoteAddr
   }
 
-  def getCookie(name: String): Cookie = {
+  def getCookie(name: String): Option[Cookie] = {
     val responseCookie: Cookie = responseCookies.get(name)
     if (responseCookie != null) {
-      return responseCookie
+      return Option(responseCookie)
     }
     val cookies = request.getCookies
     if (cookies == null) {
-      return null
+      return None
     }
     for (cookie <- cookies) {
       if (cookie.getName == name) {
-        return cookie
+        return Option(cookie)
       }
     }
     null

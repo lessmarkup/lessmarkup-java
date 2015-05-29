@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.framework.helpers
 
 import com.lessmarkup.interfaces.cache.DataCache
@@ -14,22 +20,7 @@ object LanguageHelper {
     getLanguageCache.getTranslation(textId, Option(moduleId))
   }
 
-  @Deprecated
-  def getText(moduleType: String, id: String): String = {
-    internalGetText(moduleType, id)
-  }
-
-  @Deprecated
-  def getText(moduleType: String, id: String, param1: Any) = {
-    internalGetText(moduleType, id, param1)
-  }
-
-  @Deprecated
-  def getText(moduleType: String, id: String, param1: Any, param2: Any) = {
-    internalGetText(moduleType, id, param1, param2)
-  }
-
-  private def internalGetText(moduleType: String, id: String, args: Any*): String = {
+  def getText(moduleType: String, id: String, args: Any*): String = {
     if (id == null) {
       return NoTranslationMessage
     }

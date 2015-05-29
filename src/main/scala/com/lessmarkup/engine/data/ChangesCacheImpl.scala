@@ -1,16 +1,21 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import java.time.OffsetDateTime
 import java.util.concurrent.locks.{ReadWriteLock, ReentrantReadWriteLock}
-import java.util.function.Predicate
 import java.util.logging.{Level, Logger}
 
 import com.google.inject.Inject
 import com.lessmarkup.Constants
 import com.lessmarkup.dataobjects.EntityChangeHistory
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.{AbstractCacheHandler, EntityChangeType}
 import com.lessmarkup.interfaces.data.{ChangesCache, DataChange, DomainModel, DomainModelProvider, QueryBuilder}
-import com.lessmarkup.interfaces.module.Implements
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -63,22 +68,22 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
           query = query.where("created >= $ AND " + Constants.DataIdPropertyName + " > $", dateFrame, new java.lang.Long(lastUpdateId.get))
         }
         query.toList(classOf[EntityChangeHistory]).foreach(history => {
-          lastUpdateId = Option(history.getId)
-          var collection: Option[mutable.ListBuffer[Change]] = changes.get(history.getCollectionId)
+          lastUpdateId = Option(history.id)
+          var collection: Option[mutable.ListBuffer[Change]] = changes.get(history.collectionId)
           if (collection.isEmpty) {
             collection = Option(new mutable.ListBuffer[Change]())
-            changes.put(history.getCollectionId, collection.get)
+            changes.put(history.collectionId, collection.get)
           }
 
           val change = new Change(
-            id = history.getId,
-            entityId = history.getEntityId,
-            created = history.getCreated,
-            userId = if (history.getUserId.isPresent) Option(history.getUserId.getAsLong) else None,
-            parameter1 = history.getParameter1,
-            parameter2 = history.getParameter2,
-            parameter3 = history.getParameter3,
-            changeType = EntityChangeType(history.getChangeType)
+            id = history.id,
+            entityId = history.entityId,
+            created = history.created,
+            userId = if (history.userId.isDefined) Option(history.userId.get) else None,
+            parameter1 = history.parameter1,
+            parameter2 = history.parameter2,
+            parameter3 = history.parameter3,
+            changeType = EntityChangeType(history.changeType)
           )
 
           collection.get.add(change)
@@ -106,7 +111,7 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
     lastUpdateId
   }
 
-  def getCollectionChanges(collectionId: Int, fromId: Option[Long], toId: Option[Long], filterFunc: Option[Predicate[DataChange]]): java.util.Collection[DataChange] = {
+  def getCollectionChanges(collectionId: Int, fromId: Option[Long], toId: Option[Long], filterFunc: Option[DataChange => Boolean]): Seq[DataChange] = {
     updateIfRequired()
     lock.readLock.lock()
     try {
@@ -122,9 +127,9 @@ class ChangesCacheImpl @Inject() (domainModelProvider: DomainModelProvider) exte
         query = query.filter(c => c.getId <= toId.get)
       }
       if (filterFunc != null) {
-        query = query.filter(c => filterFunc.get.test(c))
+        query = query.filter(c => filterFunc.get(c))
       }
-      asJavaCollection(query.toSeq)
+      query.toSeq
     } finally {
       lock.readLock.unlock()
     }

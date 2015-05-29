@@ -7,28 +7,23 @@
 package com.lessmarkup.engine.security
 
 import java.time.OffsetDateTime
-import java.util.OptionalLong
-
 import com.google.inject.Inject
 import com.lessmarkup.Constants
 import com.lessmarkup.dataobjects.{User, UserGroupMembership}
-import com.lessmarkup.interfaces.annotations.CacheHandlerWithFactory
+import com.lessmarkup.interfaces.annotations.{Implements, NodeAccessType, UseInstanceFactory}
 import com.lessmarkup.interfaces.cache._
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
-import com.lessmarkup.interfaces.module.Implements
-import com.lessmarkup.interfaces.structure.{CachedNodeInformation, NodeAccessType, NodeCache}
+import com.lessmarkup.interfaces.structure.{CachedNodeInformation, NodeCache}
 import com.lessmarkup.interfaces.system.UserCache
 
-import scala.collection.JavaConversions._
-
-class UserCacheFactory @Inject() (domainModelProvider: DomainModelProvider, dataCache: DataCache) extends CacheHandlerFactory {
-  override def createHandler(id: Long): CacheHandler = {
-    new UserCacheImpl(domainModelProvider, dataCache, id)
+class UserCacheFactory @Inject() (domainModelProvider: DomainModelProvider, dataCache: DataCache) extends InstanceFactory {
+  override def createInstance(params: Any*): CacheHandler = {
+    new UserCacheImpl(domainModelProvider, dataCache, params.head.asInstanceOf)
   }
 }
 
 @Implements(classOf[UserCache])
-@CacheHandlerWithFactory(classOf[UserCacheFactory])
+@UseInstanceFactory(classOf[UserCacheFactory])
 class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCache, userId: Long) extends AbstractCacheHandler(Array[Class[_]](classOf[User])) with UserCache {
 
   private val user = loadUser
@@ -45,17 +40,17 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
     }
   }
 
-  def getName: String = if (user.isDefined) user.get.getName else ""
+  def getName: String = if (user.isDefined) user.get.name else ""
 
-  def isRemoved: Boolean = user.isEmpty || user.get.isRemoved
+  def isRemoved: Boolean = user.isEmpty || user.get.removed
 
-  def isAdministrator: Boolean = user.isDefined && user.get.isAdministrator
+  def isAdministrator: Boolean = user.isDefined && user.get.administrator
 
-  def isApproved: Boolean = user.isDefined && user.get.isApproved
+  def isApproved: Boolean = user.isDefined && user.get.approved
 
-  def isEmailConfirmed: Boolean = user.isDefined && user.get.isEmailConfirmed
+  def isEmailConfirmed: Boolean = user.isDefined && user.get.emailConfirmed
 
-  def getGroups: List[Long] = {
+  def getGroups: Seq[Long] = {
 
     if (user.isEmpty) {
       return List()
@@ -65,15 +60,15 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
     try {
       domainModel.query
         .from(classOf[UserGroupMembership])
-        .where("userId = $", userId).toList(classOf[UserGroupMembership], Option("UserGroupId")).map(_.getUserGroupId)
+        .where("userId = $", userId).toList(classOf[UserGroupMembership], Option("UserGroupId")).map(_.userGroupId)
     } finally {
       domainModel.close()
     }
   }
 
-  def getEmail: String = if (user.isDefined) user.get.getEmail else ""
+  def getEmail: String = if (user.isDefined) user.get.email else ""
 
-  def getTitle: String = if (user.isDefined) user.get.getTitle else ""
+  def getTitle: String = if (user.isDefined) user.get.title.getOrElse("") else ""
 
   def isBlocked: Boolean = {
 
@@ -81,23 +76,23 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
       return true
     }
 
-    if (!user.get.isBlocked) {
+    if (!user.get.blocked) {
       return false
     }
 
-    if (user.get.getUnblockTime != null && user.get.getUnblockTime.isBefore(OffsetDateTime.now)) {
+    if (user.get.unblockTime.isDefined && user.get.unblockTime.get.isBefore(OffsetDateTime.now)) {
       return false
     }
 
     true
   }
 
-  def getProperties: String = if (user.isDefined) user.get.getProperties else ""
+  def getProperties: String = if (user.isDefined) user.get.properties.getOrElse("") else ""
 
   def getAvatarImageId: Option[Long] = {
     if (user.isDefined) {
-      val imageId = user.get.getAvatarImageId
-      if (imageId.isPresent) Option(imageId.getAsLong) else None
+      val imageId = user.get.avatarImageId
+      if (imageId.isDefined) Option(imageId.get) else None
     } else {
       None
     }
@@ -105,8 +100,8 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
 
   def getUserImageId: Option[Long] = {
     if (user.isDefined) {
-      val imageId = user.get.getUserImageId
-      if (imageId.isPresent) Option(imageId.getAsLong) else None
+      val imageId = user.get.userImageId
+      if (imageId.isDefined) Option(imageId.get) else None
     } else {
       None
     }
@@ -118,7 +113,7 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
       .getNodes
       .toList
       .map(n => {
-        val rights = n.checkRights(this, OptionalLong.of(userId))
+        val rights = n.checkRights(this, Option(userId))
         if (rights == NodeAccessType.NO_ACCESS) {
           None
         } else {
@@ -133,7 +128,7 @@ class UserCacheImpl (domainModelProvider: DomainModelProvider, dataCache: DataCa
     if (user.isEmpty) {
       None
     } else {
-      Option(user.get.getUnblockTime)
+      user.get.unblockTime
     }
   }
 }

@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.interfaces.security
 
 import java.util.OptionalLong
@@ -15,7 +21,7 @@ trait CurrentUser {
     if (userId.isDefined) OptionalLong.of(userId.get) else OptionalLong.empty()
   }
 
-  def getGroups: Option[List[Long]]
+  def getGroups: Option[Seq[Long]]
 
   @Deprecated
   def getGroupsJava = {

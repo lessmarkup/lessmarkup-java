@@ -1,32 +1,36 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.module
 
 import java.io._
 import java.lang.reflect.Modifier
 import java.net.{MalformedURLException, URL, URLClassLoader, URLDecoder}
 import java.util.zip.ZipInputStream
-
 import com.lessmarkup.dataobjects.Module
 import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
 import com.lessmarkup.interfaces.exceptions.CommonException
-import com.lessmarkup.interfaces.module.{Implements, ModuleConfiguration, ModuleInitializer, ModuleProvider}
-import com.lessmarkup.interfaces.structure.{Tuple, NodeHandler}
-
-import scala.collection.JavaConversions._
+import com.lessmarkup.interfaces.module.{ModuleConfiguration, ModuleInitializer, ModuleProvider}
+import com.lessmarkup.interfaces.structure.NodeHandlerFactory
 import scala.util.Try
 
 @Implements(classOf[ModuleProvider])
 class ModuleProviderImpl extends ModuleProvider {
 
   private val modules = discoverAndRegisterModules()
-  private val nodeHandlers: Map[String, (Class[_ <: NodeHandler], String)] = modules
+  private val nodeHandlers: Map[String, (Class[_ <: NodeHandlerFactory], String)] = modules
     .flatMap(m => m.getInitializer.getNodeHandlerTypes.map(h => (m, h)))
     .map(h => (h._2.getSimpleName, (h._2, h._1.getModuleType))).toMap
 
-  def getModules: java.util.Collection[ModuleConfiguration] = modules
+  def getModules: Seq[ModuleConfiguration] = modules
 
-  def discoverAndRegisterModules(): List[ModuleConfiguration] = {
+  def discoverAndRegisterModules(): Seq[ModuleConfiguration] = {
     val classLoader: URLClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
 
     val systemModules = (for (url <- classLoader.getURLs if url.getProtocol == "file" if !url.getPath.endsWith(".jar"))
@@ -183,30 +187,31 @@ class ModuleProviderImpl extends ModuleProvider {
       val databaseModules = query.toList(classOf[Module])
       val existingModules = modules.map(m => m.getUrl.toString -> m).toMap
 
-      databaseModules.filter(m => !existingModules.contains(m.getPath)).foreach(m => {
-        m.setRemoved(true)
+      databaseModules.filter(m => !existingModules.contains(m.path)).foreach(m => {
+        m.removed = true
         domainModel.update(m)
       })
 
-      val existingDatabaseModules = databaseModules.filter(m => existingModules.contains(m.getPath))
+      val existingDatabaseModules = databaseModules.filter(m => existingModules.contains(m.path))
 
       existingDatabaseModules.foreach(m => {
-        val existingModule = existingModules.get(m.getPath).get
-        m.setSystem(existingModule.isSystem)
-        m.setModuleType(existingModule.getModuleType)
+        val existingModule = existingModules.get(m.path).get
+        m.system = existingModule.isSystem
+        m.moduleType = existingModule.getModuleType
         domainModel.update(m)
       })
 
-      val existingDatabasePaths = databaseModules.map(_.getPath).toSet
+      val existingDatabasePaths = databaseModules.map(_.path).toSet
 
       modules.filter(m => !existingDatabasePaths.contains(m.getUrl.toString)).foreach(m => {
-        val module: Module = new Module()
-        module.setEnabled(true)
-        module.setName(m.getInitializer.getName)
-        module.setPath(m.getUrl.toString)
-        module.setRemoved(false)
-        module.setSystem(m.isSystem)
-        module.setModuleType(m.getModuleType)
+        val module: Module = new Module(
+          enabled = true,
+          name = m.getInitializer.getName,
+          path = m.getUrl.toString,
+          removed = false,
+          system = m.isSystem,
+          moduleType = m.getModuleType
+        )
         domainModel.create(module)
       })
 
@@ -215,10 +220,9 @@ class ModuleProviderImpl extends ModuleProvider {
     }
   }
 
-  def getNodeHandlers: java.util.Collection[String] = nodeHandlers.keySet
+  def getNodeHandlers: Seq[String] = nodeHandlers.keySet.toSeq
 
-  def getNodeHandler(id: String): Tuple[Class[_ <: NodeHandler], String] = {
-    val ret = nodeHandlers.get(id).get
-    new Tuple(ret._1, ret._2)
+  def getNodeHandler(id: String): Option[(Class[_ <: NodeHandlerFactory], String)] = {
+    nodeHandlers.get(id)
   }
 }

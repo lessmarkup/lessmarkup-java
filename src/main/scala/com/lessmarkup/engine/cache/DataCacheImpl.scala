@@ -1,13 +1,19 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.cache
 
-import java.util.{OptionalLong, Random}
+import java.util.Random
 
 import com.google.inject.{Inject, Singleton}
-import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
-import com.lessmarkup.interfaces.annotations.CacheHandlerWithFactory
+import com.lessmarkup.framework.helpers.DependencyResolver
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache._
 import com.lessmarkup.interfaces.data.{ChangeListener, ChangeTracker, DomainModelProvider}
-import com.lessmarkup.interfaces.module.Implements
+
 import scala.collection.JavaConversions._
 
 @Implements(classOf[DataCache])
@@ -21,22 +27,21 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
 
   changeTracker.subscribe(this)
 
-  private def getHandlerCollectionIds(cacheHandler: CacheHandler, domainModelProvider: DomainModelProvider): List[Int] = {
-    val collectionTypes = cacheHandler.getHandledCollectionTypes
+  private def getHandlerCollectionIds(cacheHandler: CacheHandler, domainModelProvider: DomainModelProvider): Seq[Int] = {
+    val collectionTypes = cacheHandler.handledCollectionTypes
     if (collectionTypes.isEmpty) {
-      return List[Int]()
+      return Nil
     }
-    collectionTypes.get.map(collectionType => {
-      val collectionId = domainModelProvider.getCollectionId(collectionType)
-      if (collectionId.isPresent) {
-        Option(collectionId.getAsInt)
-      } else {
-        None
-      }
-    }).filter(_.isDefined).map(_.get)
+
+    for (collectionType <- collectionTypes;
+         collectionId = domainModelProvider.getCollectionId(collectionType)
+         if collectionId.isDefined
+    ) yield {
+      collectionId.get
+    }
   }
 
-  private def getHashedCollectionIds(cacheItem: CacheItem, domainModelProvider: DomainModelProvider): List[(Int, CacheItem)] =
+  private def getHashedCollectionIds(cacheItem: CacheItem, domainModelProvider: DomainModelProvider): Seq[(Int, CacheItem)] =
     getHandlerCollectionIds(cacheItem.cacheHandler, domainModelProvider).map(id => (id, cacheItem))
 
   private def set[T <: CacheHandler](itemType: Class[T], cachedObject: T, objectId: Option[Long]) {
@@ -51,7 +56,7 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       return
     }
 
-    val collectionTypes = Option(cachedObject.getHandledCollectionTypes)
+    val collectionTypes = Option(cachedObject.handledCollectionTypes)
 
     if (collectionTypes.isEmpty) {
       return
@@ -62,35 +67,15 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
     hashedCollectionIds ++= getHashedCollectionIds(cacheItem, domainModelProvider)
   }
 
-  def createInstance[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], key: (Class[_], Option[Long])): Unit = {
+  def createInstance[T <: CacheHandler](itemType: Class[T], objectId: Option[Long]): Unit = {
 
-    val implements = itemType.getAnnotation(classOf[Implements])
-
-    val actualType = if (implements != null) implements.value() else itemType
-    val factoryAnnotation = actualType.getAnnotation(classOf[CacheHandlerWithFactory])
-
-    if (factoryAnnotation != null && objectId.isDefined) {
-
-      val factory: CacheHandlerFactory = DependencyResolver.resolve(factoryAnnotation.value)
-      val newInstance = factory.createHandler(objectId.get).asInstanceOf
-      set(itemType, newInstance, objectId)
-
+    val newInstance = if (objectId.isDefined) {
+      DependencyResolver.resolve(itemType, objectId.get)
     } else {
-
-      val newInstance = DependencyResolver.resolve(itemType)
-
-      set(itemType, newInstance, objectId)
-
-      try {
-        newInstance.initialize(objectId)
-      }
-      catch {
-        case e: Exception =>
-          LoggingHelper.logException(getClass, e)
-          remove(key)
-          throw e
-      }
+      DependencyResolver.resolve(itemType)
     }
+
+    set(itemType, newInstance, objectId)
   }
 
   def get[T <: CacheHandler](itemType: Class[T], objectId: Option[Long], create: Boolean): Option[T] = {
@@ -121,7 +106,7 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       return None
     }
 
-    createInstance(itemType, objectId, key)
+    createInstance(itemType, objectId)
 
     ret = items.get(key)
     val obj = ret.get.cacheHandler
@@ -140,16 +125,13 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
     val random: Random = new Random
 
     val uniqueKey = Stream.continually(random.nextLong())
-      .map(r => (itemType, r))
-      .dropWhile(r => items.containsKey(r))
+      .dropWhile(r => items.containsKey((itemType, r)))
       .head
-      ._2
 
     get(itemType, Option(uniqueKey), create = true).get
   }
 
   def reset() {
-
     hashedCollectionIds = Set()
     items = Map()
   }
@@ -168,14 +150,13 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
     items -= key
   }
 
-  def onChange(recordId: Long, userId: OptionalLong, entityId: Long, collectionId: Int, changeType: EntityChangeType) {
-
-    hashedCollectionIds
-      .filter(_._1 == collectionId)
-      .map(_._2)
-      .filter(_.cacheHandler.expires(collectionId, entityId, changeType))
-      .foreach(h => {
-      remove(h.itemType, h.objectId)
-    })
+  def onChange(recordId: Long, userId: Option[Long], entityId: Long, collectionId: Int, changeType: EntityChangeType) {
+    for (
+      (id, item) <- hashedCollectionIds
+      if id == collectionId
+      if item.cacheHandler.expires(collectionId, entityId, changeType)
+    ) {
+      remove(item.itemType, item.objectId)
+    }
   }
 }

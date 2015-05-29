@@ -1,9 +1,16 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.cache
 
-import java.util.OptionalLong
-import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
+import javax.servlet.http.Cookie
+
 import com.google.inject.Inject
 import com.lessmarkup.dataobjects.Currency
+import com.lessmarkup.framework.system.RequestContextHolder
 import com.lessmarkup.interfaces.cache.AbstractCacheHandler
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
 
@@ -13,55 +20,64 @@ object CurrencyCache {
   private val CookieCurrencyName: String = "currency"
 }
 
-class CurrencyCache @Inject() (domainModelProvider: DomainModelProvider) extends AbstractCacheHandler(Array[Class[_]](classOf[Currency])) {
-  private val currencies: Map[Long, CurrencyCacheItem] = readCurrencies
-  private val baseCurrencyId: Option[Long] = currencies.filter(_._2.isBase).keys.headOption
+class CurrencyCache @Inject() (domainModelProvider: DomainModelProvider) extends AbstractCacheHandler(Seq(classOf[Currency])) {
 
-  def readCurrencies = {
+  private val currencies: Map[Long, CurrencyCacheItem] = {
     val domainModel: DomainModel = this.domainModelProvider.create
     try {
       domainModel.query.from(classOf[Currency]).where("Enabled = $", new java.lang.Boolean(true)).toList(classOf[Currency]).map(c => {
-        val item: CurrencyCacheItem = new CurrencyCacheItem(c.getId, c.getName, c.getCode, c.getRate, c.getIsBase)
-        (c.getId, item)
+        val item: CurrencyCacheItem = new CurrencyCacheItem(c.id, c.name, c.code, c.rate, c.isBase)
+        (c.id, item)
       }).toMap
     } finally {
       if (domainModel != null) domainModel.close()
     }
   }
 
-  def getCurrentCurrencyId(request: HttpServletRequest): OptionalLong = {
-    val cookie = request.getCookies.toList.find(_.getName == CurrencyCache.CookieCurrencyName)
+  private val baseCurrencyId: Option[Long] = currencies.filter(_._2.isBase).keys.headOption
+
+  def getCurrentCurrencyId: Option[Long] = {
+
+    val requestContext = RequestContextHolder.getContext
+
+    val cookie = requestContext.getCookie(CurrencyCache.CookieCurrencyName)
     if (cookie.isDefined) {
       val currencyId: Long = cookie.get.getValue.toLong
-      return OptionalLong.of(currencyId)
+      Option(currencyId)
+    } else {
+      None
     }
-    OptionalLong.empty
   }
 
-  def setCurrentCurrencyId(response: HttpServletResponse, currencyId: OptionalLong) {
-    val cookie = if (!currencyId.isPresent) {
+  def setCurrentCurrencyId(currencyId: Option[Long]) {
+
+    val requestContext = RequestContextHolder.getContext
+
+    val cookie = if (currencyId.isEmpty) {
       new Cookie(CurrencyCache.CookieCurrencyName, null)
     } else {
       new Cookie(CurrencyCache.CookieCurrencyName, currencyId.toString)
     }
-    response.addCookie(cookie)
+
+    requestContext.setCookie(cookie)
   }
 
-  def getCurrentCurrency(request: HttpServletRequest): CurrencyCacheItem = {
-    val currencyId: OptionalLong = getCurrentCurrencyId(request)
-    if (!currencyId.isPresent) {
-      return null
+  def getCurrentCurrency: Option[CurrencyCacheItem] = {
+    val currencyId = getCurrentCurrencyId
+    if (currencyId.isEmpty) {
+      None
+    } else {
+      currencies.get(currencyId.get)
     }
-    currencies.get(currencyId.getAsLong).get
   }
 
-  def toUserCurrency(request: HttpServletRequest, value: Double): Double = {
-    val currency: CurrencyCacheItem = getCurrentCurrency(request)
-    if (currency == null || baseCurrencyId.isEmpty || currency.currencyId == baseCurrencyId.get) {
+  def toUserCurrency(value: Double): Double = {
+    val currency = getCurrentCurrency
+    if (currency.isEmpty || baseCurrencyId.isEmpty || currency.get.currencyId == baseCurrencyId.get) {
       return value
     }
     val baseCurrencyRate: Double = currencies.get(baseCurrencyId.get).get.rate
-    val userCurrencyRate: Double = currency.rate
+    val userCurrencyRate: Double = currency.get.rate
     if (baseCurrencyRate == userCurrencyRate) {
       return value
     }

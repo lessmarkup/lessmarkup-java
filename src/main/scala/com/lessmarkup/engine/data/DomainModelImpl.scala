@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import java.sql._
@@ -119,7 +125,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
       return false
     }
 
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass).get
 
     val columnsWithoutId = metadata.getColumns.values
       .filter(_.getName != Constants.DataIdPropertyName).toList
@@ -128,15 +134,14 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
       String.format("UPDATE %s SET ", this.dialect.decorateName(metadata.getName)) +
       columnsWithoutId
         .map(c => s"${dialect.decorateName(c.getName)} = ?")
-        .mkString(", ") +
-      String.format(" WHERE %s = ?", this.dialect.decorateName(Constants.DataIdPropertyName))
+        .mkString(", ") + s" WHERE ${dialect.decorateName(Constants.DataIdPropertyName)} = ?"
 
     val statement: PreparedStatement = connection.get.prepareStatement(command.toString)
     try {
       for ((column, index) <- columnsWithoutId.view.zipWithIndex) {
         updateDataValue(column, column.getValue(dataObject), statement, index)
       }
-      statement.setLong(columnsWithoutId.size, dataObject.getId)
+      statement.setLong(columnsWithoutId.size, dataObject.id)
       statement.executeUpdate != 0
     } finally {
       if (statement != null) statement.close()
@@ -148,7 +153,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
       return false
     }
 
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass).get
 
     val columnsWithoutId = metadata.getColumns.values
       .filter(_.getName != Constants.DataIdPropertyName).toList
@@ -171,7 +176,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
         if (!generatedKeys.next) {
           return false
         }
-        dataObject.setId(generatedKeys.getLong(1))
+        dataObject.id = generatedKeys.getLong(1)
       } finally {
         if (generatedKeys != null) generatedKeys.close()
       }
@@ -181,12 +186,12 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
   }
 
-  def delete[T <: DataObject](`type`: Class[T], id: Long): Boolean = {
+  def delete[T <: DataObject](dataType: Class[T], id: Long): Boolean = {
     if (connection == null) {
       return false
     }
-    val metadata: TableMetadata = MetadataStorage.getMetadata(`type`)
-    val statement: Statement = this.connection.get.createStatement
+    val metadata = MetadataStorage.getMetadata(dataType).get
+    val statement = this.connection.get.createStatement
     try {
       statement.execute(s"DELETE FROM ${dialect.decorateName(metadata.getName)} WHERE ${dialect.decorateName(Constants.DataIdPropertyName)}=$id")
     } finally {

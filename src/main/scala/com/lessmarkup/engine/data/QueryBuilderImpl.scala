@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at
+ * http://mozilla.org/MPL/2.0/.
+ */
+
 package com.lessmarkup.engine.data
 
 import java.sql.{Connection, PreparedStatement, ResultSet, ResultSetMetaData, Timestamp}
@@ -7,8 +13,6 @@ import com.lessmarkup.Constants
 import com.lessmarkup.engine.data.dialects.{DatabaseLanguageDialect, DatabaseLanguageDialectFactory}
 import com.lessmarkup.framework.helpers.{DependencyResolver, PropertyDescriptor, StringHelper, TypeHelper}
 import com.lessmarkup.interfaces.data._
-
-import scala.collection.JavaConversions._
 import scala.collection.mutable
 
 
@@ -64,7 +68,7 @@ class QueryBuilderImpl(connection: Connection,
 
   def from[T <: DataObject](dataType: Class[T], name: Option[String]) = {
 
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType).get
     if (metadata == null) {
       throw new IllegalArgumentException
     }
@@ -76,7 +80,7 @@ class QueryBuilderImpl(connection: Connection,
 
   private def anyJoin[T <: DataObject](dataType: Class[T], joinType: String, name: String, on: String): QueryBuilder = {
 
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType).get
     if (metadata == null) {
       throw new IllegalArgumentException
     }
@@ -96,7 +100,7 @@ class QueryBuilderImpl(connection: Connection,
 
     val resultingSql = "($(\\d+))|($-(\\w+))".r.replaceAllIn(sql, _ match {
       case matchTable(table) =>
-        MetadataStorage.getMetadata(table).getName
+        MetadataStorage.getMetadata(table).get.getName
       case matchNumber(num) =>
         val parameterIndex = num.toInt
         parameters += args(parameterIndex)
@@ -116,7 +120,7 @@ class QueryBuilderImpl(connection: Connection,
     constructCopy(where = Option(ret._2), parameters = Option(ret._1))
   }
 
-  def whereIds(ids: Iterator[Long]): QueryBuilder = {
+  def whereIds(ids: Seq[Long]): QueryBuilder = {
     if (ids.isEmpty) {
       throw new IllegalArgumentException
     }
@@ -161,7 +165,7 @@ class QueryBuilderImpl(connection: Connection,
     localStatement
   }
 
-  private def readDataValue[T](property: PropertyDescriptor, dataObject: T, resultSet: ResultSet, index: Int) {
+  private def readDataValue[T <: AnyRef](property: PropertyDescriptor, dataObject: T, resultSet: ResultSet, index: Int) {
     if (property.getType == classOf[OptionInt]) {
       val intValue = resultSet.getInt(index)
       property.setValue(dataObject, if (resultSet.wasNull()) new OptionInt() else new OptionInt(intValue))
@@ -195,7 +199,7 @@ class QueryBuilderImpl(connection: Connection,
     }
   }
 
-  private def readDataObject[T](dataType: Class[T], resultSetMetadata: ResultSetMetaData, metadata: TableMetadata, resultSet: ResultSet) : T = {
+  private def readDataObject[T <: AnyRef](dataType: Class[T], resultSetMetadata: ResultSetMetaData, metadata: TableMetadata, resultSet: ResultSet) : T = {
 
     val dataObject: T = dataType.newInstance
 
@@ -214,7 +218,7 @@ class QueryBuilderImpl(connection: Connection,
   private def executeOnDataObjectWithLimit[T <: DataObject](dataType: Class[T], sql: String, limit: Option[Int], args: Any*): List[T] = {
 
     val sqlAndParameters = processStringWithParameters(sql, args)
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType).get
 
     val statement: PreparedStatement = prepareStatement(sqlAndParameters._2, sqlAndParameters._1)
     val resultSet: ResultSet = statement.executeQuery
@@ -236,7 +240,7 @@ class QueryBuilderImpl(connection: Connection,
     }
   }
 
-  private def readRegularObject[T](dataType: Class[T], resultSetMetadata: ResultSetMetaData, properties: Map[String, PropertyDescriptor], resultSet: ResultSet) : T = {
+  private def readRegularObject[T <: AnyRef](dataType: Class[T], resultSetMetadata: ResultSetMetaData, properties: Map[String, PropertyDescriptor], resultSet: ResultSet) : T = {
 
     val isDataObject: Boolean = classOf[DataObject].isAssignableFrom(dataType)
 
@@ -259,7 +263,7 @@ class QueryBuilderImpl(connection: Connection,
   }
 
 
-  private def executeOnRegularObjectWithLimit[T](dataType: Class[T], sql: String, limit: Option[Int], args: Any*): List[T] = {
+  private def executeOnRegularObjectWithLimit[T <: AnyRef](dataType: Class[T], sql: String, limit: Option[Int], args: Any*): List[T] = {
 
     val sqlAndParameters = processStringWithParameters(sql, args)
     val properties = TypeHelper.getProperties(dataType).toList.map(p => (p.getName, p)).toMap
@@ -315,7 +319,7 @@ class QueryBuilderImpl(connection: Connection,
     }
   }
 
-  def toList[T](dataType: Class[T], selectText: Option[String]): List[T] = {
+  def toList[T <: AnyRef](dataType: Class[T], selectText: Option[String]): List[T] = {
     (if (this.select.isEmpty) constructCopy(select = selectText) else this)
       .executeOnRegularObjectWithLimit(dataType, getSql, None)
   }
@@ -344,7 +348,7 @@ class QueryBuilderImpl(connection: Connection,
       .executeScalar(classOf[Integer], getSql).asInstanceOf[Long].toInt
   }
 
-  def first[T](dataType: Class[T], selectText: Option[String]): Option[T] = {
+  def first[T <: AnyRef](dataType: Class[T], selectText: Option[String]): Option[T] = {
     (if (selectText.isDefined) constructCopy(select = selectText) else this)
       .executeOnRegularObjectWithLimit(dataType, getSql, Option(1))
       .headOption
@@ -355,7 +359,7 @@ class QueryBuilderImpl(connection: Connection,
   def deleteFrom[T <: DataObject](dataType: Class[T], filter: String, args: Any*): Boolean = {
 
     val sqlWithParameters = processStringWithParameters(filter, args)
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType)
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataType).get
 
     if (metadata == null) {
       throw new IllegalArgumentException
