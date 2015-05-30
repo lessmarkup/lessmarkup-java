@@ -7,16 +7,19 @@
 package com.lessmarkup.engine.data
 
 import com.google.inject.Inject
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.data.{DomainModel, DomainModelProvider}
 import com.lessmarkup.interfaces.module.ModuleProvider
 
+@Implements(classOf[DomainModelProvider])
 class DomainModelProviderImpl @Inject() (moduleProvider: ModuleProvider) extends DomainModelProvider {
 
   def initialize() {
-    for (module <- moduleProvider.getModules) {
-      for (dataObject <- module.getInitializer.getDataObjectTypes) {
+    for (
+      module <- moduleProvider.getModules;
+      dataObject <- module.getInitializer.getDataObjectTypes
+    ) {
         MetadataStorage.registerDataType(dataObject)
-      }
     }
   }
 

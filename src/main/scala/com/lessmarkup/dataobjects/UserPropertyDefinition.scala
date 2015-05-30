@@ -6,15 +6,15 @@
 
 package com.lessmarkup.dataobjects
 
+import com.lessmarkup.dataobjects.UserPropertyType.UserPropertyType
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class UserPropertyDefinition(
-  id: Long,
+class UserPropertyDefinition extends DataObject {
   @RequiredField
-  var name: String,
-  var title: String,
+  var name: String = null
+  var title: String = null
   @RequiredField
-  var propertyType: UserPropertyType.Value,
-  var required: Boolean
-  ) extends DataObject(id)
+  var propertyType: UserPropertyType = UserPropertyType.NOTE
+  var required: Boolean = false
+}

@@ -27,7 +27,7 @@ class EngineNodeHandler (dataCache: DataCache, configuration: NodeHandlerConfigu
   extends DialogNodeHandler[EngineConfigurationModel](dataCache, classOf[EngineConfigurationModel], configuration) {
 
   protected def loadObject: Option[EngineConfigurationModel] = {
-    Option(DependencyResolver.resolve(classOf[EngineConfigurationModel]))
+    Option(DependencyResolver(classOf[EngineConfigurationModel]))
   }
 
   protected def saveObject(changedObject: Option[EngineConfigurationModel]): String = {

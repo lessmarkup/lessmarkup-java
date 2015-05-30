@@ -35,7 +35,7 @@ class InputFormDefinitionModel(dataCache: DataCache, definition: RecordModelDefi
     if (definition == null) {
       List()
     } else {
-      val inputSource = DependencyResolver.resolve(definition.getModelType).asInstanceOf[InputSource]
+      val inputSource = DependencyResolver(definition.getModelType).asInstanceOf[InputSource]
       for (source <- definition.getFields) yield {
 
         val selectValues: Seq[SelectValueModel] =

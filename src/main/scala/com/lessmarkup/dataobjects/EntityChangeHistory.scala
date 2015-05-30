@@ -11,15 +11,14 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.{DataObject, OptionLong}
 
-class EntityChangeHistory(
-  id: Long = 0,
-  var userId: OptionLong,
-  var entityId: Long,
-  var collectionId: Int,
-  var changeType: Int,
+class EntityChangeHistory extends DataObject {
+  var userId: OptionLong = None
+  var entityId: Long = 0
+  var collectionId: Int = 0
+  var changeType: Int = 0
   @RequiredField
-  var created: OffsetDateTime,
-  var parameter1: Long = 0,
-  var parameter2: Long = 0,
+  var created: OffsetDateTime = null
+  var parameter1: Long = 0
+  var parameter2: Long = 0
   var parameter3: Long = 0
-  ) extends DataObject(id)
+}

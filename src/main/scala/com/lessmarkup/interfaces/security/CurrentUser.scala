@@ -6,28 +6,13 @@
 
 package com.lessmarkup.interfaces.security
 
-import java.util.OptionalLong
-
 import com.google.gson.JsonObject
 import com.lessmarkup.interfaces.data.DomainModel
-import scala.collection.JavaConverters._
 
 trait CurrentUser {
   def getUserId: Option[Long]
 
-  @Deprecated
-  def getUserIdJava = {
-    val userId = getUserId
-    if (userId.isDefined) OptionalLong.of(userId.get) else OptionalLong.empty()
-  }
-
   def getGroups: Option[Seq[Long]]
-
-  @Deprecated
-  def getGroupsJava = {
-    val groups = getGroups
-    if (groups.isDefined) groups.get.map(_.asInstanceOf[java.lang.Long]).asJava else null.asInstanceOf
-  }
 
   def getProperties: Option[JsonObject]
 

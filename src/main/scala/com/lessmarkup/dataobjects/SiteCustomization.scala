@@ -9,17 +9,16 @@ package com.lessmarkup.dataobjects
 import java.time.OffsetDateTime
 
 import com.lessmarkup.interfaces.annotations.RequiredField
-import com.lessmarkup.interfaces.data.DataObject
+import com.lessmarkup.interfaces.data.{BinaryData, DataObject}
 
-class SiteCustomization(
-  id: Long,
+class SiteCustomization extends DataObject {
   @RequiredField
-  var path: String,
-  var isBinary: Boolean,
+  var path: String = null
+  var isBinary: Boolean = false
   @RequiredField
-  var body: Array[Byte],
+  var body: BinaryData = null
   @RequiredField
-  var created: OffsetDateTime,
-  var updated: OffsetDateTime,
-  var append: Boolean
-  ) extends DataObject(id)
+  var created: OffsetDateTime = null
+  var updated: OffsetDateTime = null
+  var append: Boolean = false
+}

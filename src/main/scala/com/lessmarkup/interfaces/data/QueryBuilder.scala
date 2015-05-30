@@ -8,11 +8,7 @@ package com.lessmarkup.interfaces.data
 
 trait QueryBuilder {
 
-  def from[T <: DataObject](dataType: Class[T], name: Option[String]): QueryBuilder
-
-  def fromJava[T <: DataObject](dataType: Class[T], name: String): QueryBuilder = from(dataType, Option(name))
-
-  def from[T <: DataObject](dataType: Class[T]) = fromJava(dataType, null)
+  def from[T <: DataObject](dataType: Class[T], name: Option[String] = None): QueryBuilder
 
   def join[T <: DataObject](dataType: Class[T], name: String, on: String): QueryBuilder
 
@@ -42,7 +38,7 @@ trait QueryBuilder {
 
   def executeScalar[T](dataType: Class[T], sql: String, args: Any*): Option[T]
 
-  def toList[T <: AnyRef](dataType: Class[T], selectText: Option[String]): Seq[T]
+  def toList[T <: AnyRef](dataType: Class[T], selectText: Option[String] = None): Seq[T]
 
   def toList[T <: AnyRef](dataType: Class[T]): Seq[T] = toList(dataType, None)
 
@@ -50,7 +46,7 @@ trait QueryBuilder {
 
   def count: Int
 
-  def first[T <: AnyRef](dataType: Class[T], selectText: Option[String]): Option[T]
+  def first[T <: AnyRef](dataType: Class[T], selectText: Option[String] = None): Option[T]
 
   def createNew: QueryBuilder
 

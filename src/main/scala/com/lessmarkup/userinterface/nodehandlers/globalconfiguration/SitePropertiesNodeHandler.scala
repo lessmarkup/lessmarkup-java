@@ -27,7 +27,7 @@ class SitePropertiesNodeHandler (dataCache: DataCache, configuration: NodeHandle
   extends DialogNodeHandler[SitePropertiesModel](dataCache, classOf[SitePropertiesModel], configuration) {
 
   protected def loadObject: Option[SitePropertiesModel] = {
-    val ret: SitePropertiesModel = DependencyResolver.resolve(classOf[SitePropertiesModel])
+    val ret: SitePropertiesModel = DependencyResolver(classOf[SitePropertiesModel])
     ret.initialize(null)
     Option(ret)
   }

@@ -26,7 +26,7 @@ class LoadUpdatesModel @Inject() (domainModelProvider: DomainModelProvider, data
     var currentProvider: NotificationProvider = null
     val handlers = userCache.getNodes.filter(_._1.handlerType.get.isAssignableFrom(classOf[NotificationProvider])).flatMap {
       case (node, access) =>
-        val handlerFactory: NodeHandlerFactory = DependencyResolver.resolve(node.handlerType.get)
+        val handlerFactory: NodeHandlerFactory = DependencyResolver(node.handlerType.get)
         val settings = if (node.settings != null && node.settings.length > 0) {
           Option(JsonSerializer.deserializeToTree(node.settings).getAsJsonObject)
         } else {

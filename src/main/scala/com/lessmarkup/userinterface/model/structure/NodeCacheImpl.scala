@@ -59,18 +59,15 @@ class NodeCacheImpl @Inject() (domainModelProvider: DomainModelProvider, moduleP
       val existingRoot = nodes.find(n => n.parentId.isEmpty)
 
       val root: Node = if (existingRoot.isEmpty) {
-        new Node(
-          id = 1,
-          title = "Home",
-          description = "",
-          settings = None,
-          addToMenu = false,
-          position = 0,
-          parentId = None,
-          handlerId = classOf[DefaultRootNodeHandler].getSimpleName,
-          enabled = true,
-          path = ""
-        )
+        val node = new Node
+        node.id = 1
+        node.title = "Home"
+        node.description = ""
+        node.settings = None
+        node.handlerId = classOf[DefaultRootNodeHandler].getSimpleName
+        node.enabled = true
+        node.path = ""
+        node
       } else {
         existingRoot.get
       }
@@ -139,18 +136,15 @@ class NodeCacheImpl @Inject() (domainModelProvider: DomainModelProvider, moduleP
 
     val nodeId = idToNode.keys.max
 
-    val node = new Node(
-      id = nodeId,
-      path = path.toLowerCase,
-      title = title,
-      handlerId = handlerType.getSimpleName,
-      enabled = true,
-      description = "",
-      settings = None,
-      addToMenu = false,
-      position = 0,
-      parentId = None
-    )
+    val node = new Node
+    node.id = nodeId
+    node.path = path.toLowerCase
+    node.title = title
+    node.handlerId = handlerType.getSimpleName
+    node.enabled = true
+    node.description = ""
+    node.settings = None
+    node.addToMenu = false
 
     val cachedNodeAccess = new CachedNodeAccess(accessType, None, None, nodeId)
 
@@ -270,7 +264,7 @@ class NodeCacheImpl @Inject() (domainModelProvider: DomainModelProvider, moduleP
         node.handlerType.get
       }
 
-    val nodeHandlerFactory = DependencyResolver.resolve(handlerType)
+    val nodeHandlerFactory = DependencyResolver(handlerType)
     if (nodeHandlerFactory == null) {
       return None
     }

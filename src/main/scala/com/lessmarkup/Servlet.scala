@@ -40,7 +40,7 @@ class Servlet extends HttpServlet {
         name = actionPath.substring(0, pos)
         actionPath = actionPath.substring(pos + 1)
       }
-      val action: ModuleActionHandler = DependencyResolver.resolve(classOf[ModuleIntegration]).getActionHandler(name)
+      val action: ModuleActionHandler = DependencyResolver(classOf[ModuleIntegration]).getActionHandler(name)
       if (action != null) {
         action.handleAction(actionPath)
         return true
@@ -65,19 +65,19 @@ class Servlet extends HttpServlet {
 
     if (JsonEntryPointModel.appliesToRequest) {
       LoggingHelper.getLogger(getClass).info("Start of JSON request")
-      val model: JsonEntryPointModel = DependencyResolver.resolve(classOf[JsonEntryPointModel])
+      val model: JsonEntryPointModel = DependencyResolver(classOf[JsonEntryPointModel])
       model.handleRequest()
       LoggingHelper.getLogger(getClass).info("End of JSON request")
       return true
     }
 
-    val nodeModel: NodeEntryPointModel = DependencyResolver.resolve(classOf[NodeEntryPointModel])
+    val nodeModel: NodeEntryPointModel = DependencyResolver(classOf[NodeEntryPointModel])
     if (nodeModel.initialize(path)) {
       nodeModel.handleRequest()
       return true
     }
 
-    val resourceModel: ResourceModel = DependencyResolver.resolve(classOf[ResourceModel])
+    val resourceModel: ResourceModel = DependencyResolver(classOf[ResourceModel])
     if (resourceModel.initialize(path)) {
       LoggingHelper.getLogger(getClass).info("Handling resource access request")
       resourceModel.handleRequest()
@@ -96,7 +96,7 @@ class Servlet extends HttpServlet {
     val requestContext: RequestContextImpl = new RequestContextImpl(request, response, getServletConfig)
     RequestContextHolder.onRequestStarted(requestContext)
     try {
-      DependencyResolver.resolve(classOf[ChangeTracker]).enqueueUpdates()
+      DependencyResolver(classOf[ChangeTracker]).enqueueUpdates()
       if (!processRequestInContext(path, requestContext)) {
         response.sendError(404)
       }
@@ -147,11 +147,11 @@ class Servlet extends HttpServlet {
     val requestContext: RequestContextImpl = new RequestContextImpl(null, null, getServletConfig)
     RequestContextHolder.onRequestStarted(requestContext)
     try {
-      val moduleProvider: ModuleProvider = DependencyResolver.resolve(classOf[ModuleProvider])
-      DependencyResolver.resolve(classOf[DomainModelProvider]).initialize()
-      val migrateEngine: MigrateEngine = DependencyResolver.resolve(classOf[MigrateEngine])
+      val moduleProvider: ModuleProvider = DependencyResolver(classOf[ModuleProvider])
+      DependencyResolver(classOf[DomainModelProvider]).initialize()
+      val migrateEngine: MigrateEngine = DependencyResolver(classOf[MigrateEngine])
       migrateEngine.execute()
-      moduleProvider.updateModuleDatabase(DependencyResolver.resolve(classOf[DomainModelProvider]))
+      moduleProvider.updateModuleDatabase(DependencyResolver(classOf[DomainModelProvider]))
     } finally {
       RequestContextHolder.onRequestFinished()
     }

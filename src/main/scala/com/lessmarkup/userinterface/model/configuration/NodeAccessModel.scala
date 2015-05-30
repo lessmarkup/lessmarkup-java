@@ -24,6 +24,6 @@ class NodeAccessModel extends RecordModel[NodeAccessModel] {
   var group: String = null
 
   override def createCollection: ModelCollection[NodeAccessModel] = {
-    DependencyResolver.resolve(classOf[NodeAccessModelCollectionManager])
+    DependencyResolver(classOf[NodeAccessModelCollectionManager])
   }
 }

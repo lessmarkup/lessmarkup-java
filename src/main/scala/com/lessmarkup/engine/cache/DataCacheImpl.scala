@@ -62,7 +62,7 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       return
     }
 
-    val domainModelProvider: DomainModelProvider = DependencyResolver.resolve(classOf[DomainModelProvider])
+    val domainModelProvider: DomainModelProvider = DependencyResolver(classOf[DomainModelProvider])
 
     hashedCollectionIds ++= getHashedCollectionIds(cacheItem, domainModelProvider)
   }
@@ -70,9 +70,9 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
   def createInstance[T <: CacheHandler](itemType: Class[T], objectId: Option[Long]): Unit = {
 
     val newInstance = if (objectId.isDefined) {
-      DependencyResolver.resolve(itemType, objectId.get)
+      DependencyResolver(itemType, objectId.get)
     } else {
-      DependencyResolver.resolve(itemType)
+      DependencyResolver(itemType)
     }
 
     set(itemType, newInstance, objectId)
@@ -143,7 +143,7 @@ class DataCacheImpl @Inject()(changeTracker: ChangeTracker) extends DataCache wi
       return
     }
 
-    val domainModelProvider: DomainModelProvider = DependencyResolver.resolve(classOf[DomainModelProvider])
+    val domainModelProvider: DomainModelProvider = DependencyResolver(classOf[DomainModelProvider])
 
     hashedCollectionIds --= getHashedCollectionIds(cacheItem.get, domainModelProvider)
 

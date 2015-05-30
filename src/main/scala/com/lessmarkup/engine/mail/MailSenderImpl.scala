@@ -111,14 +111,13 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
     if (RequestContextHolder.getContext.getEngineConfiguration.isUseTestMail) {
       val domainModel: DomainModel = domainModelProvider.create
       try {
-        val testMail: TestMail = new TestMail(
-          body = body,
-          from = composeAddress(fromAddress, fromName),
-          template = viewPath,
-          sent = OffsetDateTime.now,
-          subject = subject,
-          to = composeAddress(toAddress, toName)
-        )
+        val testMail = new TestMail
+        testMail.body = body
+        testMail.from = composeAddress(fromAddress, fromName)
+        testMail.template = viewPath
+        testMail.sent = OffsetDateTime.now
+        testMail.subject = subject
+        testMail.to = composeAddress(toAddress, toName)
         domainModel.create(testMail)
       }
       catch {

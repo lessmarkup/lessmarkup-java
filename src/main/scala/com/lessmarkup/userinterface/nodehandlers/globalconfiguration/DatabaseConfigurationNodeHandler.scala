@@ -25,7 +25,7 @@ class DatabaseConfigurationNodeHandler(dataCache: DataCache, configuration: Node
   extends DialogNodeHandler[DatabaseConfigurationModel](dataCache, classOf[DatabaseConfigurationModel], configuration) {
 
   protected def loadObject: Option[DatabaseConfigurationModel] = {
-    val model: DatabaseConfigurationModel = DependencyResolver.resolve(classOf[DatabaseConfigurationModel])
+    val model: DatabaseConfigurationModel = DependencyResolver(classOf[DatabaseConfigurationModel])
     model.database = RequestContextHolder.getContext.getEngineConfiguration.getConnectionString
     Option(model)
   }

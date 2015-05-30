@@ -8,8 +8,7 @@ package com.lessmarkup.dataobjects
 
 import com.lessmarkup.interfaces.data.DataObject
 
-class UserGroupMembership(
-  id: Long = 0,
-  var userId: Long,
-  var userGroupId: Long
-  ) extends DataObject(id)
+class UserGroupMembership extends DataObject {
+  var userId: Long = 0
+  var userGroupId: Long = 0
+}

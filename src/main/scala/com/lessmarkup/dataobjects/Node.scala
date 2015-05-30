@@ -9,19 +9,18 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.{OptionString, DataObject, OptionLong}
 
-class Node(
-  id: Long = 0,
+class Node extends DataObject {
   @RequiredField
-  var path: String,
+  var path: String = null
   @RequiredField
-  var title: String,
+  var title: String = null
   @RequiredField
-  var description: String,
+  var description: String = null
   @RequiredField
-  var handlerId: String,
-  var settings: OptionString,
-  var enabled: Boolean,
-  var addToMenu: Boolean,
-  var position: Int,
-  var parentId: OptionLong
-  ) extends DataObject(id)
+  var handlerId: String = null
+  var settings: OptionString = None
+  var enabled: Boolean = false
+  var addToMenu: Boolean = false
+  var position: Int = 0
+  var parentId: OptionLong = None
+}

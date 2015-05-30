@@ -9,14 +9,13 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class Currency (
-  id: Long,
+class Currency extends DataObject {
   @RequiredField
-  var name: String,
+  var name: String = null
   @RequiredField
-  var code: String,
-  var rate: Double,
-  var enabled: Boolean,
-  var isBase: Boolean,
-  var lastUpdate: Boolean
-) extends DataObject(id)
+  var code: String = null
+  var rate: Double = 0
+  var enabled: Boolean = false
+  var isBase: Boolean = false
+  var lastUpdate: Boolean = false
+}

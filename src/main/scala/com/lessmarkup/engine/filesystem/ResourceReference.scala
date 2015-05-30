@@ -13,7 +13,7 @@ class ResourceReference(
   var path: String,
   var module: Option[ModuleConfiguration] = None,
   var recordId: Long = 0,
-  var binary: Option[Array[Byte]] = None,
+  var binary: Option[Seq[Byte]] = None,
   var minified: Boolean = false,
   var extension: Option[String] = None,
   var template: Option[Template] = None

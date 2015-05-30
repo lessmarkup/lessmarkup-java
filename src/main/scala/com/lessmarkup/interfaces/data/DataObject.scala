@@ -6,4 +6,6 @@
 
 package com.lessmarkup.interfaces.data
 
-abstract class DataObject(var id: Long)
+abstract class DataObject {
+  var id: Long = 0
+}

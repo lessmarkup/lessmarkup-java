@@ -95,25 +95,23 @@ class ChangeTrackerImpl @Inject() (domainModelProvider: DomainModelProvider) ext
   }
 
   def addChange[T <: DataObject](`type`: Class[T], objectId: Long, changeType: EntityChangeType, domainModel: DomainModel) {
-    val record: EntityChangeHistory = new EntityChangeHistory(
-      entityId = objectId,
-      changeType = changeType.value,
-      userId = RequestContextHolder.getContext.getCurrentUser.getUserId,
-      collectionId = MetadataStorage.getCollectionId(`type`).get,
-      created = OffsetDateTime.now
-    )
+    val record: EntityChangeHistory = new EntityChangeHistory
+    record.entityId = objectId
+    record.changeType = changeType.value
+    record.userId = RequestContextHolder.getContext.getCurrentUser.getUserId
+    record.collectionId = MetadataStorage.getCollectionId(`type`).get
+    record.created = OffsetDateTime.now
     domainModel.create(record)
   }
 
   def addChange[T <: DataObject](`type`: Class[T], dataObject: T, changeType: EntityChangeType, domainModel: DomainModel) {
     initializeChangeTracker()
-    val record = new EntityChangeHistory(
-      entityId = dataObject.id,
-      changeType = changeType.value,
-      userId = RequestContextHolder.getContext.getCurrentUser.getUserId,
-      collectionId = MetadataStorage.getCollectionId(`type`).get,
-      created = OffsetDateTime.now
-    )
+    val record = new EntityChangeHistory
+    record.entityId = dataObject.id
+    record.changeType = changeType.value
+    record.userId = RequestContextHolder.getContext.getCurrentUser.getUserId
+    record.collectionId = MetadataStorage.getCollectionId(`type`).get
+    record.created = OffsetDateTime.now
     domainModel.create(record)
   }
 

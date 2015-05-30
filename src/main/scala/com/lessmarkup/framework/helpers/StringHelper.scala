@@ -21,6 +21,10 @@ object StringHelper {
     e.toString
   }
 
+  def binaryToString(binary: Seq[Byte]): String = {
+    binaryToString(binary.toArray)
+  }
+
   def binaryToString(binary: Array[Byte]): String = {
     if (binary.length >= 3 && binary(0) == -17 && binary(1) == -69 && binary(2) == -65) {
       return new String(binary, 3, binary.length - 3, StandardCharsets.UTF_8)

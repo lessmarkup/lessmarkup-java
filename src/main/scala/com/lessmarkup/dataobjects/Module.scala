@@ -8,15 +8,14 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class Module(
-  id: Long = 0,
+class Module extends DataObject {
   @RequiredField
-  var name: String,
+  var name: String = null
   @RequiredField
-  var path: String,
-  var enabled: Boolean,
-  var removed: Boolean,
-  var system: Boolean,
+  var path: String = null
+  var enabled: Boolean = false
+  var removed: Boolean = false
+  var system: Boolean = false
   @RequiredField
-  var moduleType: String
-  ) extends DataObject(id)
+  var moduleType: String = null
+}

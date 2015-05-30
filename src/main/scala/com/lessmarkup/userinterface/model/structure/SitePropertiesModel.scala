@@ -116,9 +116,7 @@ class SitePropertiesModel @Inject() (domainModelProvider: DomainModelProvider) e
       var isNew: Boolean = false
       if (propertiesDataObject == null) {
         isNew = true
-        propertiesDataObject = new SiteProperties(
-          properties = null
-        )
+        propertiesDataObject = new SiteProperties
       }
       propertiesDataObject.properties = propertiesObject.toString
       if (isNew) {

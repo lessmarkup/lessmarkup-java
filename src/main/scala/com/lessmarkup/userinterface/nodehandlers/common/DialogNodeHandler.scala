@@ -21,7 +21,7 @@ abstract class DialogNodeHandler[T <: AnyRef](
   configuration: NodeHandlerConfiguration
 ) extends AbstractNodeHandler(configuration) {
 
-  private final val definitionModel: InputFormDefinitionModel = DependencyResolver.resolve(classOf[InputFormDefinitionModel], modelType)
+  private final val definitionModel: InputFormDefinitionModel = DependencyResolver(classOf[InputFormDefinitionModel], modelType)
 
   override def getScripts: Seq[String] = {
     super.getScripts ++ definitionModel.getFields.flatMap(f => {

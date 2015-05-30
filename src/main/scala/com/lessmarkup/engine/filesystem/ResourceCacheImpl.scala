@@ -83,18 +83,18 @@ class ResourceCacheImpl @Inject() (moduleProvider: ModuleProvider, domainModelPr
         val reference: Option[ResourceReference] = if (record.append) modulesResources.get(recordPath) else None
         if (record.append && reference.isDefined) {
           val binaryLength = if (reference.get.binary.isDefined) reference.get.binary.get.length else 0
-          val binary: Array[Byte] = new Array[Byte](binaryLength + record.body.length)
+          val binary = new Array[Byte](binaryLength + record.body.length)
           if (reference.get.binary.isDefined) {
             System.arraycopy(reference.get.binary.get, 0, binary, 0, binaryLength)
           }
-          System.arraycopy(record.body, 0, binary, binaryLength, record.body.length)
-          reference.get.binary = Option(binary)
+          System.arraycopy(record.body.data.toArray, 0, binary, binaryLength, record.body.length)
+          reference.get.binary = Option(binary.toSeq)
           None
         } else {
           Option(new ResourceReference(
             path = record.path,
             recordId = record.id,
-            binary = Option(record.body)
+            binary = Option(record.body.data)
           ))
         }
       }).filter(_.isDefined)
@@ -151,7 +151,7 @@ class ResourceCacheImpl @Inject() (moduleProvider: ModuleProvider, domainModelPr
     resourceOption
   }
 
-  def readBytes(path: String): Option[Array[Byte]] = {
+  def readBytes(path: String): Option[Seq[Byte]] = {
     val resource: Option[ResourceReference] = loadResource(path)
     if (resource.isEmpty || resource.get.binary.isEmpty) {
       None

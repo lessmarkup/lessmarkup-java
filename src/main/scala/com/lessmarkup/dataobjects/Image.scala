@@ -7,25 +7,23 @@
 package com.lessmarkup.dataobjects
 
 import java.time.OffsetDateTime
-import java.util.OptionalLong
 
 import com.lessmarkup.interfaces.annotations.RequiredField
-import com.lessmarkup.interfaces.data.DataObject
+import com.lessmarkup.interfaces.data.{DataObject, BinaryData, OptionLong}
 
-class Image(
-  id: Long,
+class Image extends DataObject {
   @RequiredField
-  var contentType: String,
+  var contentType: String = null
   @RequiredField
-  var data: Array[Byte],
-  var thumbnailContentType: String,
-  var thumbnail: Array[Byte],
+  var data: BinaryData = null
+  var thumbnailContentType: String = null
+  var thumbnail: BinaryData = null
   @RequiredField
-  var created: OffsetDateTime,
-  var updated: OffsetDateTime,
-  var userId: OptionalLong,
+  var created: OffsetDateTime = null
+  var updated: OffsetDateTime = null
+  var userId: OptionLong = None
   @RequiredField
-  var fileName: String,
-  var height: Int,
-  var width: Int
-  ) extends DataObject(id)
+  var fileName: String = null
+  var height: Int = 0
+  var width: Int = 0
+}

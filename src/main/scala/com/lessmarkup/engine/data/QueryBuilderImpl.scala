@@ -10,8 +10,8 @@ import java.sql.{Connection, PreparedStatement, ResultSet, ResultSetMetaData, Ti
 import java.time.{OffsetDateTime, ZoneOffset}
 
 import com.lessmarkup.Constants
-import com.lessmarkup.engine.data.dialects.{DatabaseLanguageDialect, DatabaseLanguageDialectFactory}
-import com.lessmarkup.framework.helpers.{DependencyResolver, PropertyDescriptor, StringHelper, TypeHelper}
+import com.lessmarkup.engine.data.dialects.{DatabaseLanguageDialectFactory, DatabaseLanguageDialect}
+import com.lessmarkup.framework.helpers._
 import com.lessmarkup.interfaces.data._
 import scala.collection.mutable
 
@@ -93,18 +93,33 @@ class QueryBuilderImpl(connection: Connection,
       return (List(), sql)
     }
 
-    val matchNumber = "$(\\d+)".r
-    val matchTable = "$-(\\w+)".r
+    val matchNumber = "\\$(\\d+)".r
+    val matchTable = "\\$\\-(\\w+)".r
+    val matchField = "\\$\\+(\\w+)".r
+    val matchDefaultNumber = "\\$".r
 
     val parameters = mutable.ListBuffer[Any]()
 
-    val resultingSql = "($(\\d+))|($-(\\w+))".r.replaceAllIn(sql, _ match {
-      case matchTable(table) =>
-        MetadataStorage.getMetadata(table).get.getName
-      case matchNumber(num) =>
-        val parameterIndex = num.toInt
-        parameters += args(parameterIndex)
-        "?"
+    val allRegex = "(\\$\\-(?:\\w+))|(\\$\\+(?:\\w+))|(\\$(?:\\d*))".r
+
+    var defaultIndex = 0
+
+    val resultingSql = allRegex.replaceAllIn(sql, m => {
+      m match {
+        case matchTable(table) =>
+          dialect.decorateName(MetadataStorage.getMetadata(table).get.getName)
+        case matchField(field) =>
+          dialect.decorateName(StringHelper.toJsonCase(field))
+        case matchNumber(num) =>
+          val parameterIndex = num.toInt
+          parameters += args(parameterIndex)
+          "?"
+        case matchDefaultNumber() =>
+          parameters += args(defaultIndex)
+          defaultIndex += 1
+          "?"
+
+      }
     })
 
     (parameters.toList, resultingSql)
@@ -148,7 +163,7 @@ class QueryBuilderImpl(connection: Connection,
 
   private def getSql: String = {
 
-    val select = this.select.getOrElse("")
+    val select = this.select.getOrElse("*")
     val commandText = this.commandText.getOrElse("")
     val where = if (this.where.isDefined) " WHERE " + this.where.get else ""
     val orderBy = this.orderBy.getOrElse("")
@@ -158,9 +173,12 @@ class QueryBuilderImpl(connection: Connection,
   }
 
   private def prepareStatement(sql: String, parameters: List[Any]): PreparedStatement = {
+
+    //LoggingHelper.getLogger(getClass).info(s"Executing statement: $sql")
+
     val localStatement: PreparedStatement = this.connection.prepareStatement(sql)
     for ((param, index) <- parameters.view.zipWithIndex) {
-      localStatement.setObject(index, param)
+      localStatement.setObject(index+1, param)
     }
     localStatement
   }
@@ -169,31 +187,37 @@ class QueryBuilderImpl(connection: Connection,
     if (property.getType == classOf[OptionInt]) {
       val intValue = resultSet.getInt(index)
       property.setValue(dataObject, if (resultSet.wasNull()) new OptionInt() else new OptionInt(intValue))
-    }
-    else if (property.getType == classOf[OptionLong]) {
+    } else if (property.getType == classOf[OptionLong]) {
       val longValue = resultSet.getLong(index)
       property.setValue(dataObject, if (resultSet.wasNull()) new OptionLong() else new OptionLong(longValue))
-    }
-    else if (property.getType == classOf[OptionDouble]) {
+    } else if (property.getType == classOf[OptionDouble]) {
       val doubleValue = resultSet.getDouble(index)
       property.setValue(dataObject, if (resultSet.wasNull()) new OptionDouble() else new OptionDouble(doubleValue))
-    }
-    else if (property.getType == classOf[OptionBool]) {
+    } else if (property.getType == classOf[OptionBool]) {
       val booleanValue = resultSet.getBoolean(index)
       property.setValue(dataObject, if (resultSet.wasNull()) new OptionBool() else new OptionBool(booleanValue))
-    }
-    else if (property.getType == classOf[OffsetDateTime]) {
+    } else if (property.getType == classOf[OptionOffsetDateTime]) {
+      val timestamp: Timestamp = resultSet.getTimestamp(index)
+      property.setValue(dataObject, if (resultSet.wasNull()) OptionOffsetDateTime() else OptionOffsetDateTime(OffsetDateTime.ofInstant(timestamp.toInstant, ZoneOffset.UTC)))
+    } else if (property.getType == classOf[OptionString]) {
+      val string: String = resultSet.getString(index)
+      property.setValue(dataObject, if (resultSet.wasNull()) OptionString() else OptionString(string))
+    } else if (property.getType == classOf[OptionBinaryData]) {
+      val binary = resultSet.getBytes(index)
+      property.setValue(dataObject, if (resultSet.wasNull()) OptionBinaryData() else OptionBinaryData(BinaryData(binary.toSeq)))
+    } else if (property.getType == classOf[BinaryData]) {
+      val binary = resultSet.getBytes(index)
+      property.setValue(dataObject, if (resultSet.wasNull()) null.asInstanceOf[BinaryData] else BinaryData(binary.toSeq))
+    } else if (property.getType == classOf[OffsetDateTime]) {
       val timestamp: Timestamp = resultSet.getTimestamp(index)
       property.setValue(dataObject, if (resultSet.wasNull()) null.asInstanceOf[OffsetDateTime] else {
         OffsetDateTime.ofInstant(timestamp.toInstant, ZoneOffset.UTC)
       })
-    }
-    else {
+    } else {
       val value: AnyRef = resultSet.getObject(index)
       if (resultSet.wasNull) {
         property.setValue(dataObject, null)
-      }
-      else {
+      } else {
         property.setValue(dataObject, value)
       }
     }
@@ -247,7 +271,7 @@ class QueryBuilderImpl(connection: Connection,
     val dataObject = if (isDataObject) {
       dataType.newInstance
     } else {
-      DependencyResolver.resolve(dataType)
+      DependencyResolver(dataType)
     }
 
     for (columnIndex <- 1 to resultSetMetadata.getColumnCount) {
@@ -268,7 +292,7 @@ class QueryBuilderImpl(connection: Connection,
     val sqlAndParameters = processStringWithParameters(sql, args)
     val properties = TypeHelper.getProperties(dataType).toList.map(p => (p.getName, p)).toMap
 
-    val statement: PreparedStatement = prepareStatement(sqlAndParameters._2, sqlAndParameters._1)
+    val statement: PreparedStatement = prepareStatement(sqlAndParameters._2, parameters ::: sqlAndParameters._1)
     val resultSet: ResultSet = statement.executeQuery
     try {
       val resultSetMetadata: ResultSetMetaData = resultSet.getMetaData
@@ -344,13 +368,14 @@ class QueryBuilderImpl(connection: Connection,
   }
 
   def count: Int = {
-    constructCopy(select = Option("COUNT(*)"))
-      .executeScalar(classOf[Integer], getSql).asInstanceOf[Long].toInt
+    val withSelect = constructCopy(select = Option("COUNT(*)"))
+    withSelect.executeScalar(classOf[Integer], withSelect.getSql).get.asInstanceOf[Long].toInt
   }
 
   def first[T <: AnyRef](dataType: Class[T], selectText: Option[String]): Option[T] = {
-    (if (selectText.isDefined) constructCopy(select = selectText) else this)
-      .executeOnRegularObjectWithLimit(dataType, getSql, Option(1))
+    val builder = if (selectText.isDefined) constructCopy(select = selectText) else this
+    builder
+      .executeOnRegularObjectWithLimit(dataType, builder.getSql, Option(1))
       .headOption
   }
 

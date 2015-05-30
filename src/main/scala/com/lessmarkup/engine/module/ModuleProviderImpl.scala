@@ -21,7 +21,11 @@ import com.lessmarkup.interfaces.structure.NodeHandlerFactory
 import scala.util.Try
 
 @Implements(classOf[ModuleProvider])
-class ModuleProviderImpl extends ModuleProvider {
+class ModuleProviderImpl(onlySystem: Boolean) extends ModuleProvider {
+
+  def this() = {
+    this(false)
+  }
 
   private val modules = discoverAndRegisterModules()
   private val nodeHandlers: Map[String, (Class[_ <: NodeHandlerFactory], String)] = modules
@@ -30,12 +34,16 @@ class ModuleProviderImpl extends ModuleProvider {
 
   def getModules: Seq[ModuleConfiguration] = modules
 
-  def discoverAndRegisterModules(): Seq[ModuleConfiguration] = {
+  private def discoverAndRegisterModules(): Seq[ModuleConfiguration] = {
     val classLoader: URLClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
 
     val systemModules = (for (url <- classLoader.getURLs if url.getProtocol == "file" if !url.getPath.endsWith(".jar"))
         yield discoverModules(url, isSystem = true, Option(classLoader))
       ).flatten.toList
+
+    if (onlySystem) {
+      return systemModules
+    }
 
     val modulesPath: String = RequestContextHolder.getContext.getEngineConfiguration.getModulesPath
     if (modulesPath == null || modulesPath.length == 0) {
@@ -60,6 +68,11 @@ class ModuleProviderImpl extends ModuleProvider {
   }
 
   private def directoryGetFiles(node: File): Array[File] = {
+
+    if (node.isFile) {
+      return Array()
+    }
+
     val files = node.listFiles
     if (files == null) {
       val userName: String = System.getProperty("user.name")
@@ -77,7 +90,8 @@ class ModuleProviderImpl extends ModuleProvider {
   }
 
   private def flattenDirectoryTree(basePath: String, nodes: Array[File]) : List[String] =
-    if (nodes.head.isDirectory) flattenDirectoryTree(basePath, directoryGetFiles(nodes.head)) ::: flattenDirectoryTree(basePath, nodes.tail)
+    if (nodes.isEmpty) Nil
+    else if (nodes.head.isDirectory) flattenDirectoryTree(basePath, directoryGetFiles(nodes.head)) ::: flattenDirectoryTree(basePath, nodes.tail)
     else directoryEntryPath(basePath, nodes.head) :: flattenDirectoryTree(basePath, nodes.tail)
 
   private def listAllFileSystemModuleElements(basePath: String, directory: File) : List[String] = {
@@ -128,7 +142,7 @@ class ModuleProviderImpl extends ModuleProvider {
       return None
     }
 
-    val moduleInitializer = DependencyResolver.resolve(moduleInitializerClass).asInstanceOf[ModuleInitializer]
+    val moduleInitializer = DependencyResolver(moduleInitializerClass).asInstanceOf[ModuleInitializer]
 
     if (moduleInitializer == null) {
       return None
@@ -157,16 +171,26 @@ class ModuleProviderImpl extends ModuleProvider {
       elements
         .filter(_.endsWith(".class"))
         .map(path => path.substring(0, path.length - ".class".length).replaceAll("/", "."))
-        .map(Class.forName(_, true, initializedClassLoader))
+        .filterNot(_.contains("$"))
+        .flatMap(
+        className => {
+          val cl: Option[Class[_]] = try {
+            Option(Class.forName(className, true, initializedClassLoader))
+          } catch {
+            case _: Throwable =>
+              None
+          }
+          cl
+        })
 
-    val moduleInitializerClasses = classes.filter(classOf[ModuleInitializer].isAssignableFrom)
 
-    DependencyResolver.loadClasses(classes)
+    val moduleInitializerClasses = classes.filter(c => classOf[ModuleInitializer].isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers) && !Modifier.isInterface(c.getModifiers))
 
     if (moduleInitializerClasses.isEmpty) {
-      LoggingHelper.getLogger(getClass).info(String.format("Cannot find initalizer for module %s", moduleUrl))
-      return List[ModuleConfiguration]()
+      return Nil
     }
+
+    DependencyResolver.add(classes)
 
     moduleInitializerClasses
       .map(constructModule(moduleUrl, isSystem, _, initializedClassLoader, elements))
@@ -204,14 +228,13 @@ class ModuleProviderImpl extends ModuleProvider {
       val existingDatabasePaths = databaseModules.map(_.path).toSet
 
       modules.filter(m => !existingDatabasePaths.contains(m.getUrl.toString)).foreach(m => {
-        val module: Module = new Module(
-          enabled = true,
-          name = m.getInitializer.getName,
-          path = m.getUrl.toString,
-          removed = false,
-          system = m.isSystem,
-          moduleType = m.getModuleType
-        )
+        val module = new Module
+        module.enabled = true
+        module.name = m.getInitializer.getName
+        module.path = m.getUrl.toString
+        module.removed = false
+        module.system = m.isSystem
+        module.moduleType = m.getModuleType
         domainModel.create(module)
       })
 

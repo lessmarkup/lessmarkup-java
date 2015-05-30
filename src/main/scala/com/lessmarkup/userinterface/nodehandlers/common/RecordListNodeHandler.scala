@@ -259,7 +259,7 @@ abstract class RecordListNodeHandler[T <: RecordModel[_]](
   @ActionAccess(minimumAccess = NodeAccessType.WRITE)
   def createRecord: JsonObject = {
     val collection: EditableModelCollection[T] = getEditableCollection
-    val record: T = if (collection != null) collection.createRecord else DependencyResolver.resolve(modelType)
+    val record: T = if (collection != null) collection.createRecord else DependencyResolver(modelType)
     val ret: JsonObject = new JsonObject
     ret.add("record", JsonSerializer.serializePojoToTree(record))
     ret
@@ -268,7 +268,7 @@ abstract class RecordListNodeHandler[T <: RecordModel[_]](
   @ActionAccess(minimumAccess = NodeAccessType.WRITE)
   def addRecord(@Parameter("newObject") newObject: JsonElement, @Parameter("filter") filter: String, @Parameter("settings") settings: JsonObject): JsonObject = {
     if (newObject == null || newObject.isJsonNull) {
-      return returnRecordResult(DependencyResolver.resolve(modelType), isNew = false, -1)
+      return returnRecordResult(DependencyResolver(modelType), isNew = false, -1)
     }
     recordModel.validateInput(newObject, isNew = true)
     val deserializedNewObject: Option[T] = JsonSerializer.deserializePojo(modelType, newObject)

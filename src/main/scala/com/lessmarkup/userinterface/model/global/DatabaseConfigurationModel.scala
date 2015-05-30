@@ -28,7 +28,7 @@ class DatabaseConfigurationModel extends RecordModel[DatabaseConfigurationModel]
   @ActionAccess(minimumAccess = NodeAccessType.READ) def save: String = {
     try {
       checkConnection()
-      val migrateEngine: MigrateEngine = DependencyResolver.resolve(classOf[MigrateEngine])
+      val migrateEngine: MigrateEngine = DependencyResolver(classOf[MigrateEngine])
       migrateEngine.execute(this.database)
       val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
       engineConfiguration.setConnectionString(this.database)

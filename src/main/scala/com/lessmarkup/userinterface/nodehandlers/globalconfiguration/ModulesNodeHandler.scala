@@ -45,7 +45,7 @@ class ModulesNodeHandler(domainModelProvider: DomainModelProvider, dataCache: Da
       siteModule.enabled = enable
       domainModel.update(siteModule)
       changeTracker.addChange(classOf[Module], siteModule, EntityChangeType.UPDATED, domainModel)
-      val collection: ModuleModel.ModuleModelCollection = DependencyResolver.resolve(classOf[ModuleModel.ModuleModelCollection])
+      val collection: ModuleModel.ModuleModelCollection = DependencyResolver(classOf[ModuleModel.ModuleModelCollection])
       val record: ModuleModel = collection.read(domainModel.query, Seq(moduleId)).head
       val ret: JsonObject = new JsonObject
       ret.addProperty("index", getIndex(record, null, domainModel))

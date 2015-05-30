@@ -25,9 +25,9 @@ abstract class RecordModelWithEditableCollection[TM <: RecordModel[_], TD <: Dat
 
   override def createCollection: ModelCollection[TM] = {
     new RecordModelEditableCollection[TM, TD](
-      DependencyResolver.resolve(classOf[DomainModelProvider]),
-      DependencyResolver.resolve(classOf[DataCache]),
-      DependencyResolver.resolve(classOf[ChangeTracker]),
+      DependencyResolver(classOf[DomainModelProvider]),
+      DependencyResolver(classOf[DataCache]),
+      DependencyResolver(classOf[ChangeTracker]),
       this.modelType,
       getDataType.asInstanceOf[Class[TD]])
   }

@@ -10,7 +10,7 @@ import java.sql.{Connection, ResultSet, SQLException, Statement}
 import java.time.OffsetDateTime
 import com.lessmarkup.Constants
 import com.lessmarkup.engine.data.ConnectionManager
-import com.lessmarkup.engine.data.dialects.{DatabaseDataType, DatabaseLanguageDialect, DatabaseLanguageDialectFactory}
+import com.lessmarkup.engine.data.dialects.{DatabaseDataType, DatabaseLanguageDialectFactory, DatabaseLanguageDialect}
 import com.lessmarkup.framework.helpers.{LoggingHelper, PropertyDescriptor, StringHelper, TypeHelper}
 import com.lessmarkup.interfaces.annotations.{RequiredField, MaxLength}
 import com.lessmarkup.interfaces.data._
@@ -19,13 +19,16 @@ import org.atteo.evo.inflector.English
 
 import scala.collection.JavaConversions._
 
-class MigratorImpl(connectionString: String) extends Migrator {
+class MigratorImpl(connection: Option[Connection]) extends Migrator {
 
-  private val connection: Option[Connection] =
-    if (StringHelper.isNullOrEmpty(connectionString))
-      None
-    else
-      Option(ConnectionManager.getConnection(connectionString))
+  def this(connectionString: String) = {
+    this(
+      if (StringHelper.isNullOrEmpty(connectionString))
+        None
+      else
+        Option(ConnectionManager.getConnection(connectionString))
+    )
+  }
 
   private val dialect: Option[DatabaseLanguageDialect] =
     if (connection.isDefined)
@@ -39,12 +42,15 @@ class MigratorImpl(connectionString: String) extends Migrator {
       return
     }
 
+    //LoggingHelper.getLogger(getClass).info(s"Executing statement: $sql")
+
     val statement: Statement = connection.get.createStatement
     try {
       statement.execute(sql)
     }
     catch {
-      case e: SQLException => throw new DatabaseException(e)
+      case e: SQLException =>
+        throw new DatabaseException(e)
     } finally {
       if (statement != null) statement.close()
     }
@@ -56,16 +62,19 @@ class MigratorImpl(connectionString: String) extends Migrator {
       return null
     }
 
+    //LoggingHelper.getLogger(getClass).info(s"Executing statement: $sql")
+
     val statement: Statement = this.connection.get.createStatement
     val resultSet: ResultSet = statement.executeQuery(sql)
     try {
-      if (!resultSet.first) {
+      if (!resultSet.next) {
         return null
       }
       resultSet.getObject(1)
     }
     catch {
-      case e: SQLException => throw new DatabaseException(e)
+      case e: SQLException =>
+        throw new DatabaseException(e)
     } finally {
       if (statement != null) statement.close()
       if (resultSet != null) resultSet.close()
@@ -77,7 +86,7 @@ class MigratorImpl(connectionString: String) extends Migrator {
       return true
     }
     val tableName: String = English.plural(`type`.getSimpleName)
-    executeScalar(s"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '$tableName'").asInstanceOf[Long] > 0
+    executeScalar(s"SELECT COUNT(*) FROM ${dialect.get.schemaTablesName} WHERE TABLE_NAME = '$tableName'").asInstanceOf[Long] > 0
   }
 
   private def getDataType(property: PropertyDescriptor): String = {
@@ -87,6 +96,7 @@ class MigratorImpl(connectionString: String) extends Migrator {
     }
 
     val propertyType: Class[_] = property.getType
+
     if (propertyType == classOf[OptionLong]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.LONG, required = false)
     }
@@ -99,36 +109,48 @@ class MigratorImpl(connectionString: String) extends Migrator {
     if (propertyType == classOf[OptionDouble]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.DOUBLE, required = false)
     }
-    val required: Boolean = property.getAnnotation(classOf[RequiredField]) != null
+    if (propertyType == classOf[OptionOffsetDateTime]) {
+      return dialect.get.getTypeDeclaration(DatabaseDataType.DATE_TIME, required = false)
+    }
+    if (propertyType == classOf[OptionBinaryData]) {
+      return dialect.get.getTypeDeclaration(DatabaseDataType.BINARY, required = false)
+    }
     val maxLengthAnnotation: MaxLength = property.getAnnotation(classOf[MaxLength])
     val maxLength: Option[Int] =
       if (maxLengthAnnotation != null) Option(maxLengthAnnotation.length)
       else None
+    if (propertyType == classOf[OptionString]) {
+      return dialect.get.getTypeDeclaration(DatabaseDataType.STRING, maxLength, required = false, null)
+    }
+    val required: Boolean = property.getAnnotation(classOf[RequiredField]) != null
     if ((propertyType == classOf[Int]) || (propertyType == classOf[Integer])) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.INT, required)
+    }
+    if (propertyType == classOf[BinaryData]) {
+      return dialect.get.getTypeDeclaration(DatabaseDataType.BINARY, required)
     }
     if (propertyType == classOf[OffsetDateTime]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.DATE_TIME, required)
     }
-    if ((propertyType == classOf[Long]) || (propertyType == classOf[Long])) {
+    if (propertyType == classOf[Long]) {
       if (property.getName == Constants.DataIdPropertyName) {
         return dialect.get.getTypeDeclaration(DatabaseDataType.IDENTITY, required)
       }
       return dialect.get.getTypeDeclaration(DatabaseDataType.LONG, required)
     }
-    if ((propertyType == classOf[Boolean]) || (propertyType == classOf[Boolean])) {
+    if (propertyType == classOf[Boolean]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.BOOLEAN, required)
     }
-    if ((propertyType == classOf[Double]) || (propertyType == classOf[Double])) {
+    if (propertyType == classOf[Double]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.DOUBLE, required)
     }
     if (propertyType == classOf[String]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.STRING, maxLength, required, null)
     }
-    if (propertyType == classOf[Array[Byte]]) {
+    if (propertyType == classOf[Array[_]]) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.BINARY, maxLength, required, null)
     }
-    if (propertyType.isEnum) {
+    if (propertyType.isEnum || classOf[scala.Ordered[_]].isAssignableFrom(propertyType)) {
       return dialect.get.getTypeDeclaration(DatabaseDataType.INT, required)
     }
     throw new IllegalArgumentException
@@ -154,9 +176,13 @@ class MigratorImpl(connectionString: String) extends Migrator {
       String.format("%s %s", dialect.get.decorateName(t.getName), dataType)
     }).mkString(", "))
 
-    sb.append(String.format(", CONSTRAINT %s PRIMARY KEY (%s ASC))",
-      dialect.get.decorateName("PK_" + tableName),
-      dialect.get.decorateName(Constants.DataIdPropertyName)))
+    if (dialect.get.definePrimaryKey) {
+      sb.append(String.format(", CONSTRAINT %s PRIMARY KEY (%s ASC)",
+        dialect.get.decorateName("PK_" + tableName),
+        dialect.get.decorateName(Constants.DataIdPropertyName)))
+    }
+
+    sb.append(")")
 
     try {
       executeSql(sb.toString())
@@ -194,24 +220,18 @@ class MigratorImpl(connectionString: String) extends Migrator {
       return
     }
 
-    val dependentTableName: String = English.plural(typeD.getSimpleName)
-    val baseTableName: String = English.plural(typeB.getSimpleName)
-    val safeColumn = if (column == null) String.format("%sId", typeB.getSimpleName) else column
+    val dependentTableNameUndecorated = English.plural(typeD.getSimpleName)
+    val dependentTableName = dialect.get.decorateName(dependentTableNameUndecorated)
+    val baseTableNameUndecorated = English.plural(typeB.getSimpleName)
+    val baseTableName = dialect.get.decorateName(baseTableNameUndecorated)
+    val safeUndecoratedColumn = if (column == null) String.format("%sId", StringHelper.toJsonCase(typeB.getSimpleName)) else column
+    val safeColumn = dialect.get.decorateName(safeUndecoratedColumn)
+    val idProperty = dialect.get.decorateName(Constants.DataIdPropertyName)
+    val constraintName = dialect.get.decorateName(String.format("FK_%s_%s_%s", dependentTableName, baseTableName, safeColumn))
+    val indexName = dialect.get.decorateName(s"IX_${dependentTableNameUndecorated}_$safeUndecoratedColumn")
 
-    val command1: String = String.format("ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY(%s) REFERENCES %s (%s)",
-      dialect.get.decorateName(dependentTableName),
-      dialect.get.decorateName(String.format("FK_%s_%s_%s", dependentTableName, baseTableName, safeColumn)),
-      dialect.get.decorateName(safeColumn),
-      dialect.get.decorateName(baseTableName),
-      dialect.get.decorateName(Constants.DataIdPropertyName))
-
-    executeSql(command1)
-
-    val command2 = String.format("CREATE INDEX %s ON %S (%s ASC)",
-      dialect.get.decorateName("IX_" + column),
-      dialect.get.decorateName(dependentTableName),
-      dialect.get.decorateName(column))
-    executeSql(command2)
+    executeSql(dialect.get.constructAddForeignKeyStatement(dependentTableName, constraintName, safeColumn, baseTableName, idProperty))
+    executeSql(s"CREATE INDEX $indexName ON $dependentTableName ($safeColumn ASC)")
   }
 
   def deleteDependency[TD <: DataObject, TB <: DataObject](typeD: Class[TD], typeB: Class[TB], column: String) {
@@ -223,9 +243,10 @@ class MigratorImpl(connectionString: String) extends Migrator {
     val dependentTableName: String = English.plural(typeD.getSimpleName)
     val baseTableName: String = English.plural(typeB.getSimpleName)
     val safeColumn = if (column == null) String.format("%sId", typeB.getSimpleName) else column
+    val indexName = s"IX_${dependentTableName}_$safeColumn"
 
     val command1: String = String.format("DROP INDEX %s ON %s",
-      dialect.get.decorateName("IX_" + safeColumn),
+      dialect.get.decorateName(indexName),
       dialect.get.decorateName(dependentTableName))
     executeSql(command1)
     val command2 = String.format("ALTER TABLE %s DROP CONSTRAINT %s",

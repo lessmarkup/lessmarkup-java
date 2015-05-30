@@ -11,12 +11,11 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class MigrationHistory(
-  id: Long,
+class MigrationHistory extends DataObject {
   @RequiredField
-  var moduleType: String,
+  var moduleType: String = null
   @RequiredField
-  var uniqueId: String,
+  var uniqueId: String = null
   @RequiredField
-  var created: OffsetDateTime
-  ) extends DataObject(id)
+  var created: OffsetDateTime = null
+}

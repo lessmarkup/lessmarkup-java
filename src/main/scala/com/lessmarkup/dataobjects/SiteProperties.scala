@@ -9,8 +9,7 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class SiteProperties(
-  id: Long = 0,
+class SiteProperties extends DataObject {
   @RequiredField
-  var properties: String
-  ) extends DataObject(id)
+  var properties: String = null
+}

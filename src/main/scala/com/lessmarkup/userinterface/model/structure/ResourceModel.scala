@@ -84,7 +84,7 @@ class ResourceModel @Inject() (dataCache: DataCache) {
       case "html" =>
         resourceBytes = resourceCache.parseText(this.path).get.getBytes(StandardCharsets.UTF_8)
       case _ =>
-        resourceBytes = resourceCache.readBytes(this.path).get
+        resourceBytes = resourceCache.readBytes(this.path).get.toArray
     }
     requestContext.getOutputStream.write(resourceBytes, 0, resourceBytes.length)
   }

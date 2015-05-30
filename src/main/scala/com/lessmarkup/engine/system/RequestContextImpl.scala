@@ -62,7 +62,7 @@ class RequestContextImpl(request: HttpServletRequest, response: HttpServletRespo
 
   def getCurrentUser: CurrentUser = {
     if (currentUser == null) {
-      currentUser = DependencyResolver.resolve(classOf[CurrentUser])
+      currentUser = DependencyResolver(classOf[CurrentUser])
     }
     currentUser
   }

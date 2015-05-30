@@ -46,7 +46,7 @@ class NodeListNodeHandler(moduleProvider: ModuleProvider, dataCache: DataCache, 
 
   override def getViewData: Option[JsonObject] = {
     val modelCache: RecordModelCache = dataCache.get(classOf[RecordModelCache])
-    val node: NodeSettingsModel = DependencyResolver.resolve(classOf[NodeSettingsModel])
+    val node: NodeSettingsModel = DependencyResolver(classOf[NodeSettingsModel])
     val ret: JsonObject = new JsonObject
     val rootNode: NodeSettingsModel = node.getRootNode
     ret.add("root", if (rootNode != null) JsonSerializer.serializePojoToTree(node.getRootNode) else JsonNull.INSTANCE)
@@ -66,7 +66,7 @@ class NodeListNodeHandler(moduleProvider: ModuleProvider, dataCache: DataCache, 
   }
 
   def updateParent(nodeId: Long, parentId: Option[Long], order: Int): JsonElement = {
-    val node: NodeSettingsModel = DependencyResolver.resolve(classOf[NodeSettingsModel])
+    val node: NodeSettingsModel = DependencyResolver(classOf[NodeSettingsModel])
     node.nodeId = nodeId
     node.parentId = parentId
     node.position = order
@@ -78,7 +78,7 @@ class NodeListNodeHandler(moduleProvider: ModuleProvider, dataCache: DataCache, 
   }
 
   def deleteNode(id: Long): AnyRef = {
-    val node: NodeSettingsModel = DependencyResolver.resolve(classOf[NodeSettingsModel])
+    val node: NodeSettingsModel = DependencyResolver(classOf[NodeSettingsModel])
     node.nodeId = id
     node.deleteNode()
   }
@@ -88,7 +88,7 @@ class NodeListNodeHandler(moduleProvider: ModuleProvider, dataCache: DataCache, 
   }
 
   def changeSettings(nodeId: Long, settings: JsonElement): AnyRef = {
-    val node: NodeSettingsModel = DependencyResolver.resolve(classOf[NodeSettingsModel])
+    val node: NodeSettingsModel = DependencyResolver(classOf[NodeSettingsModel])
     node.settings = settings
     node.nodeId = nodeId
     node.changeSettings

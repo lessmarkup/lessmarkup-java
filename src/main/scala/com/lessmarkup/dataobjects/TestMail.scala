@@ -11,19 +11,18 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class TestMail(
-  id: Long = 0,
+class TestMail extends DataObject {
   @RequiredField
-  var from: String,
+  var from: String = null
   @RequiredField
-  var to: String,
+  var to: String = null
   @RequiredField
-  var subject: String,
+  var subject: String = null
   @RequiredField
-  var body: String,
+  var body: String = null
   @RequiredField
-  var sent: OffsetDateTime,
-  var views: Int = 0,
+  var sent: OffsetDateTime = null
+  var views: Int = 0
   @RequiredField
-  var template: String
-  ) extends DataObject(id)
+  var template: String = null
+}

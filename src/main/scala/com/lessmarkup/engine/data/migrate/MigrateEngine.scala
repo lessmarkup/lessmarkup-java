@@ -48,12 +48,10 @@ class MigrateEngine @Inject() (moduleProvider: ModuleProvider, domainModelProvid
             val uniqueId = migration.getId + "_" + migrationType.getName
             if (!existingMigrations.contains(uniqueId)) {
               migration.migrate(migrator)
-              val history: MigrationHistory = new MigrationHistory(
-                created = OffsetDateTime.now,
-                uniqueId = uniqueId,
-                moduleType = module.getModuleType,
-                id = 0
-              )
+              val history = new MigrationHistory
+              history.created = OffsetDateTime.now
+              history.uniqueId = uniqueId
+              history.moduleType = module.getModuleType
               domainModel.create(history)
             }
           }

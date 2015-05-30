@@ -7,16 +7,15 @@
 package com.lessmarkup.dataobjects
 
 import com.lessmarkup.interfaces.annotations.RequiredField
-import com.lessmarkup.interfaces.data.DataObject
+import com.lessmarkup.interfaces.data.{BinaryData, DataObject}
 
-class Smile(
-  id: Long,
+class Smile extends DataObject {
   @RequiredField
-  var contentType: String,
+  var contentType: String = null
   @RequiredField
-  var data: Array[Byte],
+  var data: BinaryData = null
   @RequiredField
-  var name: String,
+  var name: String = null
   @RequiredField
-  var code: String
-  ) extends DataObject(id)
+  var code: String = null
+}

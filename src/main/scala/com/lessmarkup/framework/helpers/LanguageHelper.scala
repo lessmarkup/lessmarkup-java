@@ -11,7 +11,7 @@ import com.lessmarkup.interfaces.system.LanguageCache
 
 object LanguageHelper {
   private def getLanguageCache: LanguageCache = {
-    DependencyResolver.resolve(classOf[DataCache]).get(classOf[LanguageCache])
+    DependencyResolver(classOf[DataCache]).get(classOf[LanguageCache])
   }
 
   private final def NoTranslationMessage = "No Translation"

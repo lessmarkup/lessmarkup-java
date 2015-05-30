@@ -30,7 +30,7 @@ class ForgotPasswordNodeHandler (dataCache: DataCache, configuration: NodeHandle
   }
 
   protected def loadObject: Option[ForgotPasswordModel] = {
-    Option(DependencyResolver.resolve(classOf[ForgotPasswordModel]))
+    Option(DependencyResolver(classOf[ForgotPasswordModel]))
   }
 
   protected def saveObject(changedObject: Option[ForgotPasswordModel]): String = {

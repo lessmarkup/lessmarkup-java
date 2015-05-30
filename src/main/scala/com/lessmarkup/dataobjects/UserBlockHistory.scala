@@ -11,16 +11,15 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class UserBlockHistory(
-  id: Long = 0,
-  var userId: Long,
-  var blockedByUserId: Long,
+class UserBlockHistory extends DataObject {
+  var userId: Long = 0
+  var blockedByUserId: Long = 0
   @RequiredField
-  var created: OffsetDateTime,
-  var blockedToTime: OffsetDateTime,
-  var unblocked: Boolean,
+  var created: OffsetDateTime = null
+  var blockedToTime: OffsetDateTime = null
+  var unblocked: Boolean = false
   @RequiredField
-  var reason: String,
+  var reason: String = null
   @RequiredField
-  var internalReason: String
-  ) extends DataObject(id)
+  var internalReason: String = null
+}

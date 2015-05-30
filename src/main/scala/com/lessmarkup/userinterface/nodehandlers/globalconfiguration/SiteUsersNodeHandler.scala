@@ -40,7 +40,7 @@ class SiteUsersNodeHandler(domainModelProvider: DomainModelProvider, dataCache: 
   }
 
   def unblock(recordId: Long): JsonObject = {
-    val model: UserBlockModel = DependencyResolver.resolve(classOf[UserBlockModel])
+    val model: UserBlockModel = DependencyResolver(classOf[UserBlockModel])
     model.unblockUser(recordId)
     val domainModel: DomainModel = domainModelProvider.create
     try {

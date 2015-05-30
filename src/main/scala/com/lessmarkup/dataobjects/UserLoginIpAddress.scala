@@ -11,11 +11,10 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class UserLoginIpAddress(
-  id: Long = 0,
-  var userId: Long,
+class UserLoginIpAddress extends DataObject {
+  var userId: Long = 0
   @RequiredField
-  var address: String,
+  var address: String = null
   @RequiredField
-  var created: OffsetDateTime
-  ) extends DataObject(id)
+  var created: OffsetDateTime = null
+}

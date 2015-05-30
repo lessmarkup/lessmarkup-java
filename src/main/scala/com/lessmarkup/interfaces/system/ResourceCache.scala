@@ -10,7 +10,7 @@ import com.lessmarkup.interfaces.cache.CacheHandler
 
 trait ResourceCache extends CacheHandler {
   def resourceExists(path: String): Boolean
-  def readBytes(path: String): Option[Array[Byte]]
+  def readBytes(path: String): Option[Seq[Byte]]
   def readText(path: String): Option[String]
   def parseText(path: String): Option[String]
 }

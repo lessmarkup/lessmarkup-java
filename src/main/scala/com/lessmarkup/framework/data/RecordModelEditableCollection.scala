@@ -55,7 +55,7 @@ class RecordModelEditableCollection[TM <: RecordModel[_], TD <: DataObject]
       val query = String.format(Constants.DataIdPropertyName + " in (%s)", String.join(",", idsString))
 
       domainModel.query.from(dataType).where(query).toList(dataType).map(record => {
-        val model: TM = DependencyResolver.resolve(modelType)
+        val model: TM = DependencyResolver(modelType)
         updateModel(model, record)
         model
       })
@@ -65,7 +65,7 @@ class RecordModelEditableCollection[TM <: RecordModel[_], TD <: DataObject]
   }
 
   def createRecord: TM = {
-    DependencyResolver.resolve(modelType)
+    DependencyResolver(modelType)
   }
 
   def addRecord(record: TM) {

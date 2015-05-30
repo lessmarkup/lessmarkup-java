@@ -9,10 +9,9 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class UserGroup(
-  id: Long = 0,
+class UserGroup extends DataObject {
   @RequiredField
-  var name: String,
+  var name: String = null
   @RequiredField
-  var description: String
-  ) extends DataObject(id)
+  var description: String = null
+}

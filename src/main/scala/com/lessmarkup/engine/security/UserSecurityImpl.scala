@@ -13,22 +13,22 @@ import java.security.{MessageDigest, NoSuchAlgorithmException, SecureRandom}
 import java.sql.SQLException
 import java.time.{Instant, OffsetDateTime, ZoneOffset}
 import java.util.logging.Level
-import javax.crypto.{Cipher, KeyGenerator, SecretKey}
 import javax.crypto.spec.SecretKeySpec
+import javax.crypto.{Cipher, KeyGenerator, SecretKey}
 
 import com.google.inject.Inject
-import com.lessmarkup.interfaces.annotations.Implements
-import com.lessmarkup.interfaces.security.EntityAccessType._
-import com.lessmarkup.{Constants, TextIds}
 import com.lessmarkup.dataobjects.{User, UserGroup, UserGroupMembership}
 import com.lessmarkup.engine.security.models.{GeneratedPasswordModel, NewUserCreatedModel, UserConfirmationMailTemplateModel}
-import com.lessmarkup.framework.helpers.{LanguageHelper, LoggingHelper}
+import com.lessmarkup.framework.helpers.{LanguageHelper, LoggingHelper, StringHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
+import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.cache.{DataCache, EntityChangeType}
 import com.lessmarkup.interfaces.data.{ChangeTracker, DomainModel, DomainModelProvider}
 import com.lessmarkup.interfaces.exceptions.{CommonException, DatabaseException, UserValidationException}
+import com.lessmarkup.interfaces.security.EntityAccessType._
 import com.lessmarkup.interfaces.security.{EntityAccessType, LoginTicket, UserSecurity}
 import com.lessmarkup.interfaces.system.{EngineConfiguration, MailSender, SiteConfiguration}
+import com.lessmarkup.{Constants, TextIds}
 import org.apache.commons.net.util.Base64
 
 object UserSecurityImpl {
@@ -88,7 +88,7 @@ object UserSecurityImpl {
   private val LOGIN_TICKET_VERSION: Int = 1
   private val LOGIN_TICKET_CONTROL_WORD: Int = 12345
 
-  private def generateSaltBytes: Array[Byte] = {
+  def generateSaltBytes: Array[Byte] = {
     val secureRandom: SecureRandom = new SecureRandom
     val bytes: Array[Byte] = new Array[Byte](Constants.EncryptSaltLength)
     secureRandom.nextBytes(bytes)
@@ -101,12 +101,12 @@ object UserSecurityImpl {
 
   private val HEX_CODES: String = "0123456789abcdef"
 
-  def getHex(b: Byte): String = {
-    "" + HEX_CODES.charAt(b >> 4) + HEX_CODES.charAt(b & 0xf)
+  private def getHex(b: Integer): String = {
+    "" + HEX_CODES.charAt((b >> 4) & 0xF) + HEX_CODES.charAt(b & 0xf)
   }
 
   def toHexString(values: Array[Byte]): String = {
-    values.map(v => getHex(v)).mkString("")
+    values.map(v => getHex(v.toInt)).mkString("")
   }
 }
 
@@ -129,17 +129,16 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
   }
 
   private def createUserObject(username: String, email: String): User = {
-    new User(
-      salt = UserSecurityImpl.generateSalt,
-      email = email,
-      name = username,
-      registered = OffsetDateTime.now,
-      blocked = false,
-      emailConfirmed = false,
-      lastLogin = OffsetDateTime.now,
-      lastActivity = OffsetDateTime.now,
-      password = null
-    )
+    val user = new User
+    user.salt = UserSecurityImpl.generateSalt
+    user.email = email
+    user.name = username
+    user.registered = OffsetDateTime.now
+    user.blocked = false
+    user.emailConfirmed = false
+    user.lastLogin = OffsetDateTime.now
+    user.lastActivity = OffsetDateTime.now
+    user
   }
 
   def generatePassword: String = {
@@ -149,33 +148,41 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
   def generatePassword(passwordLength: Int): String = {
     val data: Array[Byte] = UserSecurityImpl.generateSaltBytes
     (0 until passwordLength)
-      .map(i => UserSecurityImpl.PASSWORD_DICTIONARY.charAt(data(i) % UserSecurityImpl.PASSWORD_DICTIONARY.length))
+      .map(i => UserSecurityImpl.PASSWORD_DICTIONARY.charAt((data(i).toInt&0xff) % UserSecurityImpl.PASSWORD_DICTIONARY.length))
       .mkString("")
   }
 
-  private def addToDefaultGroup(domainModel: DomainModel, user: User) {
+  def getOrCreateDefaultGroup(domainModel: DomainModel): Option[UserGroup] = {
     val defaultGroup: String = dataCache.get(classOf[SiteConfiguration]).defaultUserGroup
-    if (defaultGroup != null && defaultGroup.length > 0) {
-      val optionGroup: Option[UserGroup] = domainModel.query.from(classOf[UserGroup]).where("Name = $", defaultGroup).first(classOf[UserGroup], None)
-      val group = if (optionGroup.isEmpty) {
-        val g = new UserGroup(
-          name = defaultGroup,
-          description = ""
-        )
-        domainModel.create(g)
-        g
-      } else {
-        optionGroup.get
-      }
-      val membership: UserGroupMembership = new UserGroupMembership(
-        userId = user.id,
-        userGroupId = group.id
-      )
-      domainModel.create(membership)
+
+    if (StringHelper.isNullOrEmpty(defaultGroup)) {
+      return None
+    }
+
+    val optionGroup: Option[UserGroup] = domainModel.query.from(classOf[UserGroup]).where("$+Name = $", defaultGroup).first(classOf[UserGroup], None)
+    if (optionGroup.isEmpty) {
+      val g = new UserGroup
+      g.name = defaultGroup
+      g.description = ""
+      domainModel.create(g)
+      Option(g)
+    } else {
+      optionGroup
     }
   }
 
-  private def sendGeneratedPassword(email: String, password: String, user: User) {
+  def addToDefaultGroup(domainModel: DomainModel, user: User) {
+    val defaultGroup = getOrCreateDefaultGroup(domainModel)
+    if (defaultGroup.isEmpty) {
+      return
+    }
+    val membership = new UserGroupMembership
+    membership.userId = user.id
+    membership.userGroupId = defaultGroup.get.id
+    domainModel.create(membership)
+  }
+
+  def sendGeneratedPassword(email: String, password: String, user: User) {
     val notificationModel: GeneratedPasswordModel = new GeneratedPasswordModel
     notificationModel.setLogin(email)
     notificationModel.setPassword(password)
@@ -474,7 +481,7 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     buffer.putLong(OffsetDateTime.now.toInstant.toEpochMilli)
     buffer.put(UserSecurityImpl.generateSaltBytes)
     val array: Array[Byte] = buffer.array
-    (0 until buffer.position).map(i => UserSecurityImpl.getHex(array(i))).mkString("")
+    (0 until buffer.position).map(i => UserSecurityImpl.getHex(array(i).toInt)).mkString("")
   }
 
   private def userNotifyCreated(user: User, password: String) {

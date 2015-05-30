@@ -9,11 +9,10 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.DataObject
 
-class Translation(
-  id: Long,
-  var languageId: Long,
+class Translation extends DataObject {
+  var languageId: Long = 0
   @RequiredField
-  var key: String,
+  var key: String = null
   @RequiredField
-  var text: String
-  ) extends DataObject(id)
+  var text: String = null
+}

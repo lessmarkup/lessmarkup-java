@@ -9,8 +9,6 @@ package com.lessmarkup.interfaces.recordmodel
 import com.google.gson.JsonElement
 import com.lessmarkup.interfaces.data.DataObject
 
-import scala.collection.JavaConverters._
-
 trait RecordModelDefinition {
   def getTitleTextId: String
 
@@ -24,13 +22,7 @@ trait RecordModelDefinition {
 
   def getFields: List[InputFieldDefinition]
 
-  @Deprecated
-  def getFieldsJava = getFields.asJava
-
   def getColumns: List[RecordColumnDefinition]
-
-  @Deprecated
-  def getColumnsJava = getColumns.asJava
 
   def validateInput(objectToValidate: JsonElement, isNew: Boolean)
 

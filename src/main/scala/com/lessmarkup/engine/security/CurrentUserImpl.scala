@@ -36,7 +36,7 @@ object CurrentUserImpl {
   private def generateFakeSalt(hashAlgorithm: MessageDigest, email: String): Option[String] = {
 
     hashAlgorithm.update(email.getBytes)
-    val cipher: Cipher = UserSecurityImpl.initializeCipher(DependencyResolver.resolve(classOf[DataCache]), Cipher.ENCRYPT_MODE)
+    val cipher: Cipher = UserSecurityImpl.initializeCipher(DependencyResolver(classOf[DataCache]), Cipher.ENCRYPT_MODE)
     if (cipher == null) {
       return null
     }
@@ -57,17 +57,15 @@ object CurrentUserImpl {
   private def addSuccessfulLoginHistory(domainModel: DomainModel, userId: Long) {
 
     val requestContext: RequestContext = RequestContextHolder.getContext
-    val history: SuccessfulLoginHistory = new SuccessfulLoginHistory(
-      address = requestContext.getRemoteAddress,
-      time = OffsetDateTime.now,
-      userId = userId
-    )
+    val history = new SuccessfulLoginHistory
+    history.address = requestContext.getRemoteAddress
+    history.time = OffsetDateTime.now
+    history.userId = userId
     domainModel.create(history)
-    val loginIpaddress: UserLoginIpAddress = new UserLoginIpAddress(
-      userId = userId,
-      created = OffsetDateTime.now,
-      address = requestContext.getRemoteAddress
-    )
+    val loginIpaddress = new UserLoginIpAddress
+    loginIpaddress.userId = userId
+    loginIpaddress.created = OffsetDateTime.now
+    loginIpaddress.address = requestContext.getRemoteAddress
     domainModel.create(loginIpaddress)
   }
 }
@@ -134,7 +132,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       }
     }
 
-    val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
+    val dataCache: DataCache = DependencyResolver(classOf[DataCache])
     val currentUser: UserCache = dataCache.get(classOf[UserCache], Option(ticket.userId))
     if (currentUser.isRemoved) {
       LoggingHelper.getLogger(getClass).info("Cannot find user " + ticket.userId + " for current user")
@@ -248,7 +246,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
     LoggingHelper.getLogger(getClass).info("Validating user '" + email + "'")
 
-    val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
+    val dataCache: DataCache = DependencyResolver(classOf[DataCache])
     if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).hasUsers) {
       LoggingHelper.getLogger(getClass).info("Users functionality is disabled")
       return false
@@ -272,11 +270,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         if (!loginUser(email, email, -1, savePassword)) {
           return false
         }
-        val history: SuccessfulLoginHistory = new SuccessfulLoginHistory(
-          address = requestContext.getRemoteAddress,
-          userId = -2,
-          time = OffsetDateTime.now
-        )
+        val history = new SuccessfulLoginHistory
+        history.address = requestContext.getRemoteAddress
+        history.userId = -2
+        history.time = OffsetDateTime.now
         model.create(history)
         return true
       }
@@ -296,7 +293,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
         optionUser.get.blockReason = None
         optionUser.get.unblockTime = None
         model.update(optionUser.get)
-        DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], optionUser.get.id, EntityChangeType.UPDATED, model)
+        DependencyResolver(classOf[ChangeTracker]).addChange(classOf[User], optionUser.get.id, EntityChangeType.UPDATED, model)
       }
 
       if (optionUser.isEmpty) {
@@ -343,7 +340,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
   def loginWithOAuth(provider: String, providerUserId: String, savePassword: Boolean, allowAdmin: Boolean, allowRegular: Boolean): Boolean = {
 
     LoggingHelper.getLogger(getClass).info("Validating OAuth user")
-    val dataCache: DataCache = DependencyResolver.resolve(classOf[DataCache])
+    val dataCache: DataCache = DependencyResolver(classOf[DataCache])
     if (!allowAdmin && !dataCache.get(classOf[SiteConfiguration]).hasUsers) {
       LoggingHelper.getLogger(getClass).info("Users functionality is disabled")
       return false
@@ -360,7 +357,7 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
           user.get.blockReason = None
           user.get.unblockTime = None
           model.update(user.get)
-          DependencyResolver.resolve(classOf[ChangeTracker]).addChange(classOf[User], user.get.id, EntityChangeType.UPDATED, model)
+          DependencyResolver(classOf[ChangeTracker]).addChange(classOf[User], user.get.id, EntityChangeType.UPDATED, model)
         }
         else {
           user = None
@@ -491,10 +488,9 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
     try {
       if (userId.isEmpty) {
         LoggingHelper.getLogger(getClass).info("User is not found, logging failed attempt from address '" + remoteAddress + "'")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
-          created = OffsetDateTime.now,
-          address = remoteAddress
-        )
+        val failedAttempt = new FailedLoginHistory
+        failedAttempt.created = OffsetDateTime.now
+        failedAttempt.address = remoteAddress
         model.create(failedAttempt)
         return false
       }
@@ -506,10 +502,9 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
 
       if (attemptCount >= maxAttemptCount) {
         LoggingHelper.getLogger(getClass).info("User is exceeded failed attempt limit for remote address '" + remoteAddress + "'")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
-          created = OffsetDateTime.now,
-          address = remoteAddress
-        )
+        val failedAttempt = new FailedLoginHistory
+        failedAttempt.created = OffsetDateTime.now
+        failedAttempt.address = remoteAddress
         model.create(failedAttempt)
         return false
       }
@@ -525,11 +520,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       attemptCount = model.query.from(classOf[FailedLoginHistory]).where("userId = $ AND created > $", userId.get, timeLimit).count
       if (attemptCount >= maxAttemptCount) {
         LoggingHelper.getLogger(getClass).info("Found failed attempts for specified user which exceed maximum attempt count")
-        val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
-          created = OffsetDateTime.now,
-          address = remoteAddress,
-          userId = userId
-        )
+        val failedAttempt = new FailedLoginHistory
+        failedAttempt.created = OffsetDateTime.now
+        failedAttempt.address = remoteAddress
+        failedAttempt.userId = userId
         model.create(failedAttempt)
         return false
       }
@@ -564,11 +558,10 @@ class CurrentUserImpl @Inject() (domainModelProvider: DomainModelProvider, userS
       }
 
       LoggingHelper.getLogger(getClass).info("Password is invalid, logging new failed attempt for the user")
-      val failedAttempt: FailedLoginHistory = new FailedLoginHistory(
-        address = remoteAddress,
-        userId = userId,
-        created = OffsetDateTime.now
-      )
+      val failedAttempt = new FailedLoginHistory
+      failedAttempt.address = remoteAddress
+      failedAttempt.userId = userId
+      failedAttempt.created = OffsetDateTime.now
       model.create(failedAttempt)
 
       false

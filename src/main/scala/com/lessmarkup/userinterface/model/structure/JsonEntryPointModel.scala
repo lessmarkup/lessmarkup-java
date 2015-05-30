@@ -54,38 +54,38 @@ class JsonEntryPointModel @Inject() (dataCache: DataCache, changeTracker: Change
   private def handleDataRequest(data: JsonObject, command: String, path: String): JsonElement = {
     StringHelper.toJsonCase(command) match {
       case "form" =>
-        val model: InputFormDefinitionModel = DependencyResolver.resolve(classOf[InputFormDefinitionModel], data.get("id").getAsString)
+        val model: InputFormDefinitionModel = DependencyResolver(classOf[InputFormDefinitionModel], data.get("id").getAsString)
         model.toJson
       case "view" =>
         val cachedTemplates = data.getAsJsonArray("cached").toSeq.map(_.getAsString)
-        val model: LoadNodeViewModel = DependencyResolver.resolve(classOf[LoadNodeViewModel])
+        val model: LoadNodeViewModel = DependencyResolver(classOf[LoadNodeViewModel])
         model.initialize(data.getAsJsonPrimitive("newPath").getAsString, cachedTemplates, initializeUiElements = true, tryCreateResult = false)
         if (model.getNodeId.isDefined) {
           nodeId = model.getNodeId
         }
         model.toJson
       case "loginStage1" =>
-        val model: LoginModel = DependencyResolver.resolve(classOf[LoginModel])
+        val model: LoginModel = DependencyResolver(classOf[LoginModel])
         model.handleStage1Request(data)
       case "loginStage2" =>
-        val model: LoginModel = DependencyResolver.resolve(classOf[LoginModel])
+        val model: LoginModel = DependencyResolver(classOf[LoginModel])
         model.handleStage2Request(data)
       case "idle" => new JsonPrimitive("")
       case "logout" =>
-        val model: LoginModel = DependencyResolver.resolve(classOf[LoginModel])
+        val model: LoginModel = DependencyResolver(classOf[LoginModel])
         model.handleLogout
       case "typeahead" =>
-        val model: TypeaheadModel = DependencyResolver.resolve(classOf[TypeaheadModel])
+        val model: TypeaheadModel = DependencyResolver(classOf[TypeaheadModel])
         model.initialize(path, data.get("property").getAsString, data.get("searchText").getAsString)
         model.toJson
       case "register" =>
-        val model: RegisterModel = DependencyResolver.resolve(classOf[RegisterModel])
+        val model: RegisterModel = DependencyResolver(classOf[RegisterModel])
         model.getRegisterObject
       case "searchText" =>
-        val model: SearchTextModel = DependencyResolver.resolve(classOf[SearchTextModel])
+        val model: SearchTextModel = DependencyResolver(classOf[SearchTextModel])
         model.handle(data.get("text").getAsString).get
       case _ =>
-        val model: ExecuteActionModel = DependencyResolver.resolve(classOf[ExecuteActionModel])
+        val model: ExecuteActionModel = DependencyResolver(classOf[ExecuteActionModel])
         model.handleRequest(data, path)
     }
   }
@@ -101,13 +101,13 @@ class JsonEntryPointModel @Inject() (dataCache: DataCache, changeTracker: Change
       response.add("versionId", new JsonPrimitive(newVersionId.get))
     }
     if (userChanged) {
-      val notificationsModel: UserInterfaceElementsModel = DependencyResolver.resolve(classOf[UserInterfaceElementsModel])
+      val notificationsModel: UserInterfaceElementsModel = DependencyResolver(classOf[UserInterfaceElementsModel])
       notificationsModel.handle(response, newVersionId)
     }
     if ((newVersionId == versionId) && nodeId.isEmpty) {
       return
     }
-    val model: LoadUpdatesModel = DependencyResolver.resolve(classOf[LoadUpdatesModel])
+    val model: LoadUpdatesModel = DependencyResolver(classOf[LoadUpdatesModel])
     model.handle(versionId, newVersionId, path, request, response, this.nodeId)
   }
 

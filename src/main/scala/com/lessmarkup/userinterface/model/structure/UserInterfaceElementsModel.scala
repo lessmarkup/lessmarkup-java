@@ -31,7 +31,7 @@ class UserInterfaceElementsModel @Inject() (domainModelProvider: DomainModelProv
       for (nodeInfo <- nodeCache.getNodes
            if nodeInfo.handlerType.isDefined && classOf[NotificationProviderFactory].isAssignableFrom(nodeInfo.handlerType.get)
            if nodeInfo.checkRights(RequestContextHolder.getContext.getCurrentUser) != NodeAccessType.NO_ACCESS) {
-        val handlerFactory = DependencyResolver.resolve(nodeInfo.handlerType.get)
+        val handlerFactory = DependencyResolver(nodeInfo.handlerType.get)
         val settings = if (nodeInfo.settings != null && nodeInfo.settings.length > 0) {
           Option(JsonSerializer.deserializeToTree(nodeInfo.settings).getAsJsonObject)
         } else {

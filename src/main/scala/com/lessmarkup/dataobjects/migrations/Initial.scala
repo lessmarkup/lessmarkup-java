@@ -36,7 +36,7 @@ class Initial extends Migration {
     migrator.addDependency(classOf[NodeUserData], classOf[User])
     migrator.addDependency(classOf[NodeAccess], classOf[Node])
     migrator.addDependency(classOf[UserBlockHistory], classOf[User])
-    migrator.addDependency(classOf[UserBlockHistory], classOf[User], "BlockedByUserId")
+    migrator.addDependency(classOf[UserBlockHistory], classOf[User], "blockedByUserId")
     migrator.addDependency(classOf[UserGroupMembership], classOf[User])
     migrator.addDependency(classOf[UserGroupMembership], classOf[UserGroup])
     migrator.addDependency(classOf[UserLoginIpAddress], classOf[User])

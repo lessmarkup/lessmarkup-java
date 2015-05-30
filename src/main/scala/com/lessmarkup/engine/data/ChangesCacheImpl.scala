@@ -39,7 +39,7 @@ class Change(id: Long,
   def getType = changeType
 }
 
-@Implements(classOf[ChangesCache]) object ChangesCacheImpl {
+object ChangesCacheImpl {
   private val UPDATE_INTERVAL: Int = 500
 }
 

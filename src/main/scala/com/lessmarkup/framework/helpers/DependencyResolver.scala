@@ -17,7 +17,7 @@ object DependencyResolver {
 
   var injector: Injector = Guice.createInjector()
 
-  def resolve[T] (typeToResolve: Class[T], params: Any*): T = {
+  def apply[T] (typeToResolve: Class[T], params: Any*): T = {
 
     if (params.nonEmpty) {
       val implements = typeToResolve.getAnnotation(classOf[Implements])
@@ -40,22 +40,30 @@ object DependencyResolver {
     Option[TA] (f.getAnnotation(a))
   }
 
-  def loadClasses(classes: List[Class[_]]): Unit = {
-    injector = injector.createChildInjector(new AbstractModule {
+  private class Module(classes: List[Class[_]]) extends AbstractModule {
+    private def setOverride[T](abstractType: Class[T], concreteType: Class[_ <: T]): Unit = {
+      bind(abstractType).to(concreteType)
+    }
 
-      private def setOverride[T](abstractType: Class[T], concreteType: Class[_ <: T]): Unit = {
-        bind(abstractType).to(concreteType)
+    override def configure() = {
+      for (
+        concreteType <- classes;
+        implements = getAnnotation(concreteType, classOf[Implements]);
+        useInstanceFactory = getAnnotation(concreteType, classOf[UseInstanceFactory])
+        if implements.isDefined && useInstanceFactory.isEmpty;
+        abstractType = implements.get.value()
+        if abstractType.isAssignableFrom(concreteType)
+      ) {
+        setOverride(abstractType, concreteType.asSubclass(abstractType))
       }
+    }
+  }
 
-      override def configure() = {
-        classes
-          .map(concreteType => (concreteType, getAnnotation(concreteType, classOf[Implements])))
-          .filter(_._2.isDefined)
-          .map { case(concreteType, annotation) => (concreteType, annotation.get.value()) }
-          .foreach {
-          case (concreteType, abstractType) => setOverride(abstractType, concreteType.asSubclass(abstractType))
-        }
-      }
-    })
+  def reset(classes: List[Class[_]]): Unit = {
+    injector = Guice.createInjector(new Module(classes))
+  }
+
+  def add(classes: List[Class[_]]): Unit = {
+    injector = injector.createChildInjector(new Module(classes))
   }
 }

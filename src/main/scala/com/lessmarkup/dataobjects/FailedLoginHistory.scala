@@ -11,10 +11,10 @@ import java.time.OffsetDateTime
 import com.lessmarkup.interfaces.annotations.RequiredField
 import com.lessmarkup.interfaces.data.{DataObject, OptionLong}
 
-class FailedLoginHistory(
-  id: Long = 0,
-  userId: OptionLong = None,
+class FailedLoginHistory extends DataObject {
+  var userId: OptionLong = None
   @RequiredField
-  address: String,
+  var address: String = null
   @RequiredField
-  created: OffsetDateTime) extends DataObject(id)
+  var created: OffsetDateTime = null
+}

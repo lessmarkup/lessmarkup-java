@@ -36,7 +36,7 @@ class ResetPasswordNodeHandler(
   extends DialogNodeHandler[ChangePasswordModel](dataCache, classOf[ChangePasswordModel], configuration) {
 
   protected def loadObject: Option[ChangePasswordModel] = {
-    Option(DependencyResolver.resolve(classOf[ChangePasswordModel]))
+    Option(DependencyResolver(classOf[ChangePasswordModel]))
   }
 
   protected def saveObject(changedObject: Option[ChangePasswordModel]): String = {

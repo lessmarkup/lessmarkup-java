@@ -35,7 +35,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
   }
 
-  private def createConnectionWithTransaction: Option[Connection] = {
+  protected def createConnectionWithTransaction: Option[Connection] = {
     val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
     if (StringHelper.isNullOrEmpty(actualConnectionString)) {
       None
@@ -46,7 +46,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
   }
 
-  private def createConnection: Option[Connection] = {
+  protected def createConnection: Option[Connection] = {
     val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
     if (StringHelper.isNullOrEmpty(actualConnectionString)) {
       None
@@ -91,8 +91,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
       else {
         statement.setNull(columnIndex, Types.BIT)
       }
-    }
-    else if (property.getType == classOf[OptionDouble]) {
+    } else if (property.getType == classOf[OptionDouble]) {
       val valueDouble: OptionDouble = value.asInstanceOf[OptionDouble]
       if (valueDouble.isDefined) {
         statement.setObject(columnIndex, valueDouble.get)
@@ -100,8 +99,29 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
       else {
         statement.setNull(columnIndex, Types.DOUBLE)
       }
-    }
-    else if (property.getType == classOf[OffsetDateTime]) {
+    } else if (property.getType == classOf[OptionString]) {
+      val stringValue: OptionString = value.asInstanceOf[OptionString]
+      if (stringValue.isDefined) {
+        statement.setString(columnIndex, stringValue.get)
+      } else {
+        statement.setNull(columnIndex, Types.VARCHAR)
+      }
+    } else if (property.getType == classOf[OptionOffsetDateTime]) {
+      val dateTimeValue: OptionOffsetDateTime = value.asInstanceOf[OptionOffsetDateTime]
+      if (dateTimeValue.isDefined) {
+        val timestamp: Timestamp = Timestamp.from(dateTimeValue.get.toInstant)
+        statement.setTimestamp(columnIndex, timestamp)
+      } else {
+        statement.setNull(columnIndex, Types.TIMESTAMP_WITH_TIMEZONE)
+      }
+    } else if (property.getType == classOf[OptionBinaryData]) {
+      val binaryDataValue: OptionBinaryData = value.asInstanceOf[OptionBinaryData]
+      if (binaryDataValue.isDefined) {
+        statement.setBytes(columnIndex, binaryDataValue.get.data.toArray)
+      } else {
+        statement.setNull(columnIndex, Types.BINARY)
+      }
+    } else if (property.getType == classOf[OffsetDateTime]) {
       if (value == null) {
         statement.setNull(columnIndex, Types.TIMESTAMP_WITH_TIMEZONE)
       }
@@ -109,8 +129,14 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
         val timestamp: Timestamp = Timestamp.from(value.asInstanceOf[OffsetDateTime].toInstant)
         statement.setTimestamp(columnIndex, timestamp)
       }
-    }
-    else {
+    } else if (property.getType == classOf[BinaryData]) {
+      val binaryData: BinaryData = value.asInstanceOf[BinaryData]
+      if (binaryData != null) {
+        statement.setBytes(columnIndex, binaryData.data.toArray)
+      } else {
+        statement.setNull(columnIndex, Types.BINARY)
+      }
+    } else {
       if (value == null) {
         statement.setNull(columnIndex, Types.JAVA_OBJECT)
       }
@@ -165,7 +191,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     val statement: PreparedStatement = connection.get.prepareStatement(command, Statement.RETURN_GENERATED_KEYS)
     try {
       for ((column, index) <- columnsWithoutId.view.zipWithIndex) {
-        updateDataValue(column, column.getValue(dataObject), statement, index)
+        updateDataValue(column, column.getValue(dataObject), statement, index+1)
       }
       val createdRecords: Int = statement.executeUpdate
       if (createdRecords == 0) {

@@ -38,7 +38,7 @@ class NodeAccessNodeHandler @Inject()(
   with PropertyCollectionManager {
 
   protected override def createCollection: ModelCollection[NodeAccessModel] = {
-    DependencyResolver.resolve(classOf[NodeAccessModelCollectionManager], nodeId)
+    DependencyResolver(classOf[NodeAccessModelCollectionManager], nodeId)
   }
 
   def getCollection(domainModel: DomainModel, property: String, searchText: String): Seq[String] = {

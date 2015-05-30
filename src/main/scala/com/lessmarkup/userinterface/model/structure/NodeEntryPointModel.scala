@@ -6,7 +6,7 @@
 
 package com.lessmarkup.userinterface.model.structure
 
-import java.io._
+import java.io.{OutputStreamWriter, Writer}
 
 import com.google.gson.{JsonArray, JsonNull, JsonObject}
 import com.google.inject.Inject
@@ -149,7 +149,7 @@ class NodeEntryPointModel @Inject() (dataCache: DataCache, domainModelProvider: 
     serverConfiguration.addProperty("rootTitle", siteConfiguration.siteName)
     serverConfiguration.addProperty("profilePath", "/" + Constants.NodePathProfile)
     serverConfiguration.addProperty("forgotPasswordPath", "/" + Constants.NodePathForgotPassword)
-    val notificationsModel: UserInterfaceElementsModel = DependencyResolver.resolve(classOf[UserInterfaceElementsModel])
+    val notificationsModel: UserInterfaceElementsModel = DependencyResolver(classOf[UserInterfaceElementsModel])
     notificationsModel.handle(serverConfiguration, this.versionId)
     serverConfiguration.addProperty("recaptchaPublicKey", engineConfiguration.getRecaptchaPublicKey)
     serverConfiguration.addProperty("maximumFileSize", siteConfiguration.maximumFileSize)
@@ -211,7 +211,7 @@ class NodeEntryPointModel @Inject() (dataCache: DataCache, domainModelProvider: 
       context.setUseScripts(false)
     }
     this.nodeLoadError = null
-    viewData = DependencyResolver.resolve(classOf[LoadNodeViewModel])
+    viewData = DependencyResolver(classOf[LoadNodeViewModel])
     try {
       if (!viewData.initialize(path, null, initializeUiElements = true, tryCreateResult = true)) {
         return false

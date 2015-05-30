@@ -55,10 +55,9 @@ class NodeAccessModelCollectionManager @Inject() (
     val domainModel: DomainModel = domainModelProvider.createWithTransaction
     try {
 
-      val access: NodeAccess = new NodeAccess(
-        accessType = record.accessType,
-        nodeId = nodeId
-      )
+      val access = new NodeAccess
+      access.accessType = record.accessType
+      access.nodeId = nodeId
 
       if (record.user != null && record.group.length > 0) {
         val userId: Long = domainModel.query

@@ -9,7 +9,10 @@ object DatabaseLanguageDialectFactory {
       return new MySqlDialect // TODO: create fake dialect class
     }
 
-    connection.get.getMetaData.getDriverName match {
+    val driverName = connection.get.getMetaData.getDriverName
+
+    driverName match {
+      case "HSQL Database Engine Driver" => new HsqldbDialect
       case _ => new MySqlDialect
     }
   }

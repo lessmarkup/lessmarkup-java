@@ -16,7 +16,7 @@ import com.lessmarkup.interfaces.structure.{NodeHandlerFactory, NodeHandler}
 abstract class AbstractNodeHandler(configuration: NodeHandlerConfiguration) extends NodeHandler {
 
   protected def createChildHandler(handlerType: Class[_ <: NodeHandlerFactory], nodeHandlerConfiguration: NodeHandlerConfiguration, arguments: Any*): NodeHandler = {
-    DependencyResolver.resolve(handlerType).createNodeHandler(nodeHandlerConfiguration, arguments: _*)
+    DependencyResolver(handlerType).createNodeHandler(nodeHandlerConfiguration, arguments: _*)
   }
 
   def getObjectId = configuration.objectId

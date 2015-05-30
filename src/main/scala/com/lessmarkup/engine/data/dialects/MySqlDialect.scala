@@ -6,25 +6,23 @@
 
 package com.lessmarkup.engine.data.dialects
 
-import com.lessmarkup.engine.data.dialects.DatabaseDataType._
-
 class MySqlDialect extends DatabaseLanguageDialect {
   def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: Option[Int], required: Boolean, characterSet: Option[String]): String = {
     val nullable: String = if (required) " NOT NULL" else " NULL"
     dataType match {
-      case INT => "INT" + nullable
-      case LONG => "BIGINT" + nullable
-      case DATE_TIME => "DATETIME" + nullable
-      case STRING =>
+      case DatabaseDataType.INT => "INT" + nullable
+      case DatabaseDataType.LONG => "BIGINT" + nullable
+      case DatabaseDataType.DATE_TIME => "DATETIME" + nullable
+      case DatabaseDataType.STRING =>
         if (sizeLimit.isEmpty)
           "TEXT CHARACTER SET " + characterSet.getOrElse("utf8") + nullable
         else
           s"VARCHAR(${sizeLimit.get}) CHARACTER SET ${characterSet.getOrElse("utf8")} $nullable"
-      case BOOLEAN => "BIT" + nullable
-      case FLOAT => "REAL" + nullable
-      case DOUBLE => "DOUBLE" + nullable
-      case BINARY => "BLOB" + nullable
-      case IDENTITY => "BIGINT" + nullable + " AUTO_INCREMENT"
+      case DatabaseDataType.BOOLEAN => "BIT" + nullable
+      case DatabaseDataType.FLOAT => "REAL" + nullable
+      case DatabaseDataType.DOUBLE => "DOUBLE" + nullable
+      case DatabaseDataType.BINARY => "BLOB" + nullable
+      case DatabaseDataType.IDENTITY => "BIGINT AUTO_INCREMENT"
       case _ => throw new IllegalArgumentException
     }
   }
@@ -51,4 +49,8 @@ class MySqlDialect extends DatabaseLanguageDialect {
   def paging(from: Int, count: Int): String = {
     s"LIMIT $from,$count"
   }
+
+  override def schemaTablesName: String = "INFORMATION_SCHEMA.TABLES"
+
+  override def definePrimaryKey: Boolean = true
 }

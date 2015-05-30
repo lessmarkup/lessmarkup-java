@@ -85,17 +85,16 @@ class NodeSettingsModel @Inject() (moduleProvider: ModuleProvider, domainModelPr
         return None
     }
 
-    val target: Node = new Node(
-      enabled = enabled,
-      handlerId = handlerId,
-      parentId = parentId,
-      position = position,
-      path = path,
-      addToMenu = addToMenu,
-      settings = if (settings != null) Option(settings.toString) else None,
-      title = title,
-      description = ""
-    )
+    val target = new Node
+    target.enabled = enabled
+    target.handlerId = handlerId
+    target.parentId = parentId
+    target.position = position
+    target.path = path
+    target.addToMenu = addToMenu
+    target.settings = if (settings != null) Option(settings.toString) else None
+    target.title = title
+    target.description = ""
 
     val domainModel: DomainModel = domainModelProvider.createWithTransaction
     try {
@@ -107,7 +106,7 @@ class NodeSettingsModel @Inject() (moduleProvider: ModuleProvider, domainModelPr
     }
 
     nodeId = target.id
-    val handlerFactory: NodeHandlerFactory = DependencyResolver.resolve(moduleProvider.getNodeHandler(handlerId).get._1)
+    val handlerFactory: NodeHandlerFactory = DependencyResolver(moduleProvider.getNodeHandler(handlerId).get._1)
     val configuration = new NodeHandlerConfiguration(
       objectId = None,
       settings = None,
@@ -219,12 +218,12 @@ class NodeSettingsModel @Inject() (moduleProvider: ModuleProvider, domainModelPr
         .sortBy(_.position)
         .map(source => {
 
-        val node = DependencyResolver.resolve(classOf[NodeSettingsModel])
+        val node = DependencyResolver(classOf[NodeSettingsModel])
 
         val handlerReference = moduleProvider.getNodeHandler(source.handlerId)
         val handler =
           if (handlerReference.isDefined) {
-            val factory = DependencyResolver.resolve(handlerReference.get._1)
+            val factory = DependencyResolver(handlerReference.get._1)
 
             val configuration = new NodeHandlerConfiguration(
               objectId = None,

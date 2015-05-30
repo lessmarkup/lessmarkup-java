@@ -39,5 +39,5 @@ abstract class RecordModel[T](titleTextId: String, collectionType: Class[_ <: Mo
   def getDataType: Class[_ <: DataObject] = dataType
   def getTitleTextId: String = titleTextId
   def getSubmitWithCaptcha: Boolean = submitWithCaptcha
-  def createCollection: ModelCollection[T] = DependencyResolver.resolve(this.collectionType)
+  def createCollection: ModelCollection[T] = DependencyResolver(collectionType)
 }

@@ -7,16 +7,15 @@
 package com.lessmarkup.dataobjects
 
 import com.lessmarkup.interfaces.annotations.RequiredField
-import com.lessmarkup.interfaces.data.DataObject
+import com.lessmarkup.interfaces.data.{BinaryData, DataObject}
 
-class AttachedFile (
-  id: Long,
+class AttachedFile extends DataObject {
   @RequiredField
-  var uniqueId: String,
+  var uniqueId: String = null
   @RequiredField
-  var fileName: String,
+  var fileName: String = null
   @RequiredField
-  var contentType: String,
+  var contentType: String = null
   @RequiredField
-  var data: Array[Byte]
-) extends DataObject(id)
+  var data: BinaryData = null
+}

@@ -18,4 +18,11 @@ trait DatabaseLanguageDialect {
   def getDataType(dataType: String): DatabaseDataType
 
   def paging(from: Int, count: Int): String
+
+  def schemaTablesName: String
+
+  def definePrimaryKey: Boolean
+
+  def constructAddForeignKeyStatement(dependentTableName: String, constraintName: String, column: String, baseTableName: String, idProperty: String) =
+    s"ALTER TABLE $dependentTableName ADD CONSTRAINT $constraintName FOREIGN KEY($column) REFERENCES $baseTableName ($idProperty)"
 }

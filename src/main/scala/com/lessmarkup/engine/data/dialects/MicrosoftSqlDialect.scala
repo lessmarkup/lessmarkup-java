@@ -6,36 +6,34 @@
 
 package com.lessmarkup.engine.data.dialects
 
-import com.lessmarkup.engine.data.dialects.DatabaseDataType._
-
 class MicrosoftSqlDialect extends DatabaseLanguageDialect {
 
   def getTypeDeclaration(dataType: DatabaseDataType, sizeLimit: Option[Int], required: Boolean, characterSet: Option[String]): String = {
     val nullable: String = if (required) " NOT NULL" else " NULL"
     dataType match {
-      case INT => "[INT]" + nullable
-      case LONG => "[BIGINT]" + nullable
-      case DATE_TIME => "[DATETIME]" + nullable
-      case IDENTITY => "[BIGINT] IDENTITY(1,1)" + nullable
-      case BOOLEAN => "[BIT]" + nullable
-      case FLOAT => "[FLOAT]" + nullable
-      case DOUBLE => "[DOUBLE]" + nullable
-      case STRING => String.format("[NVARCHAR](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
-      case BINARY => String.format("[VARBINARY](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
+      case DatabaseDataType.INT => "[INT]" + nullable
+      case DatabaseDataType.LONG => "[BIGINT]" + nullable
+      case DatabaseDataType.DATE_TIME => "[DATETIME]" + nullable
+      case DatabaseDataType.IDENTITY => "[BIGINT] IDENTITY(1,1)"
+      case DatabaseDataType.BOOLEAN => "[BIT]" + nullable
+      case DatabaseDataType.FLOAT => "[FLOAT]" + nullable
+      case DatabaseDataType.DOUBLE => "[DOUBLE]" + nullable
+      case DatabaseDataType.STRING => String.format("[NVARCHAR](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
+      case DatabaseDataType.BINARY => String.format("[VARBINARY](%s)%s", if (sizeLimit.isDefined) Integer.toString(sizeLimit.get) else "max", nullable)
       case _ => throw new IllegalArgumentException
     }
   }
 
   def getDataType(dataType: String): DatabaseDataType = {
     dataType.toUpperCase match {
-      case "INT" => INT
-      case "BIGINT" => LONG
-      case "DATETIME" => DATE_TIME
-      case "BIT" => BOOLEAN
-      case "FLOAT" => FLOAT
-      case "DOUBLE" => DOUBLE
-      case "NVARCHAR" => STRING
-      case "VARBINARY" => BINARY
+      case "INT" => DatabaseDataType.INT
+      case "BIGINT" => DatabaseDataType.LONG
+      case "DATETIME" => DatabaseDataType.DATE_TIME
+      case "BIT" => DatabaseDataType.BOOLEAN
+      case "FLOAT" => DatabaseDataType.FLOAT
+      case "DOUBLE" => DatabaseDataType.DOUBLE
+      case "NVARCHAR" => DatabaseDataType.STRING
+      case "VARBINARY" => DatabaseDataType.BINARY
       case _ => null
     }
   }
@@ -47,4 +45,8 @@ class MicrosoftSqlDialect extends DatabaseLanguageDialect {
   def decorateName(name: String): String = {
     "[" + name + "]"
   }
+
+  override def schemaTablesName: String = "INFORMATION_SCHEMA.TABLES"
+
+  override def definePrimaryKey: Boolean = true
 }

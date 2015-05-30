@@ -9,10 +9,9 @@ package com.lessmarkup.dataobjects
 import com.lessmarkup.interfaces.annotations.NodeAccessType
 import com.lessmarkup.interfaces.data.{DataObject, OptionLong}
 
-class NodeAccess(
-  id: Long = 0,
-  var nodeId: Long,
-  var accessType: NodeAccessType,
-  var userId: OptionLong = None,
+class NodeAccess extends DataObject {
+  var nodeId: Long = 0
+  var accessType: NodeAccessType = NodeAccessType.NO_ACCESS
+  var userId: OptionLong = None
   var groupId: OptionLong = None
-  ) extends DataObject(id)
+}

@@ -40,15 +40,14 @@ class UserBlockModel @Inject() (domainModelProvider: DomainModelProvider, change
       }
       user.unblockTime = unblockTime
       user.lastBlock = OffsetDateTime.now
-      val blockHistory: UserBlockHistory = new UserBlockHistory(
-        blockedByUserId = currentUserId.get,
-        blockedToTime = unblockTime,
-        reason = reason,
-        internalReason = internalReason,
-        userId = userId,
-        created = OffsetDateTime.now,
-        unblocked = false
-      )
+      val blockHistory = new UserBlockHistory
+      blockHistory.blockedByUserId = currentUserId.get
+      blockHistory.blockedToTime = unblockTime
+      blockHistory.reason = reason
+      blockHistory.internalReason = internalReason
+      blockHistory.userId = userId
+      blockHistory.created = OffsetDateTime.now
+      blockHistory.unblocked = false
       domainModel.create(blockHistory)
       changeTracker.addChange(classOf[User], user, EntityChangeType.UPDATED, domainModel)
     } finally {

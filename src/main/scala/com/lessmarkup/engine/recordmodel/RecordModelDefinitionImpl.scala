@@ -7,7 +7,7 @@
 package com.lessmarkup.engine.recordmodel
 
 import java.security.MessageDigest
-import java.util._
+import java.util.Base64
 
 import com.google.gson.{JsonElement, JsonObject}
 import com.lessmarkup.engine.scripting.ScriptHelper
@@ -28,7 +28,7 @@ object RecordModelDefinitionImpl {
 
 class RecordModelDefinitionImpl(modelType: Class[_ <: RecordModel[_]], moduleType: String, index: Int) extends RecordModelDefinition {
 
-  private val recordModelInstance = DependencyResolver.resolve(modelType)
+  private val recordModelInstance = DependencyResolver(modelType)
   private val dataType: Class[_ <: DataObject] = recordModelInstance.getDataType
   private val id = createDefinitionId
   private val properties = TypeHelper.getProperties(modelType)

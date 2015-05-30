@@ -27,7 +27,7 @@ class EmailNodeHandler(dataCache: DataCache, configuration: NodeHandlerConfigura
   extends DialogNodeHandler[EmailConfigurationModel](dataCache, classOf[EmailConfigurationModel], configuration) {
 
   protected def loadObject: Option[EmailConfigurationModel] = {
-    Option(DependencyResolver.resolve(classOf[EmailConfigurationModel]))
+    Option(DependencyResolver(classOf[EmailConfigurationModel]))
   }
 
   protected def saveObject(changedObject: Option[EmailConfigurationModel]): String = {

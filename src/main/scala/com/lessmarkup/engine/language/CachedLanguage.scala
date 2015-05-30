@@ -6,10 +6,8 @@
 
 package com.lessmarkup.engine.language
 
-import com.lessmarkup.interfaces.annotations.Implements
 import com.lessmarkup.interfaces.system.Language
 
-@Implements(classOf[Language])
 class CachedLanguage(
   val name: String,
   val shortName: String,

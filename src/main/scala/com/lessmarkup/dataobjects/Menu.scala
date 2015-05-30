@@ -7,23 +7,21 @@
 package com.lessmarkup.dataobjects
 
 import java.time.OffsetDateTime
-import java.util.OptionalLong
 
 import com.lessmarkup.interfaces.annotations.RequiredField
-import com.lessmarkup.interfaces.data.DataObject
+import com.lessmarkup.interfaces.data.{DataObject, OptionLong}
 
-class Menu(
-  id: Long,
+class Menu extends DataObject {
   @RequiredField
-  var text: String,
+  var text: String = null
   @RequiredField
-  var description: String,
-  var argument: String,
-  var uniqueId: String,
-  var order: Int,
-  var visible: Boolean,
+  var description: String = null
+  var argument: String = null
+  var uniqueId: String = null
+  var order: Int = 0
+  var visible: Boolean = false
   @RequiredField
-  var created: OffsetDateTime,
-  var updated: OffsetDateTime,
-  var imageId: OptionalLong
-  ) extends DataObject(id)
+  var created: OffsetDateTime = null
+  var updated: OffsetDateTime = null
+  var imageId: OptionLong = None
+}
