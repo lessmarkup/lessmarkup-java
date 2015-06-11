@@ -12,6 +12,7 @@ import com.lessmarkup.engine.testutilities.WithEnvironmentSpec
 import com.lessmarkup.interfaces.system.SiteConfiguration
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
+import resource._
 
 class UserSecurityImplTest extends WithEnvironmentSpec with Matchers with MockFactory with BeforeAndAfterEach {
 
@@ -56,12 +57,24 @@ class UserSecurityImplTest extends WithEnvironmentSpec with Matchers with MockFa
     val defaultGroupName = "TestGrou"
     (siteConfiguration.defaultUserGroup _).expects().returns(defaultGroupName)
     dataCache.set(classOf[SiteConfiguration], None, siteConfiguration)
-    domainModelProvider.create.query.from(classOf[UserGroup]).count should be (0)
+
+    for {
+      domainModel <- managed(domainModelProvider.create)
+    } {
+      val query = domainModel.query
+      query.from(classOf[UserGroup]).count should be (0)
+    }
+
     val group = userSecurity.getOrCreateDefaultGroup(domainModelProvider.create)
+
     domainModelProvider.create.query.from(classOf[UserGroup]).count should be (1)
     group.get.name should be (defaultGroupName)
     val groups: Seq[UserGroup] = domainModelProvider.create.query.from(classOf[UserGroup]).toList(classOf[UserGroup])
     groups.length should be (1)
     groups.head.name should be (defaultGroupName)
+  }
+
+  "addToDefaultGroup" should "add specified user to configured default group" in new InstanceContext {
+
   }
 }

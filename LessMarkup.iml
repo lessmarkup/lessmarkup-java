@@ -70,5 +70,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.scalamock:scalamock-scalatest-support_2.11:3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.scalamock:scalamock-core_2.11:3.2" level="project" />
     <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.2" level="project" />
+    <orderEntry type="library" name="Maven: com.jsuereth:scala-arm_2.11:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang.plugins:scala-continuations-library_2.11:1.0.1" level="project" />
   </component>
 </module>
