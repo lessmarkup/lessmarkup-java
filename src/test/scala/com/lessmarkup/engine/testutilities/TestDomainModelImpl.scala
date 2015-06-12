@@ -14,4 +14,7 @@ class TestDomainModelImpl(connection: Connection) extends DomainModelImpl(None, 
   protected override def createConnection: Option[Connection] = {
     Option(connection)
   }
+  override def close(): Unit = {
+    // do nothing
+  }
 }
