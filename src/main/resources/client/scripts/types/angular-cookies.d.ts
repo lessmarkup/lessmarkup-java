@@ -7,7 +7,7 @@
 /// <reference path="angular.d.ts" />
 
 declare module "angular-cookies" {
-    var _: string;
+    var _:string;
     export = _;
 }
 
@@ -29,12 +29,12 @@ declare module angular.cookies {
     // see http://docs.angularjs.org/api/ngCookies.$cookieStore
     ///////////////////////////////////////////////////////////////////////////
     interface ICookiesService {
-        get(key: string): string;
-        getObject(key: string): any;
+        get(key:string): string;
+        getObject(key:string): any;
         getAll(): any;
-        put(key: string, value: string, options?: any): void;
-        putObject(key: string, value: any, options?: any): void;
-        remove(key: string, options?: any): void;
+        put(key:string, value:string, options?:any): void;
+        putObject(key:string, value:any, options?:any): void;
+        remove(key:string, options?:any): void;
     }
 
 }

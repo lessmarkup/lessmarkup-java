@@ -3,7 +3,8 @@
 // Definitions by: Christian Holm Nielsen <https://github.com/dotnetnerd>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-declare function domready(callback: () => any) : void;
+declare
+function domready(callback:() => any):void;
 
 declare module "domready" {
     export = domready;

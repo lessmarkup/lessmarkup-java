@@ -7,7 +7,7 @@
 /// <reference path="angular.d.ts" />
 
 declare module "angular-sanitize" {
-    var _: string;
+    var _:string;
     export = _;
 }
 
@@ -21,7 +21,7 @@ declare module angular.sanitize {
     // see http://docs.angularjs.org/api/ngSanitize.$sanitize
     ///////////////////////////////////////////////////////////////////////////
     interface ISanitizeService {
-        (html: string): string;
+        (html:string): string;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ declare module angular.sanitize {
         // Supports http/https/ftp/mailto and plain email address links.
         // see http://code.angularjs.org/1.2.0/docs/api/ngSanitize.filter:linky
         interface ILinky {
-            (text: string, target?: string): string;
+            (text:string, target?:string): string;
         }
     }
 }
