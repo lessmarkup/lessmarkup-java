@@ -19,5 +19,5 @@ module.exports = function(grunt) {
     }));
     
     grunt.registerTask('default', []);
-    grunt.registerTask('build', ['tsd', 'ts', 'copy:ts', 'copy:bower', 'copy:resources', 'sass', 'csslint', 'cssmin', 'jade']);
+    grunt.registerTask('build', ['ts', 'copy:ts', 'copy:bower', 'copy:resources', 'sass', 'csslint', 'cssmin', 'jade']);
 };
