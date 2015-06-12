@@ -3,7 +3,6 @@
 // Definitions by: Diego Vilar <http://github.com/diegovilar>, Anthony Ciccarello <http://github.com/aciccarello>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-
 /// <reference path="angular.d.ts" />
 
 declare module "angular-cookies" {
