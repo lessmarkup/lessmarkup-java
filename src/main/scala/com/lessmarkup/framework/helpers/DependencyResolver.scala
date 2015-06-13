@@ -7,17 +7,24 @@
 package com.lessmarkup.framework.helpers
 
 import java.lang.annotation.Annotation
-
+import scala.collection.mutable
 import com.google.inject.{AbstractModule, Guice, Injector}
 import com.lessmarkup.interfaces.annotations.{UseInstanceFactory, Implements}
 import com.lessmarkup.interfaces.cache.InstanceFactory
 import com.lessmarkup.interfaces.exceptions.CommonException
+import com.lessmarkup.interfaces.module.ModuleProvider
 
 object DependencyResolver {
 
+  val overrides = new mutable.HashMap[Class[_ <: AnyRef], AnyRef]()
   var injector: Injector = Guice.createInjector()
 
-  def apply[T] (typeToResolve: Class[T], params: Any*): T = {
+  def apply[T <: AnyRef] (typeToResolve: Class[T], params: Any*): T = {
+
+    val sin: Option[AnyRef] = overrides.get(typeToResolve)
+    if (sin.isDefined) {
+      return sin.get.asInstanceOf[T]
+    }
 
     if (params.nonEmpty) {
       val implements = typeToResolve.getAnnotation(classOf[Implements])
@@ -36,15 +43,23 @@ object DependencyResolver {
     injector.getInstance(typeToResolve)
   }
 
+  def reset(moduleProvider: ModuleProvider): Unit = {
+    injector = Guice.createInjector(new ModuleProviderModule(moduleProvider))
+  }
+
+  def defineOverride[T <: AnyRef](typeToResolve: Class[T], instance: T): Unit = {
+    overrides.put(typeToResolve, instance)
+  }
+
+  def add(classes: List[Class[_]]): Unit = {
+    injector = injector.createChildInjector(new Module(classes))
+  }
+
   private def getAnnotation[T, TA <: Annotation](f: Class[T], a: Class[TA]) = {
     Option[TA] (f.getAnnotation(a))
   }
 
   private class Module(classes: List[Class[_]]) extends AbstractModule {
-    private def setOverride[T](abstractType: Class[T], concreteType: Class[_ <: T]): Unit = {
-      bind(abstractType).to(concreteType)
-    }
-
     override def configure() = {
       for (
         concreteType <- classes;
@@ -57,13 +72,15 @@ object DependencyResolver {
         setOverride(abstractType, concreteType.asSubclass(abstractType))
       }
     }
+
+    private def setOverride[T](abstractType: Class[T], concreteType: Class[_ <: T]): Unit = {
+      bind(abstractType).to(concreteType)
+    }
   }
 
-  def reset(classes: List[Class[_]]): Unit = {
-    injector = Guice.createInjector(new Module(classes))
-  }
-
-  def add(classes: List[Class[_]]): Unit = {
-    injector = injector.createChildInjector(new Module(classes))
+  private class ModuleProviderModule(moduleProvider: ModuleProvider) extends AbstractModule {
+    override def configure() = {
+      bind(classOf[ModuleProvider]).toInstance(moduleProvider)
+    }
   }
 }

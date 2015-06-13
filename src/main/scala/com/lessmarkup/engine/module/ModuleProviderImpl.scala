@@ -10,6 +10,7 @@ import java.io._
 import java.lang.reflect.Modifier
 import java.net.{MalformedURLException, URL, URLClassLoader, URLDecoder}
 import java.util.zip.ZipInputStream
+import com.google.inject.Singleton
 import com.lessmarkup.dataobjects.Module
 import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
@@ -20,21 +21,74 @@ import com.lessmarkup.interfaces.module.{ModuleConfiguration, ModuleInitializer,
 import com.lessmarkup.interfaces.structure.NodeHandlerFactory
 import scala.util.Try
 
-@Implements(classOf[ModuleProvider])
 class ModuleProviderImpl(onlySystem: Boolean) extends ModuleProvider {
-
-  def this() = {
-    this(false)
-  }
 
   private val modules = discoverAndRegisterModules()
   private val nodeHandlers: Map[String, (Class[_ <: NodeHandlerFactory], String)] = modules
     .flatMap(m => m.getInitializer.getNodeHandlerTypes.map(h => (m, h)))
     .map(h => (h._2.getSimpleName, (h._2, h._1.getModuleType))).toMap
 
+  def this() = {
+    this(false)
+  }
+
   def getModules: Seq[ModuleConfiguration] = modules
 
+  def updateModuleDatabase(domainModelProvider: DomainModelProvider) {
+
+    if (domainModelProvider == null) {
+      return
+    }
+
+    val domainModel: DomainModel = domainModelProvider.create
+    try {
+
+      val query = domainModel.query.from(classOf[Module]).where("removed = $", new java.lang.Boolean(false))
+      val databaseModules = query.toList(classOf[Module])
+      val existingModules = modules.map(m => m.getUrl.toString -> m).toMap
+
+      databaseModules.filter(m => !existingModules.contains(m.path)).foreach(m => {
+        m.removed = true
+        domainModel.update(m)
+      })
+
+      val existingDatabaseModules = databaseModules.filter(m => existingModules.contains(m.path))
+
+      existingDatabaseModules.foreach(m => {
+        val existingModule = existingModules.get(m.path).get
+        m.system = existingModule.isSystem
+        m.moduleType = existingModule.getModuleType
+        domainModel.update(m)
+      })
+
+      val existingDatabasePaths = databaseModules.map(_.path).toSet
+
+      modules.filter(m => !existingDatabasePaths.contains(m.getUrl.toString)).foreach(m => {
+        val module = new Module
+        module.enabled = true
+        module.name = m.getInitializer.getName
+        module.path = m.getUrl.toString
+        module.removed = false
+        module.system = m.isSystem
+        module.moduleType = m.getModuleType
+        domainModel.create(module)
+      })
+
+    } finally {
+      if (domainModel != null) domainModel.close()
+    }
+  }
+
+  def getNodeHandlers: Seq[String] = nodeHandlers.keySet.toSeq
+
+  def getNodeHandler(id: String): Option[(Class[_ <: NodeHandlerFactory], String)] = {
+    nodeHandlers.get(id)
+  }
+
   private def discoverAndRegisterModules(): Seq[ModuleConfiguration] = {
+
+    DependencyResolver.reset(this)
+
     val classLoader: URLClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
 
     val systemModules = (for (url <- classLoader.getURLs if url.getProtocol == "file" if !url.getPath.endsWith(".jar"))
@@ -136,7 +190,7 @@ class ModuleProviderImpl(onlySystem: Boolean) extends ModuleProvider {
     }
   }
 
-  private def constructModule(moduleUrl: URL, isSystem: Boolean, moduleInitializerClass: Class[_], classLoader: ClassLoader, elements: List[String]): Option[ModuleConfiguration] = {
+  private def constructModule(moduleUrl: URL, isSystem: Boolean, moduleInitializerClass: Class[_ <: AnyRef], classLoader: ClassLoader, elements: List[String]): Option[ModuleConfiguration] = {
 
     if (moduleInitializerClass.isInterface || Modifier.isAbstract(moduleInitializerClass.getModifiers) || !classOf[ModuleInitializer].isAssignableFrom(moduleInitializerClass)) {
       return None
@@ -161,27 +215,30 @@ class ModuleProviderImpl(onlySystem: Boolean) extends ModuleProvider {
       return List[ModuleConfiguration]()
     }
 
-    val elements = Try ({ listAllModuleElements(URLDecoder.decode(moduleUrl.getPath, "UTF-8")) })
+    val elements = Try({
+      listAllModuleElements(URLDecoder.decode(moduleUrl.getPath, "UTF-8"))
+    })
       .recoverWith { case ex: Throwable => ex.printStackTrace(); return List[ModuleConfiguration]() }
       .getOrElse(List[String]())
 
     val initializedClassLoader = classLoader.getOrElse(URLClassLoader.newInstance(Array[URL](moduleUrl), getClass.getClassLoader))
 
-    val classes: List[Class[_]] =
+    val classes: List[Class[_ <: AnyRef]] =
       elements
         .filter(_.endsWith(".class"))
         .map(path => path.substring(0, path.length - ".class".length).replaceAll("/", "."))
         .filterNot(_.contains("$"))
         .flatMap(
-        className => {
-          val cl: Option[Class[_]] = try {
-            Option(Class.forName(className, true, initializedClassLoader))
-          } catch {
-            case _: Throwable =>
-              None
-          }
-          cl
-        })
+          className => {
+            val cl: Option[Class[_ <: AnyRef]] = try {
+              val loadedClass = Class.forName(className, true, initializedClassLoader)
+              Option(loadedClass.asInstanceOf[Class[_ <: AnyRef]])
+            } catch {
+              case _: Throwable =>
+                None
+            }
+            cl
+          })
 
 
     val moduleInitializerClasses = classes.filter(c => classOf[ModuleInitializer].isAssignableFrom(c) && !Modifier.isAbstract(c.getModifiers) && !Modifier.isInterface(c.getModifiers))
@@ -196,56 +253,5 @@ class ModuleProviderImpl(onlySystem: Boolean) extends ModuleProvider {
       .map(constructModule(moduleUrl, isSystem, _, initializedClassLoader, elements))
       .filter(_.isDefined)
       .map(_.get)
-  }
-
-  def updateModuleDatabase(domainModelProvider: DomainModelProvider) {
-
-    if (domainModelProvider == null) {
-      return
-    }
-
-    val domainModel: DomainModel = domainModelProvider.create
-    try {
-
-      val query = domainModel.query.from(classOf[Module]).where("removed = $", new java.lang.Boolean(false))
-      val databaseModules = query.toList(classOf[Module])
-      val existingModules = modules.map(m => m.getUrl.toString -> m).toMap
-
-      databaseModules.filter(m => !existingModules.contains(m.path)).foreach(m => {
-        m.removed = true
-        domainModel.update(m)
-      })
-
-      val existingDatabaseModules = databaseModules.filter(m => existingModules.contains(m.path))
-
-      existingDatabaseModules.foreach(m => {
-        val existingModule = existingModules.get(m.path).get
-        m.system = existingModule.isSystem
-        m.moduleType = existingModule.getModuleType
-        domainModel.update(m)
-      })
-
-      val existingDatabasePaths = databaseModules.map(_.path).toSet
-
-      modules.filter(m => !existingDatabasePaths.contains(m.getUrl.toString)).foreach(m => {
-        val module = new Module
-        module.enabled = true
-        module.name = m.getInitializer.getName
-        module.path = m.getUrl.toString
-        module.removed = false
-        module.system = m.isSystem
-        module.moduleType = m.getModuleType
-        domainModel.create(module)
-      })
-
-    } finally {
-      if (domainModel != null) domainModel.close()
-    }
-  }
-
-  def getNodeHandlers: Seq[String] = nodeHandlers.keySet.toSeq
-
-  def getNodeHandler(id: String): Option[(Class[_ <: NodeHandlerFactory], String)] = {
-    nodeHandlers.get(id)
   }
 }

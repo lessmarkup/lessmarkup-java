@@ -18,9 +18,21 @@ object RequestContextImpl {
   private val LanguageCookieName: String = "lang"
 }
 
-class RequestContextImpl(request: HttpServletRequest, response: HttpServletResponse, servletConfig: ServletConfig) extends RequestContext {
+class RequestContextImpl(
+                          request: HttpServletRequest,
+                          response: HttpServletResponse,
+                          servletConfig: ServletConfig,
+                          engineConfigurationDefault: Option[EngineConfiguration] = None) extends RequestContext {
+
   private final val responseCookies: java.util.Map[String, Cookie] = new java.util.HashMap[String, Cookie]
-  private var currentUser: CurrentUser = null
+  private lazy val currentUser: CurrentUser = DependencyResolver(classOf[CurrentUser])
+  private lazy val engineConfiguration: EngineConfiguration = {
+    if (engineConfigurationDefault.isDefined) {
+      engineConfigurationDefault.get
+    } else {
+      new EngineConfigurationImpl(servletConfig)
+    }
+  }
 
   def getLanguageId: Option[String] = {
     val languageCookie = getCookie(RequestContextImpl.LanguageCookieName)
@@ -34,41 +46,6 @@ class RequestContextImpl(request: HttpServletRequest, response: HttpServletRespo
   def setLanguageId(languageId: Long) {
     val cookie: Cookie = new Cookie(RequestContextImpl.LanguageCookieName, languageId.asInstanceOf[Long].toString)
     response.addCookie(cookie)
-  }
-
-  def getBasePath: String = {
-    UrlHelper.getBaseUrl(request)
-  }
-
-  def getPath: String = {
-    request.getPathInfo
-  }
-
-  def getEngineConfiguration: EngineConfiguration = {
-    new EngineConfigurationImpl(servletConfig)
-  }
-
-  def redirect(path: String) {
-    response.sendRedirect(getBasePath + path)
-  }
-
-  def sendError(errorCode: Int) {
-    response.sendError(errorCode)
-  }
-
-  def isJsonRequest: Boolean = {
-    ("POST" == request.getMethod) && request.getContentType.startsWith("application/json")
-  }
-
-  def getCurrentUser: CurrentUser = {
-    if (currentUser == null) {
-      currentUser = DependencyResolver(classOf[CurrentUser])
-    }
-    currentUser
-  }
-
-  def getRemoteAddress: String = {
-    request.getRemoteAddr
   }
 
   def getCookie(name: String): Option[Cookie] = {
@@ -85,21 +62,39 @@ class RequestContextImpl(request: HttpServletRequest, response: HttpServletRespo
         return Option(cookie)
       }
     }
-    null
+    None
   }
+
+  def getPath: String = request.getPathInfo
+
+  def getEngineConfiguration: EngineConfiguration = engineConfiguration
+
+  def redirect(path: String) {
+    response.sendRedirect(getBasePath + path)
+  }
+
+  def getBasePath: String = UrlHelper.getBaseUrl(request)
+
+  def sendError(errorCode: Int) {
+    response.sendError(errorCode)
+  }
+
+  def isJsonRequest: Boolean = {
+    ("POST" == request.getMethod) && request.getContentType.startsWith("application/json")
+  }
+
+  def getCurrentUser: CurrentUser = currentUser
+
+  def getRemoteAddress: String = request.getRemoteAddr
 
   def setCookie(cookie: Cookie) {
     response.addCookie(cookie)
     responseCookies.put(cookie.getName, cookie)
   }
 
-  def getInputStream: InputStream = {
-    request.getInputStream
-  }
+  def getInputStream: InputStream = request.getInputStream
 
-  def getOutputStream: OutputStream = {
-    response.getOutputStream
-  }
+  def getOutputStream: OutputStream = response.getOutputStream
 
   def setContentType(contentType: String) {
     response.setContentType(contentType)
@@ -114,11 +109,7 @@ class RequestContextImpl(request: HttpServletRequest, response: HttpServletRespo
     response.addHeader(name, value)
   }
 
-  def mapPath(relativePath: String): String = {
-    request.getContextPath + "/" + relativePath
-  }
+  def mapPath(relativePath: String): String = request.getContextPath + "/" + relativePath
 
-  def getRootPath: String = {
-    request.getContextPath
-  }
+  def getRootPath: String = request.getContextPath
 }

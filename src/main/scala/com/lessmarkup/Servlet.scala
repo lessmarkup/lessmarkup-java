@@ -12,6 +12,7 @@ import javax.servlet.ServletException
 import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 
 import com.lessmarkup.engine.data.migrate.MigrateEngine
+import com.lessmarkup.engine.module.ModuleProviderImpl
 import com.lessmarkup.engine.system.RequestContextImpl
 import com.lessmarkup.framework.helpers.{DependencyResolver, LoggingHelper}
 import com.lessmarkup.framework.system.RequestContextHolder
@@ -25,6 +26,75 @@ object Servlet {
 }
 
 class Servlet extends HttpServlet {
+
+  /**
+   * Returns a short description of the servlet.
+   *
+   * @return a String containing servlet description
+   */
+  override def getServletInfo: String = "LessMarkup"
+
+  @throws(classOf[ServletException])
+  override def init() {
+    super.init()
+    LoggingHelper.getLogger(getClass).info("Initializing application")
+    val requestContext: RequestContextImpl = new RequestContextImpl(null, null, getServletConfig)
+    RequestContextHolder.onRequestStarted(requestContext)
+    try {
+      val moduleProvider: ModuleProvider = new ModuleProviderImpl()
+      val migrateEngine: MigrateEngine = DependencyResolver(classOf[MigrateEngine])
+      migrateEngine.execute()
+      moduleProvider.updateModuleDatabase(DependencyResolver(classOf[DomainModelProvider]))
+    } finally {
+      RequestContextHolder.onRequestFinished()
+    }
+    LoggingHelper.getLogger(getClass).info("Successfully initialized application")
+  }
+
+  /**
+   * Handles the HTTP <code>GET</code> method.
+   *
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  protected override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
+    LoggingHelper.getLogger(getClass).info("Start of doGet")
+    processRequest(request, response)
+    LoggingHelper.getLogger(getClass).info("End of doGet")
+  }
+
+  /**
+   * Handles the HTTP <code>POST</code> method.
+   *
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  protected override def doPost(request: HttpServletRequest, response: HttpServletResponse) {
+    LoggingHelper.getLogger(getClass).info("Start of doPost")
+    processRequest(request, response)
+    LoggingHelper.getLogger(getClass).info("End of doPost")
+  }
+
+  protected def processRequest(request: HttpServletRequest, response: HttpServletResponse) {
+    var path: String = request.getPathInfo
+    if (path.startsWith("/")) {
+      path = path.substring(1)
+    }
+    val requestContext: RequestContextImpl = new RequestContextImpl(request, response, getServletConfig)
+    RequestContextHolder.onRequestStarted(requestContext)
+    try {
+      DependencyResolver(classOf[ChangeTracker]).enqueueUpdates()
+      if (!processRequestInContext(path, requestContext)) {
+        response.sendError(404)
+      }
+    } finally {
+      RequestContextHolder.onRequestFinished()
+    }
+  }
 
   private def processRequestInContext(path: String, requestContext: RequestContext): Boolean = {
     LoggingHelper.getLogger(getClass).info(String.format("Request to '%s'", path))
@@ -86,75 +156,5 @@ class Servlet extends HttpServlet {
     }
 
     false
-  }
-
-  protected def processRequest(request: HttpServletRequest, response: HttpServletResponse) {
-    var path: String = request.getPathInfo
-    if (path.startsWith("/")) {
-      path = path.substring(1)
-    }
-    val requestContext: RequestContextImpl = new RequestContextImpl(request, response, getServletConfig)
-    RequestContextHolder.onRequestStarted(requestContext)
-    try {
-      DependencyResolver(classOf[ChangeTracker]).enqueueUpdates()
-      if (!processRequestInContext(path, requestContext)) {
-        response.sendError(404)
-      }
-    } finally {
-      RequestContextHolder.onRequestFinished()
-    }
-  }
-
-  /**
-   * Handles the HTTP <code>GET</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
-  protected override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
-    LoggingHelper.getLogger(getClass).info("Start of doGet")
-    processRequest(request, response)
-    LoggingHelper.getLogger(getClass).info("End of doGet")
-  }
-
-  /**
-   * Handles the HTTP <code>POST</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
-  protected override def doPost(request: HttpServletRequest, response: HttpServletResponse) {
-    LoggingHelper.getLogger(getClass).info("Start of doPost")
-    processRequest(request, response)
-    LoggingHelper.getLogger(getClass).info("End of doPost")
-  }
-
-  /**
-   * Returns a short description of the servlet.
-   *
-   * @return a String containing servlet description
-   */
-  override def getServletInfo: String = "LessMarkup"
-
-  @throws(classOf[ServletException])
-  override def init() {
-    super.init()
-    LoggingHelper.getLogger(getClass).info("Initializing application")
-    val requestContext: RequestContextImpl = new RequestContextImpl(null, null, getServletConfig)
-    RequestContextHolder.onRequestStarted(requestContext)
-    try {
-      val moduleProvider: ModuleProvider = DependencyResolver(classOf[ModuleProvider])
-      DependencyResolver(classOf[DomainModelProvider]).initialize()
-      val migrateEngine: MigrateEngine = DependencyResolver(classOf[MigrateEngine])
-      migrateEngine.execute()
-      moduleProvider.updateModuleDatabase(DependencyResolver(classOf[DomainModelProvider]))
-    } finally {
-      RequestContextHolder.onRequestFinished()
-    }
-    LoggingHelper.getLogger(getClass).info("Successfully initialized application")
   }
 }

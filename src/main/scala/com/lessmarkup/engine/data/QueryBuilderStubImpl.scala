@@ -51,4 +51,6 @@ class QueryBuilderStubImpl extends QueryBuilder {
   override def first[T](dataType: Class[T], selectText: Option[String]): Option[T] = None
 
   override def whereId(id: Long): QueryBuilder = this
+
+  override def decorateName(name: String): String = name
 }

@@ -51,4 +51,6 @@ trait QueryBuilder {
   def createNew: QueryBuilder
 
   def deleteFrom[T <: DataObject](dataType: Class[T], filter: String, args: Any*): Boolean
+
+  def decorateName(name: String): String
 }

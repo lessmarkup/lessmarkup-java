@@ -26,20 +26,20 @@ class ForgotPasswordModel @Inject() (userSecurity: UserSecurity, dataCache: Data
   private var message: String = LanguageHelper.getText(Constants.ModuleTypeMain, TextIds.FORGOT_PASSWORD_MESSAGE)
   private var email: String = null
 
-  @InputField(fieldType = InputFieldType.LABEL) def setMessage(message: String) {
-    this.message = message
-  }
-
   def getMessage: String = {
     this.message
   }
 
-  @InputField(fieldType = InputFieldType.EMAIL, textId = TextIds.EMAIL) def setEmail(email: String) {
-    this.email = email
+  @InputField(fieldType = InputFieldType.LABEL) def setMessage(message: String) {
+    this.message = message
   }
 
   def getEmail: String = {
     this.email
+  }
+
+  @InputField(fieldType = InputFieldType.EMAIL, textId = TextIds.EMAIL) def setEmail(email: String) {
+    this.email = email
   }
 
   def submit(nodeHandler: NodeHandler, fullPath: String) {
@@ -64,7 +64,7 @@ class ForgotPasswordModel @Inject() (userSecurity: UserSecurity, dataCache: Data
       val model: ResetPasswordEmailModel = new ResetPasswordEmailModel
       model.setSiteName(siteName)
       model.setResetUrl(resetUrl)
-      mailSender.sendMail(classOf[ResetPasswordEmailModel], None, Option(user.get.id), email, Constants.MailTemplatesResetPassword, model)
+      mailSender.sendEmailWithUserIds(classOf[ResetPasswordEmailModel], None, Option(user.get.id), email, Constants.MailTemplatesResetPassword, model)
     } finally {
       if (domainModel != null) domainModel.close()
     }

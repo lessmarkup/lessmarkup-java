@@ -37,20 +37,22 @@ abstract class PropertiesNodeHandler(moduleProvider: ModuleProvider, configurati
     val ret: JsonObject = new JsonObject
     val propertiesArray: JsonArray = new JsonArray
 
-    TypeHelper.getProperties(getClass)
-      .map(p => (p, p.getAnnotation(classOf[Property]), p.getValue(this)))
-      .filter(p => p._2 != null && p._3 != null).foreach {
-      case (property, attribute, value) =>
-        val model: JsonObject = new JsonObject
-        model.addProperty("name", LanguageHelper.getFullTextId(moduleConfiguration.get.getModuleType, attribute.textId))
-        model.addProperty("type", attribute.`type`.toString)
-        model.addProperty("value", value.toString)
-        attribute.`type` match {
-          case InputFieldType.IMAGE =>
-            val imageId = value.toString.toLong
-            model.addProperty("value", ImageHelper.getImageUrl(imageId))
-        }
-        propertiesArray.add(model)
+    for (
+      property <- TypeHelper.getProperties(getClass);
+      attribute = property.getAnnotation(classOf[Property]);
+      value = property.getValue(this)
+    ) {
+      val model: JsonObject = new JsonObject
+      model.addProperty("name", LanguageHelper.getFullTextId(moduleConfiguration.get.getModuleType, attribute.textId))
+      model.addProperty("type", attribute.`type`.toString)
+      model.addProperty("value", value.toString)
+
+      if (attribute.`type`() == InputFieldType.IMAGE) {
+        val imageId = value.toString.toLong
+        model.addProperty("value", ImageHelper.getImageUrl(imageId))
+      }
+
+      propertiesArray.add(model)
     }
 
     properties.foreach(p => propertiesArray.add(p))

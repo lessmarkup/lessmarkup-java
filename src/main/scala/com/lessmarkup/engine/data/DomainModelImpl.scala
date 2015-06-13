@@ -35,26 +35,6 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
   }
 
-  protected def createConnectionWithTransaction: Option[Connection] = {
-    val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
-    if (StringHelper.isNullOrEmpty(actualConnectionString)) {
-      None
-    } else {
-      val connection = ConnectionManager.getConnection(actualConnectionString)
-      connection.setAutoCommit(false)
-      Option(connection)
-    }
-  }
-
-  protected def createConnection: Option[Connection] = {
-    val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
-    if (StringHelper.isNullOrEmpty(actualConnectionString)) {
-      None
-    } else {
-      Option(ConnectionManager.getConnection(actualConnectionString))
-    }
-  }
-
   def completeTransaction() {
 
     if (connection.isEmpty) {
@@ -62,6 +42,34 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
 
     connection.get.commit()
+  }
+
+  def update[T <: DataObject](dataObject: T): Boolean = {
+    if (connection.isEmpty) {
+      return false
+    }
+
+    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass).get
+
+    val columnsWithoutId = metadata.getColumns.values
+      .filter(_.getName != Constants.DataIdPropertyName).toList
+
+    val command =
+      String.format("UPDATE %s SET ", this.dialect.decorateName(metadata.getName)) +
+        columnsWithoutId
+          .map(c => s"${dialect.decorateName(c.getName)} = ?")
+          .mkString(", ") + s" WHERE ${dialect.decorateName(Constants.DataIdPropertyName)} = ?"
+
+    val statement: PreparedStatement = connection.get.prepareStatement(command.toString)
+    try {
+      for ((column, index) <- columnsWithoutId.view.zipWithIndex) {
+        updateDataValue(column, column.getValue(dataObject), statement, index + 1)
+      }
+      statement.setLong(columnsWithoutId.size + 1, dataObject.id)
+      statement.executeUpdate != 0
+    } finally {
+      if (statement != null) statement.close()
+    }
   }
 
   private def updateDataValue(property: PropertyDescriptor, value: AnyRef, statement: PreparedStatement, columnIndex: Int) {
@@ -146,34 +154,6 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
   }
 
-  def update[T <: DataObject](dataObject: T): Boolean = {
-    if (connection.isEmpty) {
-      return false
-    }
-
-    val metadata: TableMetadata = MetadataStorage.getMetadata(dataObject.getClass).get
-
-    val columnsWithoutId = metadata.getColumns.values
-      .filter(_.getName != Constants.DataIdPropertyName).toList
-
-    val command =
-      String.format("UPDATE %s SET ", this.dialect.decorateName(metadata.getName)) +
-      columnsWithoutId
-        .map(c => s"${dialect.decorateName(c.getName)} = ?")
-        .mkString(", ") + s" WHERE ${dialect.decorateName(Constants.DataIdPropertyName)} = ?"
-
-    val statement: PreparedStatement = connection.get.prepareStatement(command.toString)
-    try {
-      for ((column, index) <- columnsWithoutId.view.zipWithIndex) {
-        updateDataValue(column, column.getValue(dataObject), statement, index)
-      }
-      statement.setLong(columnsWithoutId.size, dataObject.id)
-      statement.executeUpdate != 0
-    } finally {
-      if (statement != null) statement.close()
-    }
-  }
-
   def create[T <: DataObject](dataObject: T): Boolean = {
     if (connection == null) {
       return false
@@ -191,7 +171,7 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     val statement: PreparedStatement = connection.get.prepareStatement(command, Statement.RETURN_GENERATED_KEYS)
     try {
       for ((column, index) <- columnsWithoutId.view.zipWithIndex) {
-        updateDataValue(column, column.getValue(dataObject), statement, index+1)
+        updateDataValue(column, column.getValue(dataObject), statement, index + 1)
       }
       val createdRecords: Int = statement.executeUpdate
       if (createdRecords == 0) {
@@ -231,5 +211,25 @@ class DomainModelImpl(connectionString: Option[String], inTransaction: Boolean) 
     }
 
     this.connection.get.close()
+  }
+
+  protected def createConnectionWithTransaction: Option[Connection] = {
+    val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
+    if (StringHelper.isNullOrEmpty(actualConnectionString)) {
+      None
+    } else {
+      val connection = ConnectionManager.getConnection(actualConnectionString)
+      connection.setAutoCommit(false)
+      Option(connection)
+    }
+  }
+
+  protected def createConnection: Option[Connection] = {
+    val actualConnectionString: String = connectionString.getOrElse(DomainModelImpl.getConnectionString)
+    if (StringHelper.isNullOrEmpty(actualConnectionString)) {
+      None
+    } else {
+      Option(ConnectionManager.getConnection(actualConnectionString))
+    }
   }
 }

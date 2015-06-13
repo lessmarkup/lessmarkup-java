@@ -30,8 +30,14 @@ import com.lessmarkup.interfaces.security.{EntityAccessType, LoginTicket, UserSe
 import com.lessmarkup.interfaces.system.{EngineConfiguration, MailSender, SiteConfiguration}
 import com.lessmarkup.{Constants, TextIds}
 import org.apache.commons.net.util.Base64
+import resource._
 
 object UserSecurityImpl {
+  private val PASSWORD_DICTIONARY: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-!?"
+  private val LOGIN_TICKET_VERSION: Int = 1
+  private val LOGIN_TICKET_CONTROL_WORD: Int = 12345
+  private val HEX_CODES: String = "0123456789abcdef"
+
   def encodePassword(password: String, salt: String): String = {
     try {
       val digest: MessageDigest = MessageDigest.getInstance(Constants.EncryptHashProvider)
@@ -42,6 +48,44 @@ object UserSecurityImpl {
       case ex: NoSuchAlgorithmException =>
         throw new CommonException(ex)
     }
+  }
+
+  def toHexString(values: Array[Byte]): String = {
+    values.map(v => getHex(v.toInt)).mkString("")
+  }
+
+  private def getHex(b: Integer): String = {
+    "" + HEX_CODES.charAt((b >> 4) & 0xF) + HEX_CODES.charAt(b & 0xf)
+  }
+
+  def initializeCipher(dataCache: DataCache, mode: Int): Cipher = {
+    val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
+    var secretKeyText: String = engineConfiguration.getSessionKey
+    var secretKey: SecretKey = null
+    if (secretKeyText == null || secretKeyText.length == 0) {
+      val keyGenerator: KeyGenerator = KeyGenerator.getInstance(Constants.EncryptSymmetricCipher)
+      keyGenerator.init(Constants.EncryptSymmetricKeySize)
+      secretKey = keyGenerator.generateKey
+      secretKeyText = Base64.encodeBase64String(secretKey.getEncoded, false)
+      engineConfiguration.setSessionKey(secretKeyText)
+    }
+    else {
+      secretKey = new SecretKeySpec(Base64.decodeBase64(secretKeyText), Constants.EncryptSymmetricCipher)
+    }
+    val ret: Cipher = Cipher.getInstance(Constants.EncryptSymmetricCipher)
+    ret.init(mode, secretKey)
+    ret
+  }
+
+  def generateSalt: String = {
+    Base64.encodeBase64String(generateSaltBytes, false)
+  }
+
+  def generateSaltBytes: Array[Byte] = {
+    val secureRandom: SecureRandom = new SecureRandom
+    val bytes: Array[Byte] = new Array[Byte](Constants.EncryptSaltLength)
+    secureRandom.nextBytes(bytes)
+    bytes
   }
 
   private def validateNewUserProperties(username: String, password: String, email: String, generatePassword: Boolean) {
@@ -63,51 +107,6 @@ object UserSecurityImpl {
       throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain, TextIds.INVALID_EMAIL, fixedEmail))
     }
   }
-
-  private val PASSWORD_DICTIONARY: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-!?"
-
-  def initializeCipher(dataCache: DataCache, mode: Int): Cipher = {
-    val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
-    var secretKeyText: String = engineConfiguration.getSessionKey
-    var secretKey: SecretKey = null
-    if (secretKeyText == null || secretKeyText.length == 0) {
-      val keyGenerator: KeyGenerator = KeyGenerator.getInstance(Constants.EncryptSymmetricCipher)
-      keyGenerator.init(Constants.EncryptSymmetricKeySize)
-      secretKey = keyGenerator.generateKey
-      secretKeyText = Base64.encodeBase64String(secretKey.getEncoded, false)
-      engineConfiguration.setSessionKey(secretKeyText)
-    }
-    else {
-      secretKey = new SecretKeySpec(Base64.decodeBase64(secretKeyText), Constants.EncryptSymmetricCipher)
-    }
-    val ret: Cipher = Cipher.getInstance(Constants.EncryptSymmetricCipher)
-    ret.init(mode, secretKey)
-    ret
-  }
-
-  private val LOGIN_TICKET_VERSION: Int = 1
-  private val LOGIN_TICKET_CONTROL_WORD: Int = 12345
-
-  def generateSaltBytes: Array[Byte] = {
-    val secureRandom: SecureRandom = new SecureRandom
-    val bytes: Array[Byte] = new Array[Byte](Constants.EncryptSaltLength)
-    secureRandom.nextBytes(bytes)
-    bytes
-  }
-
-  def generateSalt: String = {
-    Base64.encodeBase64String(generateSaltBytes, false)
-  }
-
-  private val HEX_CODES: String = "0123456789abcdef"
-
-  private def getHex(b: Integer): String = {
-    "" + HEX_CODES.charAt((b >> 4) & 0xF) + HEX_CODES.charAt(b & 0xf)
-  }
-
-  def toHexString(values: Array[Byte]): String = {
-    values.map(v => getHex(v.toInt)).mkString("")
-  }
 }
 
 @Implements(classOf[UserSecurity])
@@ -119,89 +118,14 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     (salt, encodedPassword)
   }
 
-  private def checkUserExistence(email: String, domainModel: DomainModel) {
-    val user: Option[User] = domainModel.query
-      .from(classOf[User]).where("email = $ AND isRemoved = $", email, false).first(classOf[User], Option("Id"))
-    if (user.isDefined) {
-      LoggingHelper.getLogger(getClass).info(String.format("User with e-mail '%s' already exists", email))
-      throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain, TextIds.INVALID_EMAIL, email))
-    }
-  }
-
-  private def createUserObject(username: String, email: String): User = {
-    val user = new User
-    user.salt = UserSecurityImpl.generateSalt
-    user.email = email
-    user.name = username
-    user.registered = OffsetDateTime.now
-    user.blocked = false
-    user.emailConfirmed = false
-    user.lastLogin = OffsetDateTime.now
-    user.lastActivity = OffsetDateTime.now
-    user
-  }
-
-  def generatePassword: String = {
-    generatePassword(8)
-  }
-
-  def generatePassword(passwordLength: Int): String = {
-    val data: Array[Byte] = UserSecurityImpl.generateSaltBytes
-    (0 until passwordLength)
-      .map(i => UserSecurityImpl.PASSWORD_DICTIONARY.charAt((data(i).toInt&0xff) % UserSecurityImpl.PASSWORD_DICTIONARY.length))
-      .mkString("")
-  }
-
-  def getOrCreateDefaultGroup(domainModel: DomainModel): Option[UserGroup] = {
-    val defaultGroup: String = dataCache.get(classOf[SiteConfiguration]).defaultUserGroup
-
-    if (StringHelper.isNullOrEmpty(defaultGroup)) {
-      return None
-    }
-
-    val optionGroup: Option[UserGroup] = domainModel.query.from(classOf[UserGroup]).where("$+Name = $", defaultGroup).first(classOf[UserGroup], None)
-    if (optionGroup.isEmpty) {
-      val g = new UserGroup
-      g.name = defaultGroup
-      g.description = ""
-      domainModel.create(g)
-      Option(g)
-    } else {
-      optionGroup
-    }
-  }
-
-  def addToDefaultGroup(domainModel: DomainModel, user: User) {
-    val defaultGroup = getOrCreateDefaultGroup(domainModel)
-    if (defaultGroup.isEmpty) {
-      return
-    }
-    val membership = new UserGroupMembership
-    membership.userId = user.id
-    membership.userGroupId = defaultGroup.get.id
-    domainModel.create(membership)
-  }
-
-  def sendGeneratedPassword(email: String, password: String, user: User) {
-    val notificationModel: GeneratedPasswordModel = new GeneratedPasswordModel
-    notificationModel.setLogin(email)
-    notificationModel.setPassword(password)
-    notificationModel.setSiteLink("")
-    notificationModel.setSiteName(dataCache.get(classOf[SiteConfiguration]).siteName)
-    mailSender.sendMail(classOf[GeneratedPasswordModel],
-      None,
-      Option(user.id),
-      null,
-      Constants.MailTemplatesPasswordGeneratedNotification,
-      notificationModel)
-  }
-
   def createUser(username: String, password: String, email: String, preApproved: Boolean, generatePassword: Boolean): Long = {
     UserSecurityImpl.validateNewUserProperties(username, password, email, generatePassword)
     var user: User = null
-    val domainModel: DomainModel = domainModelProvider.createWithTransaction
-    try {
+
+    for {domainModel <- managed(domainModelProvider.createWithTransaction)} {
+
       checkUserExistence(email, domainModel)
+
       user = createUserObject(username, email)
       if (generatePassword) {
         if (!RequestContextHolder.getContext.getEngineConfiguration.isSmtpConfigured) {
@@ -248,11 +172,129 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
         adminNotifyNewUsers(user, domainModel)
       }
       domainModel.completeTransaction()
-    } finally {
-      if (domainModel != null) domainModel.close()
     }
 
     user.id
+  }
+
+  private def checkUserExistence(email: String, domainModel: DomainModel) {
+    val idDecorated = domainModel.query.decorateName(Constants.DataIdPropertyName)
+    val user: Option[User] = domainModel.query
+      .from(classOf[User]).where("$+email = $ AND $+removed = $", email, false).first(classOf[User], Option(idDecorated))
+    if (user.isDefined) {
+      LoggingHelper.getLogger(getClass).info(String.format("User with e-mail '%s' already exists", email))
+      throw new UserValidationException(LanguageHelper.getText(Constants.ModuleTypeMain, TextIds.INVALID_EMAIL, email))
+    }
+  }
+
+  private def createUserObject(username: String, email: String): User = {
+    val user = new User
+    user.salt = UserSecurityImpl.generateSalt
+    user.email = email
+    user.name = username
+    user.registered = OffsetDateTime.now
+    user.blocked = false
+    user.emailConfirmed = false
+    user.lastLogin = OffsetDateTime.now
+    user.lastActivity = OffsetDateTime.now
+    user
+  }
+
+  def generatePassword: String = {
+    generatePassword(8)
+  }
+
+  def generatePassword(passwordLength: Int): String = {
+    val data: Array[Byte] = UserSecurityImpl.generateSaltBytes
+    (0 until passwordLength)
+      .map(i => UserSecurityImpl.PASSWORD_DICTIONARY.charAt((data(i).toInt&0xff) % UserSecurityImpl.PASSWORD_DICTIONARY.length))
+      .mkString("")
+  }
+
+  def addToDefaultGroup(domainModel: DomainModel, user: User) {
+    val defaultGroup = getOrCreateDefaultGroup(domainModel)
+    if (defaultGroup.isEmpty) {
+      return
+    }
+    val membership = new UserGroupMembership
+    membership.userId = user.id
+    membership.userGroupId = defaultGroup.get.id
+    domainModel.create(membership)
+  }
+
+  def getOrCreateDefaultGroup(domainModel: DomainModel): Option[UserGroup] = {
+    val defaultGroup: String = dataCache.get(classOf[SiteConfiguration]).defaultUserGroup
+
+    if (StringHelper.isNullOrEmpty(defaultGroup)) {
+      return None
+    }
+
+    val optionGroup: Option[UserGroup] = domainModel.query.from(classOf[UserGroup]).where("$+Name = $", defaultGroup).first(classOf[UserGroup], None)
+    if (optionGroup.isEmpty) {
+      val g = new UserGroup
+      g.name = defaultGroup
+      g.description = ""
+      domainModel.create(g)
+      Option(g)
+    } else {
+      optionGroup
+    }
+  }
+
+  def sendGeneratedPassword(email: String, password: String, user: User) {
+    val notificationModel: GeneratedPasswordModel = new GeneratedPasswordModel
+    notificationModel.setLogin(email)
+    notificationModel.setPassword(password)
+    notificationModel.setSiteLink("")
+    notificationModel.setSiteName(dataCache.get(classOf[SiteConfiguration]).siteName)
+    mailSender.sendEmailWithUserIds(classOf[GeneratedPasswordModel],
+      None,
+      Option(user.id),
+      null,
+      Constants.MailTemplatesPasswordGeneratedNotification,
+      notificationModel)
+  }
+
+  def generateUniqueId: String = {
+    val buffer: ByteBuffer = ByteBuffer.allocate(100)
+    buffer.putLong(OffsetDateTime.now.toInstant.toEpochMilli)
+    buffer.put(UserSecurityImpl.generateSaltBytes)
+    val array: Array[Byte] = buffer.array
+    (0 until buffer.position).map(i => UserSecurityImpl.getHex(array(i).toInt)).mkString("")
+  }
+
+  private def userNotifyCreated(user: User, password: String) {
+    val model: NewUserCreatedModel = new NewUserCreatedModel
+    model.setEmail(user.email)
+    model.setPassword(password)
+    model.setSiteName(dataCache.get(classOf[SiteConfiguration]).siteName)
+    mailSender.sendEmailWithUserIds(classOf[NewUserCreatedModel], None, Option(user.id), null, Constants.MailTemplatesUserNewUserCreated, model)
+  }
+
+  private def sendConfirmationLink(user: User) {
+    val path: String = String.format("%s/%s/%s", RequestContextHolder.getContext.getBasePath, Constants.ModuleActionsValidateAccount, user.validateSecret)
+    val confirmationModel: UserConfirmationMailTemplateModel = new UserConfirmationMailTemplateModel
+    confirmationModel.setLink(path)
+    mailSender.sendEmailWithUserIds(classOf[UserConfirmationMailTemplateModel], None, Option(user.id), null, Constants.MailTemplatesValidateUser, confirmationModel)
+  }
+
+  private def adminNotifyNewUsers(user: User, domainModel: DomainModel) {
+    val model = new NewUserCreatedModel
+    model.setUserId(user.id)
+    model.setName(user.name)
+    model.setEmail(user.email)
+    domainModel.query
+      .from(classOf[User])
+      .where("$+administrator = $ AND $+removed = $ AND $+blocked = $", true, false, false)
+      .toList(classOf[User], Option(Constants.DataIdPropertyName))
+      .foreach(admin => {
+      val modelType = classOf[NewUserCreatedModel]
+      val userIdFrom = None
+      val userIdTo = Option(admin.id)
+      val userEmailTo: String = null
+      val viewPath = Constants.MailTemplatesAdminNewUserCreated
+      mailSender.sendEmailWithUserIds(modelType, userIdFrom, userIdTo, userEmailTo, viewPath, model)
+    })
   }
 
   def createPasswordChangeToken(userId: Long): Option[String] = {
@@ -261,7 +303,7 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     try {
       val optionUser: Option[User] = domainModel.query
         .from(classOf[User])
-        .where(Constants.DataIdPropertyName + " = $", userId)
+        .where("$+" + Constants.DataIdPropertyName + " = $", userId)
         .first(classOf[User], None)
       if (optionUser.isEmpty) {
         return None
@@ -288,7 +330,7 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     try {
       val user: Option[User] = domainModel.query
         .from(classOf[User])
-        .where("email = $ AND passwordChangeToken = $", email, token)
+        .where("$+email = $ AND $+passwordChangeToken = $", email, token)
         .first(classOf[User], None)
       if (user.isEmpty) {
         LoggingHelper.getLogger(getClass).info("Cannot validate password - cannot find user or token")
@@ -304,8 +346,6 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
       if (domainModel != null) domainModel.close()
     }
   }
-
-  private def initializeCipher(mode: Int): Cipher = UserSecurityImpl.initializeCipher(dataCache, mode)
 
   def encryptLoginTicket(ticket: LoginTicket): String = {
     val cipher: Cipher = initializeCipher(Cipher.ENCRYPT_MODE)
@@ -382,29 +422,7 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     }
   }
 
-  class AccessToken extends Serializable {
-
-    private var userId: Option[Long] = None
-    private var collectionId: Int = 0
-    private var entityId: Long = 0L
-    private var accessType: EntityAccessType = null
-    private var ticks: Option[Long] = None
-
-    def getUserId: Option[Long] = userId
-    def setUserId(userId: Option[Long]): Unit = this.userId = userId
-
-    def getCollectionId: Int = collectionId
-    def setCollectionId(collectionId: Int): Unit = this.collectionId = collectionId
-
-    def getEntityId: Long = entityId
-    def setEntityId(entityId: Long): Unit = this.entityId = entityId
-
-    def getAccessType: EntityAccessType = accessType
-    def setAccessType(accessType: EntityAccessType): Unit = this.accessType = accessType
-
-    def getTicks: Option[Long] = ticks
-    def setTicks(ticks: Option[Long]): Unit = this.ticks = ticks
-  }
+  private def initializeCipher(mode: Int): Cipher = UserSecurityImpl.initializeCipher(dataCache, mode)
 
   def createAccessToken(collectionId: Int, entityId: Long, accessType: Int, userId: Option[Long], expirationTime: Option[OffsetDateTime]): String = {
     val cipher: Cipher = initializeCipher(Cipher.ENCRYPT_MODE)
@@ -476,35 +494,12 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     }
   }
 
-  def generateUniqueId: String = {
-    val buffer: ByteBuffer = ByteBuffer.allocate(100)
-    buffer.putLong(OffsetDateTime.now.toInstant.toEpochMilli)
-    buffer.put(UserSecurityImpl.generateSaltBytes)
-    val array: Array[Byte] = buffer.array
-    (0 until buffer.position).map(i => UserSecurityImpl.getHex(array(i).toInt)).mkString("")
-  }
-
-  private def userNotifyCreated(user: User, password: String) {
-    val model: NewUserCreatedModel = new NewUserCreatedModel
-    model.setEmail(user.email)
-    model.setPassword(password)
-    model.setSiteName(dataCache.get(classOf[SiteConfiguration]).siteName)
-    mailSender.sendMail(classOf[NewUserCreatedModel], None, Option(user.id), null, Constants.MailTemplatesUserNewUserCreated, model)
-  }
-
-  private def sendConfirmationLink(user: User) {
-    val path: String = String.format("%s/%s/%s", RequestContextHolder.getContext.getBasePath, Constants.ModuleActionsValidateAccount, user.validateSecret)
-    val confirmationModel: UserConfirmationMailTemplateModel = new UserConfirmationMailTemplateModel
-    confirmationModel.setLink(path)
-    mailSender.sendMail(classOf[UserConfirmationMailTemplateModel], None, Option(user.id), null, Constants.MailTemplatesValidateUser, confirmationModel)
-  }
-
   def confirmUser(validateSecret: String): Option[Long] = {
     val domainModel: DomainModel = domainModelProvider.createWithTransaction
     try {
       val optionUser: Option[User] = domainModel.query
         .from(classOf[User])
-        .where("validateSecret = $ AND emailConfirmed = $", validateSecret, false)
+        .where("$+validateSecret = $ AND $+emailConfirmed = $", validateSecret, false)
         .first(classOf[User], None)
       if (optionUser.isEmpty) {
         return None
@@ -522,25 +517,6 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
     } finally {
       if (domainModel != null) domainModel.close()
     }
-  }
-
-  private def adminNotifyNewUsers(user: User, domainModel: DomainModel) {
-    val model = new NewUserCreatedModel
-    model.setUserId(user.id)
-    model.setName(user.name)
-    model.setEmail(user.email)
-    domainModel.query
-      .from(classOf[User])
-      .where("isAdministrator = $ AND isRemoved = $ AND isBlocked = $", true, false, false)
-      .toList(classOf[User], Option(Constants.DataIdPropertyName))
-      .foreach(admin => {
-        val modelType = classOf[NewUserCreatedModel]
-        val userIdFrom = None
-        val userIdTo = Option(admin.id)
-        val userEmailTo: String = null
-        val viewPath = Constants.MailTemplatesAdminNewUserCreated
-        mailSender.sendMail(modelType, userIdFrom, userIdTo, userEmailTo, viewPath, model)
-    } )
   }
 
   def encryptObject(obj: AnyRef): Option[String] = {
@@ -590,5 +566,34 @@ class UserSecurityImpl @Inject() (domainModelProvider: DomainModelProvider, data
       if (memoryStream != null) memoryStream.close()
       if (objectStream != null) objectStream.close()
     }
+  }
+
+  class AccessToken extends Serializable {
+
+    private var userId: Option[Long] = None
+    private var collectionId: Int = 0
+    private var entityId: Long = 0L
+    private var accessType: EntityAccessType = null
+    private var ticks: Option[Long] = None
+
+    def getUserId: Option[Long] = userId
+
+    def setUserId(userId: Option[Long]): Unit = this.userId = userId
+
+    def getCollectionId: Int = collectionId
+
+    def setCollectionId(collectionId: Int): Unit = this.collectionId = collectionId
+
+    def getEntityId: Long = entityId
+
+    def setEntityId(entityId: Long): Unit = this.entityId = entityId
+
+    def getAccessType: EntityAccessType = accessType
+
+    def setAccessType(accessType: EntityAccessType): Unit = this.accessType = accessType
+
+    def getTicks: Option[Long] = ticks
+
+    def setTicks(ticks: Option[Long]): Unit = this.ticks = ticks
   }
 }

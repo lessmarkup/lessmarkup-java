@@ -7,11 +7,11 @@
 package com.lessmarkup.interfaces.system
 
 trait MailSender {
-  def sendMail[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T)
+  def sendEmailWithSmtpParameters[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T)
 
-  def sendMail[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T)
+  def sendEmailWithUserStrings[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T)
 
-  def sendMail[T <: MailTemplateModel](modelType: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T)
+  def sendEmailWithUserIds[T <: MailTemplateModel](modelType: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T)
 
   def sendPlainEmail(emailTo: String, subject: String, message: String)
 }

@@ -8,12 +8,11 @@ package com.lessmarkup.engine.system
 
 import java.io._
 import javax.servlet.ServletConfig
-
-import com.lessmarkup.framework.helpers.LoggingHelper
 import com.lessmarkup.interfaces.system.EngineConfiguration
 import com.thoughtworks.xstream.XStream
-
 import scala.collection.JavaConversions._
+import scala.collection.mutable
+import resource._
 
 class CustomizationFile {
   private var entries: java.util.List[CustomizationFileEntry] = null
@@ -36,121 +35,7 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
 
   private final val CONFIGURATION_DIRECTORY: String = ".config"
   private final val CONFIGURATION_FILE: String = CONFIGURATION_DIRECTORY + "/engine.xml"
-  private final val overrides: java.util.Map[String, String] = new java.util.HashMap[String, String]
-  private var overridesInitialized: Boolean = false
-
-  private def getXmlStream: XStream = {
-    val xStream: XStream = new XStream
-    xStream.alias("file", classOf[CustomizationFile])
-    xStream.alias("entry", classOf[CustomizationFileEntry])
-    xStream.alias("entries", classOf[java.util.LinkedList[CustomizationFileEntry]])
-    xStream
-  }
-
-  private def loadOverrides() {
-    if (!overridesInitialized) {
-      overridesInitialized = true
-      var rootPath: String = servletConfig.getServletContext.getRealPath("/")
-      if (rootPath.endsWith("/") || rootPath.endsWith("\\")) {
-        rootPath = rootPath.substring(0, rootPath.length - 1)
-      }
-      val configurationPath: String = rootPath + CONFIGURATION_FILE
-      val file: File = new File(configurationPath)
-      if (file.exists) {
-        val reader: Reader = new FileReader(configurationPath)
-        try {
-          val stream: XStream = getXmlStream
-          val entries: CustomizationFile = stream.fromXML(reader).asInstanceOf[CustomizationFile]
-          if (entries != null && entries.getEntries != null) {
-            for (entry <- entries.getEntries) {
-              if (entry.getKey != null && entry.getValue != null) {
-                overrides.put(entry.getKey, entry.getValue)
-              }
-            }
-          }
-        }
-        catch {
-          case e: IOException =>
-            LoggingHelper.logException(getClass, e)
-        } finally {
-          if (reader != null) reader.close()
-        }
-      }
-    }
-  }
-
-  private def saveOverrides() {
-    loadOverrides()
-    val customizationFile: CustomizationFile = new CustomizationFile
-    val entries: java.util.List[CustomizationFileEntry] = new java.util.LinkedList[CustomizationFileEntry]
-    customizationFile.setEntries(entries)
-    for (source <- overrides.entrySet) {
-      val target: CustomizationFileEntry = new CustomizationFileEntry
-      target.setKey(source.getKey)
-      target.setValue(source.getValue)
-      entries.add(target)
-    }
-    val rootPath: String = servletConfig.getServletContext.getRealPath("/")
-    new File(rootPath + CONFIGURATION_DIRECTORY).mkdirs
-    val configurationPath: String = rootPath + CONFIGURATION_FILE
-    val writer: Writer = new FileWriter(configurationPath)
-    try {
-      val xStream: XStream = getXmlStream
-      xStream.toXML(customizationFile, writer)
-    }
-    catch {
-      case e: IOException =>
-        LoggingHelper.logException(getClass, e)
-    } finally {
-      if (writer != null) writer.close()
-    }
-  }
-
-  private def getString(parameterName: String, defaultValue: String): String = {
-
-    var value: String = null
-    loadOverrides()
-    value = overrides.get(parameterName)
-    if (value == null) {
-      value = servletConfig.getInitParameter(parameterName)
-    }
-    if (value == null || value.length == 0) {
-      return defaultValue
-    }
-
-    value
-  }
-
-  private def setString(parameterName: String, value: String) {
-
-    loadOverrides()
-    overrides.put(parameterName, value)
-    saveOverrides()
-  }
-
-  private def getBoolean(parameterName: String, defaultValue: Boolean): Boolean = {
-    val value: String = getString(parameterName, null)
-    if (value == null || value.length == 0) {
-      return defaultValue
-    }
-    (value == "true") || !(value == "false") && defaultValue
-  }
-
-  private def setBoolean(parameterName: String, value: Boolean) {
-    setString(parameterName, value.toString)
-  }
-
-  private def getInteger(parameterName: String, defaultValue: Int): Int = {
-    val value: String = getString(parameterName, null)
-    if (value == null || value.length == 0) {
-      return defaultValue
-    }
-    value.toInt
-  }
-
-  private def setInteger(parameterName: String, value: Int) {
-    setString(parameterName, Integer.toString(value))
-  }
+  private lazy val overrides = loadOverrides
 
   def isSafeMode: Boolean = {
     getBoolean("safeMode", defaultValue = false)
@@ -197,12 +82,63 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
     setString("smtpPassword", password)
   }
 
+  protected def setString(parameterName: String, value: String) {
+    overrides.put(parameterName, value)
+    saveOverrides()
+  }
+
+  protected def saveOverrides() {
+
+    val configurationPath = getConfigurationPath(createDirectory = true)
+    if (configurationPath.length == 0) {
+      return
+    }
+
+    val customizationFile: CustomizationFile = new CustomizationFile
+    val entries: java.util.List[CustomizationFileEntry] = new java.util.LinkedList[CustomizationFileEntry]
+    customizationFile.setEntries(entries)
+    for (source <- overrides.entrySet) {
+      val target: CustomizationFileEntry = new CustomizationFileEntry
+      target.setKey(source.getKey)
+      target.setValue(source.getValue)
+      entries.add(target)
+    }
+
+    for {writer <- managed(new FileWriter(configurationPath))} {
+      val xStream: XStream = getXmlStream
+      xStream.toXML(customizationFile, writer)
+    }
+  }
+
+  private def getXmlStream: XStream = {
+    val xStream: XStream = new XStream
+    xStream.alias("file", classOf[CustomizationFile])
+    xStream.alias("entry", classOf[CustomizationFileEntry])
+    xStream.alias("entries", classOf[java.util.LinkedList[CustomizationFileEntry]])
+    xStream
+  }
+
+  protected def getConfigurationPath(createDirectory: Boolean = false) = {
+    var rootPath: String = servletConfig.getServletContext.getRealPath("/")
+    if (createDirectory) {
+      new File(rootPath + CONFIGURATION_DIRECTORY).mkdirs
+    }
+    if (rootPath.endsWith("/") || rootPath.endsWith("\\")) {
+      rootPath = rootPath.substring(0, rootPath.length - 1)
+    }
+    rootPath + CONFIGURATION_FILE
+  }
+
   def isSmtpSsl: Boolean = {
     getBoolean("smtpSsl", defaultValue = false)
   }
 
   def setSmtpSsl(ssl: Boolean) {
     setBoolean("smtpSsl", ssl)
+  }
+
+  private def setBoolean(parameterName: String, value: Boolean) {
+    setString(parameterName, value.toString)
   }
 
   def getRecaptchaPublicKey: String = {
@@ -223,6 +159,14 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
 
   def isUseTestMail: Boolean = {
     getBoolean("useTestMail", defaultValue = false)
+  }
+
+  private def getBoolean(parameterName: String, defaultValue: Boolean): Boolean = {
+    val value: String = getString(parameterName, null)
+    if (value == null || value.length == 0) {
+      return defaultValue
+    }
+    (value == "true") || !(value == "false") && defaultValue
   }
 
   def setUseTestMail(use: Boolean) {
@@ -257,6 +201,26 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
     getInteger("maximumFailedAttempts", 5)
   }
 
+  private def getInteger(parameterName: String, defaultValue: Int): Int = {
+    val value: String = getString(parameterName, null)
+    if (value == null || value.length == 0) {
+      return defaultValue
+    }
+    value.toInt
+  }
+
+  protected def getString(parameterName: String, defaultValue: String): String = {
+
+    val value = overrides.get(parameterName)
+    if (value.isEmpty) {
+      servletConfig.getInitParameter(parameterName)
+    } else if (value.get.length == 0) {
+      defaultValue
+    } else {
+      value.get
+    }
+  }
+
   def setMaximumFailedAttempts(attempts: Int) {
     setInteger("maximumFailedAttempts", attempts)
   }
@@ -267,6 +231,10 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
 
   def setRecordsPerPage(recordsPerPage: Int) {
     setInteger("recordsPerPage", recordsPerPage)
+  }
+
+  private def setInteger(parameterName: String, value: Int) {
+    setString(parameterName, Integer.toString(value))
   }
 
   def getAuthCookieName: String = {
@@ -371,5 +339,35 @@ class EngineConfigurationImpl(servletConfig: ServletConfig) extends EngineConfig
 
   def setSessionKey(sessionKey: String) {
     setString("sessionKey", sessionKey)
+  }
+
+  protected def loadOverrides: mutable.Map[String, String] = {
+
+    val configurationPath = getConfigurationPath()
+    val map = new mutable.HashMap[String, String]()
+
+    if (configurationPath.length == 0) {
+      return map
+    }
+
+    val file: File = new File(configurationPath)
+
+    if (!file.exists()) {
+      return map
+    }
+
+    for {reader <- managed(new FileReader(configurationPath))} {
+      val stream: XStream = getXmlStream
+      val entries: CustomizationFile = stream.fromXML(reader).asInstanceOf[CustomizationFile]
+      if (entries != null && entries.getEntries != null) {
+        for (entry <- entries.getEntries) {
+          if (entry.getKey != null && entry.getValue != null) {
+            map.put(entry.getKey, entry.getValue)
+          }
+        }
+      }
+    }
+
+    map
   }
 }

@@ -22,48 +22,19 @@ import org.apache.commons.net.smtp.{AuthenticatingSMTPClient, SimpleSMTPHeader}
 @Implements(classOf[MailSender])
 class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTemplateProvider: MailTemplateProvider, dataCache: DataCache) extends MailSender {
 
-  private def getNoReplyEmail: String = {
-    val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
-    val ret: String = siteConfiguration.noReplyEmail
-    if (ret == null || ret.length == 0) {
-      val ret = RequestContextHolder.getContext.getEngineConfiguration.getNoReplyEmail
-      if (ret == null || ret.length == 0) {
-        "no@reply.email"
-      } else {
-        ret
-      }
-    } else {
-      ret
-    }
+  def sendEmailWithUserStrings[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T) {
+    val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
+    sendEmailWithSmtpParameters(modelType, engineConfiguration.getSmtpServer, engineConfiguration.getSmtpUsername, engineConfiguration.getSmtpPassword, engineConfiguration.isSmtpSsl, emailFrom, emailTo, viewPath, parameters)
   }
 
-  private def getNoReplyName: String = {
-    val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
-    val ret: String = siteConfiguration.noReplyName
-    if (ret == null || ret.length == 0) {
-      RequestContextHolder.getContext.getEngineConfiguration.getNoReplyName
-    } else {
-      ret
-    }
-  }
-
-  private def composeAddress(email: String, name: String): String = {
-    String.format("\"%s\" <%s>", name, email)
-  }
-
-  def sendMail[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T) {
+  def sendEmailWithSmtpParameters[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T) {
     parameters.setUserEmail(emailTo)
     val body = mailTemplateProvider.executeTemplate(modelType, viewPath, parameters)
     val subject = parameters.getSubject
-    sendMail("", emailFrom, parameters.getUserName, emailTo, subject, body, viewPath, smtpServer, smtpUser, smtpPassword, smtpSsl)
+    sendEmailWithSmtpParameters("", emailFrom, parameters.getUserName, emailTo, subject, body, viewPath, smtpServer, smtpUser, smtpPassword, smtpSsl)
   }
 
-  def sendMail[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T) {
-    val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
-    sendMail(modelType, engineConfiguration.getSmtpServer, engineConfiguration.getSmtpUsername, engineConfiguration.getSmtpPassword, engineConfiguration.isSmtpSsl, emailFrom, emailTo, viewPath, parameters)
-  }
-
-  def sendMail[T <: MailTemplateModel](`type`: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T) {
+  def sendEmailWithUserIds[T <: MailTemplateModel](`type`: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T) {
     try {
       var userFrom: Option[User] = None
       var userTo: Option[User] = None
@@ -96,7 +67,7 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
         throw new IllegalArgumentException
       }
       val engineConfiguration: EngineConfiguration = RequestContextHolder.getContext.getEngineConfiguration
-      sendMail(fromName, fromEmail, parameters.getUserName, parameters.getUserEmail, subject, body, viewPath, engineConfiguration.getSmtpServer, engineConfiguration.getSmtpUsername, engineConfiguration.getSmtpPassword, engineConfiguration.isSmtpSsl)
+      sendEmailWithSmtpParameters(fromName, fromEmail, parameters.getUserName, parameters.getUserEmail, subject, body, viewPath, engineConfiguration.getSmtpServer, engineConfiguration.getSmtpUsername, engineConfiguration.getSmtpPassword, engineConfiguration.isSmtpSsl)
     }
     catch {
       case e: Exception =>
@@ -104,10 +75,32 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
     }
   }
 
-  def sendPlainEmail(emailTo: String, subject: String, message: String) {
+  private def getNoReplyEmail: String = {
+    val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
+    val ret: String = siteConfiguration.noReplyEmail
+    if (ret == null || ret.length == 0) {
+      val ret = RequestContextHolder.getContext.getEngineConfiguration.getNoReplyEmail
+      if (ret == null || ret.length == 0) {
+        "no@reply.email"
+      } else {
+        ret
+      }
+    } else {
+      ret
+    }
   }
 
-  private def sendMail(fromName: String, fromAddress: String, toName: String, toAddress: String, subject: String, body: String, viewPath: String, server: String, username: String, password: String, useSsl: Boolean) {
+  private def getNoReplyName: String = {
+    val siteConfiguration: SiteConfiguration = dataCache.get(classOf[SiteConfiguration])
+    val ret: String = siteConfiguration.noReplyName
+    if (ret == null || ret.length == 0) {
+      RequestContextHolder.getContext.getEngineConfiguration.getNoReplyName
+    } else {
+      ret
+    }
+  }
+
+  private def sendEmailWithSmtpParameters(fromName: String, fromAddress: String, toName: String, toAddress: String, subject: String, body: String, viewPath: String, server: String, username: String, password: String, useSsl: Boolean) {
     if (RequestContextHolder.getContext.getEngineConfiguration.isUseTestMail) {
       val domainModel: DomainModel = domainModelProvider.create
       try {
@@ -159,5 +152,12 @@ class MailSenderImpl @Inject() (domainModelProvider: DomainModelProvider, mailTe
       case e: Exception =>
         Logger.getLogger(classOf[MailSenderImpl].getName).log(Level.SEVERE, null, e)
     }
+  }
+
+  private def composeAddress(email: String, name: String): String = {
+    String.format("\"%s\" <%s>", name, email)
+  }
+
+  def sendPlainEmail(emailTo: String, subject: String, message: String) {
   }
 }

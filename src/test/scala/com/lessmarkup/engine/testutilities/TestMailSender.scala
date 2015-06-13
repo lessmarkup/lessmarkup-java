@@ -9,11 +9,11 @@ package com.lessmarkup.engine.testutilities
 import com.lessmarkup.interfaces.system.{MailTemplateModel, MailSender}
 
 class TestMailSender extends MailSender {
-  override def sendMail[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T): Unit = ???
+  override def sendEmailWithSmtpParameters[T <: MailTemplateModel](modelType: Class[T], smtpServer: String, smtpUser: String, smtpPassword: String, smtpSsl: Boolean, emailFrom: String, emailTo: String, viewPath: String, parameters: T): Unit = ???
 
-  override def sendMail[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T): Unit = ???
+  override def sendEmailWithUserStrings[T <: MailTemplateModel](modelType: Class[T], emailFrom: String, emailTo: String, viewPath: String, parameters: T): Unit = ???
 
-  override def sendMail[T <: MailTemplateModel](modelType: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T): Unit = ???
+  override def sendEmailWithUserIds[T <: MailTemplateModel](modelType: Class[T], userIdFrom: Option[Long], userIdTo: Option[Long], userEmailTo: String, viewPath: String, parameters: T): Unit = ???
 
   override def sendPlainEmail(emailTo: String, subject: String, message: String): Unit = ???
 }

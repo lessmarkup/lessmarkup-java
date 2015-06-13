@@ -6,12 +6,14 @@
 
 package com.lessmarkup.engine.testutilities
 
-import com.lessmarkup.interfaces.cache.{CacheHandler, DataCache}
+import com.lessmarkup.engine.cache.DataCacheImpl
+import com.lessmarkup.interfaces.cache.CacheHandler
+import com.lessmarkup.interfaces.data.ChangeTracker
 import scala.collection.mutable
 
-class TestDataCache extends DataCache {
+class TestDataCache(changeTracker: ChangeTracker) extends DataCacheImpl(changeTracker) {
 
-  val objectMap: mutable.Map[(Class[_ <: CacheHandler], Option[Long]), CacheHandler] = mutable.LinkedHashMap()
+  private val objectMap: mutable.Map[(Class[_ <: CacheHandler], Option[Long]), CacheHandler] = mutable.LinkedHashMap()
 
   def set[T <: CacheHandler](t: Class[T], objectId: Option[Long], handler: T): Unit = {
     val key = (t, objectId)
@@ -19,8 +21,13 @@ class TestDataCache extends DataCache {
   }
 
   override def get[T <: CacheHandler](t: Class[T], objectId: Option[Long], create: Boolean): Option[T] = {
-    val handler: T = objectMap((t, objectId)).asInstanceOf[T]
-    Option(handler)
+
+    val handler = objectMap.get((t, objectId))
+    if (handler.isDefined) {
+      Option(handler.get.asInstanceOf[T])
+    } else {
+      super.get[T](t, objectId, create)
+    }
   }
 
   override def expired[T <: CacheHandler](t: Class[T], objectId: Option[Long]): Unit = {}
